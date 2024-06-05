@@ -15,8 +15,8 @@
             width: 300px;
             margin: 100px auto;
             padding: 20px;
-            background-color: #f0f0f0;
-            border-radius: 30px;
+            background-color: #e4e4e4e8;
+            border-radius: 50px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
             position: relative;
@@ -29,7 +29,7 @@
             right: 10px;
             width: 24px;
             height: 24px;
-            background-color: gray;
+            background-color: rgb(104, 103, 103);
             border-radius: 50%;
             display: flex;
             justify-content: center;
@@ -66,21 +66,25 @@
             padding: 10px;
             margin: 10px 0;
             box-sizing: border-box;
-            border-radius: 10px;
+            border-radius: 12px;
             border: none;
         }
 
         .login-container input[type="text"],
         .login-container input[type="password"] {
             height: 45px;
-            background-color: rgb(189, 195, 244);
-            color: black;
+            background-color: rgb(212, 216, 243);
             font-size: 18px;
+        }
+
+        .login-container input[type="text"]::placeholder,
+        .login-container input[type="password"]::placeholder {
+            color: black; /* placeholder 텍스트 색상을 검정으로 변경 */
         }
 
         .login-container button {
             height: 45px;
-            background-color: rgb(31, 87, 151);
+            background-color: rgb(81, 83, 171);
             color: white;
             cursor: pointer;
             font-weight: bold;
@@ -92,7 +96,7 @@
         }
 
         .login-container button:hover {
-            background-color: rgb(124, 142, 162);
+            background-color: rgb(107, 123, 141);
         }
 
         .login-container .forgot-password {

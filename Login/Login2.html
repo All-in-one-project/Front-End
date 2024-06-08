@@ -15,7 +15,7 @@
             width: 300px;
             margin: 100px auto;
             padding: 20px;
-            background-color: #e4e4e4e8;
+            background-color: #e4e4e4;
             border-radius: 50px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
@@ -79,12 +79,13 @@
 
         .login-container input[type="text"]::placeholder,
         .login-container input[type="password"]::placeholder {
-            color: black; /* placeholder 텍스트 색상을 검정으로 변경 */
+            color: black;
+            /* placeholder 텍스트 색상을 검정으로 변경 */
         }
 
         .login-container button {
             height: 45px;
-            background-color: rgb(81, 83, 171);
+            background-color: #637ABF;
             color: white;
             cursor: pointer;
             font-weight: bold;
@@ -92,7 +93,8 @@
         }
 
         .forgot-password a {
-            color: black; /* 링크 색상을 검정으로 변경 */        
+            color: black;
+            /* 링크 색상을 검정으로 변경 */
         }
 
         .login-container button:hover {
@@ -115,7 +117,7 @@
 
 <body>
     <div class="login-container">
-        <span class="close-btn">&times;</span>
+        <span class="close-btn"></span>
         <h2>한국대학교 수강신청</h2>
         <input type="text" placeholder="아이디/학번 입력">
         <input type="password" placeholder="비밀번호 입력">

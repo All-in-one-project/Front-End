@@ -6,7 +6,7 @@
     }
   
     /* Styles for the LoginContainer component */
-    .App {
+    .login-container {
       width: 300px;
       margin: 100px auto;
       padding: 20px;
@@ -18,7 +18,7 @@
       height: 310px;
     }
   
-    .App h2 {
+    .login-container h2 {
       font-size: 24px;
       margin-bottom: 20px;
     }

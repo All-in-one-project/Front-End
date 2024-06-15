@@ -1,10 +1,12 @@
-// LoginForm.jsx
 import React, { useState } from 'react';
-import '../App.css'; // CSS 파일을 import합니다. 파일 경로는 실제 프로젝트 구조에 따라 다를 수 있습니다.
+import { useHistory } from 'react-router-dom';
+import '../App.css';
 
-function LoginForm() {
+function Login() {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const history = useHistory(); // useHistory 훅을 사용하여 페이지 이동을 제어
 
   const handleIdChange = (event) => {
     setId(event.target.value);
@@ -15,14 +17,26 @@ function LoginForm() {
   };
 
   const handleLogin = async (event) => {
-    event.preventDefault(); // 페이지 새로고침 방지
-    // 로그인 처리 코드...
-    console.log('Login attempt:', { id, password });
+    event.preventDefault(); 
+
+    if (id === 'test' && password === 'password') {
+      // 로그인 성공 시 홈 페이지로 이동
+      history.push('/home');
+    } else {
+      // 로그인 실패 시 에러 메시지 표시
+      setError('다시 입력하세요');
+    }
+  };
+
+  const handleClose = () => {
+    history.goBack(); // 이전 페이지로 이동, x동그라미 클릭시
   };
 
   return (
-    <div className="App"> {/* App 클래스를 div로 감싸서 스타일 적용 */}
-      <form onSubmit={handleLogin} className="login-form">
+    <div className="login-container"> {/* login-container 클래스를 적용 */}
+      <span className="close-btn" onClick={handleClose}></span> {/* close-btn 클릭 시 handleClose 호출 , x동그라미*/}
+      <h2>한국대학교 수강신청</h2>
+      <form onSubmit={handleLogin}>
         <div>
           <input 
             id="id" 
@@ -42,13 +56,18 @@ function LoginForm() {
             onChange={handlePasswordChange} 
             placeholder="비밀번호 입력" 
             required 
-            className="login-input" // 동일하게 input 스타일 적용
+            className="login-input" 
           />
         </div>
-        <button type="submit" className="login-button">로그인</button> {/* 버튼 스타일 적용을 위해 className 추가 */}
+        {error && <div className="error-message">{error}</div>} {/* 에러 메시지 표시 */}
+        <button type="submit" className="login-button">로그인</button> 
       </form>
-    </div>
+       <div className="separator"></div> 
+       <div className="forgot-password"> 
+         <a href="#">아이디 / 비밀번호 찾기</a>
+       </div>
+     </div>
   );
 }
 
-export default LoginForm;
+export default Login;

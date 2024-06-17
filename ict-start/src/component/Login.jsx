@@ -40,12 +40,12 @@ function Login() {
         <div>
           <input 
             id="id" 
-            type="text" 
+            type="login" 
             value={id} 
             onChange={handleIdChange} 
             placeholder="아이디/학번 입력" 
             required 
-            className="login-input" // input 스타일 적용을 위해 className 추가
+            className="login-input" //  스타일 적용을 위해 className 추가
           />
         </div>
         <div>

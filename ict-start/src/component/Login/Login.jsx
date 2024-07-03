@@ -1,27 +1,39 @@
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import '../App.css';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import '../../App.css';
+import axios from 'axios';
 
 function Login() {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const history = useHistory(); // useHistory 훅을 사용하여 페이지 이동을 제어
+  const navigate = useNavigate(); 
 
 
   const handleLogin = async (event) => {
     event.preventDefault(); 
-    if (id === 'test' && password === 'password') {
+      try {
+      const response = await axios.post('/student/login', {
+        student_number: id,
+        password: password,
+        token: 'generatedJWTToken' 
+      });
+
+    if (response.data.success) {
       // 로그인 성공 시 홈 페이지로 이동
-      history.push('/home');
+      navigate('/home');
     } else {
       // 로그인 실패 시 에러 메시지 표시
       setError('다시 입력하세요');
     }
+     } catch (error) {
+      console.error('로그인 중 오류 발생:', error);
+      setError('로그인 중 오류가 발생했습니다.');
+    }
   };
 
   const handleClose = () => {
-    history.goBack(); // 이전 페이지로 이동, x동그라미 클릭시
+    navigate(-1); // 이전 페이지로 이동, x동그라미 클릭시
   };
 
   return (
@@ -32,7 +44,7 @@ function Login() {
         <div>
           <input 
             id="id" 
-            type="login" 
+            type="text" 
             value={id} 
             onChange={(event)=>setId(event.target.value)}
             placeholder="아이디/학번 입력" 

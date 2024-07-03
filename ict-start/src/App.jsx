@@ -1,22 +1,16 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import './App.css';
-import Login from './component/Login';
-import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 
-function Home() {
-  return <h2>홈페이지</h2>;
-}
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import '././App.css';
+import Login from './component/Login/Login.jsx';
 
 function App() {
+
   return (
     <BrowserRouter>
-      <div>
-        <Switch>
-          <Route path="/" exact component={Login} />
-          <Route path="/home" component={Home} />
-        </Switch>
-      </div>
+        <Routes>
+          <Route path='/student/login' element={<Login />}/> {/*exact는 "/" 이게 정확히 일치할경우에만 출력되는*/}
+        </Routes>
     </BrowserRouter>
   );
 }

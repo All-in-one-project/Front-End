@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>예비수강신청 페이지</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /*왼쪽바---------------------*/
+
+        .left-bar {
+            width: 300px;
+            height: 620px;
+            padding: 25px;
+            background-color: #637ABF;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: white;
+        }
+
+        .left-bar .title h3 {
+            margin-top: 5px;
+            color:white;
+            margin: 15px 24px;
+            justify-content:center;
+        }
+        
+        .left-bar .title{
+            width: 150px;
+            height: 80px;
+            border: 1px solid white;
+            border-radius: 20px 20px; 
+        }
+        
+       
+
+        .left-bar .user-info,
+        .left-bar .credits-info {
+            margin: 20px 1px 10px;
+        }
+
+        .left-bar .user-info div,
+        .left-bar .credits-info div{
+            margin: 10px ;
+        }
+
+
+        .left-bar button {
+            margin-top: 5px;
+            padding: 15px;
+            border: 1px solid white;
+            cursor: pointer;
+            background-color: #637ABF;
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+            border-radius: 10px 10px; 
+        }
+
+
+
+        /*중간---------------------*/
+
+        .main-content {
+            flex: 1;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            margin-left: 35px;
+        }
+
+        .navbar,
+        .sub-navbar {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px ;
+        }
+
+        .navbar button {
+            padding: 10px;
+            border: 1px, solid rgb(104, 103, 103);
+            cursor: pointer;
+            background-color:rgb(212, 216, 243);
+            border-radius: 15px 15px; 
+            font-weight: bold;
+            font-size: 15px;
+            color:rgb(104, 103, 103);
+            margin: 0 10px;
+            width:150px;
+            &.application{
+                background:#637ABF;
+                color:white;
+            }
+
+        }
+        
+        
+        .sub-navbar button{
+            padding: 0px 130px;
+            height: 40px;
+            border: 1px, solid rgb(104, 103, 103);
+            cursor: pointer;
+            background-color:rgb(212, 216, 243);
+            border-radius: 10px 10px; 
+            font-weight: bold;
+            font-size: 15px;
+            color:rgb(104, 103, 103);
+            margin: 0px -10px;
+             
+        }
+        /*js 에서 사용하려고, 예비, 일반수강신청 선택된 박스는 앞으로 나오게*/
+        .sub-navbar button.selected {
+            background-color: #637ABF; /* 파란색 배경 */
+            color: white; /* 하얀색 글자 */
+            transform: translateY(-1px); /* 앞으로 튀어나오게  */
+        }
+
+        .sub-navbar button:last-child {
+            margin-right: 0;
+        }
+        
+
+      /*선택사항들*/
+
+        .section {
+            margin: 10px 0;
+        }
+
+        .section-title {
+            font-size: 15px;
+            margin-bottom: 10px;
+            font-weight:bold;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 10px;
+
+            & div{
+                  border: 2px solid #637ABF;
+                  padding: 7px;            
+                  text-align: center;       
+                  border-radius: 10px;       
+                  grid-column: span 2;   
+                  font-size: 13px;  
+                  font-weight: bold;
+                  color:rgb(104, 108, 109);
+            }
+                  
+        }
+
+        
+        .department-container,
+        .year-container{
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+            
+            & div{
+                  border: 2px solid #637ABF;
+                  padding: 5px;            
+                  text-align: center;      
+                  border-radius: 10px;       
+                  grid-column: span 1;   
+                  font-size: 15px;  
+                  width: 100px;             /* 상자 너비 */
+                  height: 20px;  
+                  font-size: 13px;
+                  font-weight: bold;
+                  color:rgb(104, 108, 109);
+            }
+
+        }
+
+
+
+
+
+
+        /*강의 목록 상자들*/
+        .lecture-container{
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .lecture-box {
+             border: 2px solid #637ABF;
+             width: 163px;  /* 너비를 150px로 설정 */
+             height: 90px;
+             border-radius: 10px;
+             font-size: 13px;
+             color: rgb(104, 108, 109);
+             padding: 8px 2px; /* 내부 여백 추가 */
+             box-sizing: border-box; /* 패딩과 테두리를 width와 height에 포함시킴 */
+        }
+
+       
+
+       
+        .lecture-box div {
+            margin-left: 10px;
+            font-size:13px; 
+        }
+        .lecture-box .name {
+            font-size: 15px; 
+            font-weight: bold;
+            color:black;
+        }
+        .lecture-box .top-row {
+             display: flex;
+             justify-content: space-between;
+            margin:0 10px;
+            margin-top:-3px;     
+        }
+        .lecture-box .top-row div:first-child {
+            transform: translateX(-10px); /* 첫 번째 항목을 왼쪽으로 이동 */
+        }
+        
+
+        .lecture-box button {
+          width: 200px;
+           height: 20px;
+           padding: 0px 0px;
+           font-weight: bold;
+           border-radius: 8px;
+            cursor: pointer;
+            margin: 0 2px; /* 버튼 사이 간격 추가 */
+            font-size:11px;
+
+        }
+       
+
+        .lecture-box .buttons {
+             display: flex;
+             justify-content: space-between;  
+             margin-top: 3px;
+             
+        }
+
+
+        .lecture-box button.plan {
+            background-color: rgb(212, 216, 243);
+            border: 1px solid black;
+            color:rgb(104, 108, 109);
+            font-weight:bold;
+        }
+         .lecture-box button.basket {
+            background-color: #637ABF;
+            border: none;
+            color:white;
+            font-weight:bold;
+        }
+
+
+
+
+         /*오른쪽바---------------------*/
+
+   .right-bar {
+    padding: 5px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-top: 10px;    
+}
+
+.right-bar .section {
+    margin-bottom: 30px;
+}
+
+.right-bar input {
+    width: 50%;
+    height: 15px; 
+    padding: 10px 10px;
+    margin: 5px;
+    border: none;
+    background-color: #e7e7e7; 
+    border-radius: 10px;
+}
+
+.section input {
+    width: 100%;
+    height: 15px; 
+    padding: 10px 10px;
+    margin: 5px;
+    border: none;
+    background-color: #e7e7e7; 
+    border-radius: 10px;
+}
+
+.right-bar button {
+    width: 70%;
+    height: 30px; /* 높이 변경 */
+    padding: 0px 10px;
+    margin: 5px;
+    border: none;
+    font-size: 10px;
+    font-weight: bold;
+    color: rgb(104, 108, 109); 
+    background-color: rgb(204, 204, 204);
+    border-radius: 10px;
+}
+
+.right-bar .section-title {
+    font-weight: bold;
+    margin-left: 5px;
+    color: rgb(100, 101, 101); 
+}
+
+.section button.cart-btn {
+    background-color: #637ABF; 
+    width: 100%;
+    height: 30px; /* 높이 변경 */
+    padding: 0px 10px;
+    margin: 5px;
+    border: none;
+    font-weight: bold;
+    font-size:10px;
+    color:white;
+    border-radius: 10px;
+}
+
+.lecture-list {
+    padding: 0;
+    margin: 0;
+}
+
+.lecture-list .lecture-item {
+    background-color: #e7e7e7;
+    border-radius: 10px;
+    padding: 3px;
+    margin: 1px 1px;
+    width: 250px;
+}
+
+.lecture-list .lecture-name {
+    margin-left: 10px;
+    font-size: 11px;
+    color: rgb(100, 101, 101);
+}
+
+.lecture-list .info-btn, .lecture-list .apply-btn {
+    width: 45px;
+    height: 25px;
+    margin-left: 5px;
+    background-color: rgb(204, 204, 204);
+    color: rgb(104, 108, 109);
+    border: none;
+    border-radius: 5px;
+    font-size: 10px;
+    cursor: pointer;
+}
+
+.lecture-list .apply-btn {
+    background-color: #637ABF;
+    color: white;
+}
+
+/* 과목 코드 직접 입력 섹션에 대한 CSS */
+.section-subject input {
+    width: 100%;
+    height: 15px; 
+    padding: 10px 10px;
+    margin: 5px;
+    border: none;
+    background-color: #e7e7e7; 
+    border-radius: 10px;
+}
+
+.section-subject .cart-btn {
+    background-color: #637ABF; 
+    width: 100%;
+    height: 30px; /* 높이 변경 */
+    padding: 0px 10px;
+    margin: 5px;
+    border: none;
+    font-weight: bold;
+    font-size:10px;
+    color:white;
+    border-radius: 10px;
+}
+
+
+
+    </style>
+</head>
+
+<body>
+    <!-- 왼쪽 사이드바 -->
+    <div class="left-bar">
+        <div>
+            <div class="title">
+            <h3>
+                한국대학교 
+                 수강신청
+            </h3>
+            </div>
+            <div class="user-info">
+                <div>이름 홍길동</div>
+                <div>학번 12345678</div>
+                <h4>학과 (부전공)</h4>
+                <div>컴퓨터공학과</div>
+                <div>(없음)</div>
+            </div>
+
+            <hr style="border: 1px solid white;">
+            <div class="credits-info">
+                <h4>학점 정보 (부전공)</h4>
+                <div>총합 /130</div>
+                <div>전핵 /24</div>
+                <div>전선 /48</div>
+                <div>전교 /9</div>
+                <div>전취 /3</div>
+            </div>
+            <h4>전체 정보 보기</h4>
+            <div>
+                <hr style="border: 1px solid white;">
+            </div>
+        </div>
+        <button>로그아웃</button>
+    </div>
+
+
+
+
+
+
+
+    <!-- 메인 컨텐츠 -->
+    <div class="main-content">
+        <!-- 상단 네비게이션 바 -->
+        <div class="navbar">
+            <button>공지사항</button>
+            <button>과목조회</button>
+            <button class="application" >수강신청</button>
+            <button>마이페이지</button>
+        </div>
+
+        <!-- 하위 네비게이션 바 -->
+        <div class="sub-navbar">
+            <button  class="sub-navbar-btn">예비수강신청</button>
+            <button  class="sub-navbar-btn">일반수강신청</button>
+        </div>
+
+        <!-- 단과대 선택 섹션 -->
+        <div class="section">
+            <div class="section-title">단과대 선택</div>
+            <div class="grid-container">
+                <div>ICT융합과학대학</div>
+                <div>건강과학대학</div>
+                <div>음악대학</div>
+                <div>법학대학</div>
+                <div>자연과학대학</div>
+                <div>공과대학</div>
+                <div>인문사회대학</div>
+                <div>미술대학</div>
+                <div>체육대학</div>
+                <div>교양대학</div>
+            </div>
+        </div>
+
+        <!-- 학부 및 학과 선택 섹션 -->
+        <div class="section">
+            <div class="section-title">학부 및 학과 선택</div>
+            <div class="department-container">
+                <div>컴퓨터공학부</div>
+                <div>데이터과학부</div>
+                <div>정보통신학부</div>
+            </div>
+        </div>
+
+        <!-- 학년 선택 섹션 -->
+        <div class="section">
+            <div class="section-title">학년 선택</div>
+            <div class="year-container">
+                <div>1학년</div>
+                <div>2학년</div>
+                <div>3학년</div>
+                <div>4학년</div>
+            </div>
+        </div>
+
+        <!-- 강의 목록 섹션 -->
+        <div class="section">
+            <div class="lecture-container">
+                <div class="lecture-box">
+                    <div class="top-row">
+                        <div>21032-001</div>
+                        <div>[전핵]</div>
+                    </div>
+                        <div class="name">컴퓨터 네트워크</div>
+                        <div calss="time">교수 김철수 | 월 1,2,3</div>
+                        <div class="buttons">
+                            <button class="basket">장바구니</button> 
+                            <button class="plan">강의 계획서</button>
+                        </div>
+                </div>
+                <div class="lecture-box">
+                    <div class="top-row">
+                        <div>21032-001</div>
+                        <div>[전선]</div>
+                    </div>
+                    <div class="name">자바</div>
+                    <div>교수 유정 | 월 5,6,7,8</div>
+                    <div class="buttons">
+                        <button class="basket">장바구니</button>
+                        <button class="plan">강의 계획서</button>
+                    </div>
+                </div>
+
+                <div class="lecture-box">
+                    <div class="top-row">
+                        <div>20930-001</div>
+                        <div>[전선]</div>
+                    </div>
+                    <div class="name">웹 프로그래밍</div>
+                    <div>교수 민경식 | 수 2,3,4</div>
+                    <div class="buttons">
+                        <button class="basket">장바구니</button>
+                        <button class="plan">강의 계획서</button>
+                    </div>
+                </div>
+                <div class="lecture-box">
+                    <div class="top-row">
+                        <div>20931-012</div>
+                        <div>[전선]</div>
+                    </div>
+                    <div class="name">소프트웨어 공학</div>
+                    <div>교수 최지우 | 목 6,7,8</div>
+                    <div class="buttons">
+                        <button class="basket">장바구니</button>
+                        <button class="plan">강의 계획서</button>
+                    </div>
+                </div>
+                <div class="lecture-box">
+                    <div class="top-row">
+                        <div>21032-001</div>
+                        <div>[전핵]</div>
+                    </div>
+                    <div class="name">캡스톤 디자인 1</div>
+                    <div>교수 김철수 | 수 5,6,7,</div>
+                    <div class="buttons">
+                        <button class="basket">장바구니</button>
+                        <button class="plan">강의 계획서</button>
+                    </div>
+                </div>
+                <div class="lecture-box">
+                    <div class="top-row">
+                        <div>21032-001</div>
+                        <div>[전선]</div>
+                    </div>
+                    <div class="name">인공지능</div>
+                    <div>교수 김철수 | 금 2,3,4</div>
+                    <div class="buttons">
+                        <button class="basket">장바구니</button>
+                        <button class="plan">강의 계획서</button>
+                    </div>
+                </div>
+                <div class="lecture-box">
+                    <div class="top-row">
+                        <div>21032-001</div>
+                        <div>[전교]</div>
+                    </div>
+                    <div class="name">확률과 통계</div>
+                    <div>교수 김철수 | 화 1,2,3</div>
+                    <div class="buttons">
+                        <button class="basket">장바구니</button>
+                        <button class="plan">강의 계획서</button>
+                    </div>
+                </div>
+                <div class="lecture-box">
+                    <div class="top-row">
+                        <div>21032-001</div>
+                        <div>[전선]</div>
+                    </div>
+                    <div class="name">데이터 베이스 관리</div>
+                    <div>교수 김철수 | 목 1,2,3</div>
+                    <div class="buttons">
+                        <button class="basket">장바구니</button>
+                        <button class="plan">강의 계획서</button>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+<!-- 오른쪽 사이드바 -->
+<div class="right-bar">
+    <!-- 강의명으로 조회 후 신청 -->
+    <div class="section">
+        <div class="section-title">강의명으로 조회 후 신청</div>
+        <input type="text" placeholder="강의명 검색" />
+        <button type="button" clss="more">더보기</button>
+    </div>
+
+    <!-- 강의 리스트 -->
+    <div class="lecture-list">
+        <div class="lecture-item">
+            <span class="lecture-name">20세기 한국사 (월4,5)</span>
+            <button class="info-btn">정보</button>
+            <button class="apply-btn">신청</button>
+        </div>
+        <div class="lecture-item">
+            <span class="lecture-name">경제학 입문 (화3,4)</span>
+            <button class="info-btn">정보</button>
+            <button class="apply-btn">신청</button>
+        </div>
+        <div class="lecture-item">
+            <span class="lecture-name">프로그래밍 기초 (수1,2)</span>
+            <button class="info-btn">정보</button>
+            <button class="apply-btn">신청</button>
+        </div>
+        <div class="lecture-item">
+            <span class="lecture-name">심리학 개론 (목2,3)</span>
+            <button class="info-btn">정보</button>
+            <button class="apply-btn">신청</button>
+        </div>
+    </div>
+    </div>
+
+    <!-- 과목 코드 직접 입력 -->
+    <div class="section-subject">
+        <div class="section-title">과목 코드 직접 입력</div>
+        <input type="text" placeholder="과목 코드 입력" class="subject-code"/>
+        <input type="text" placeholder="분반 코드 입력" />
+        <button type="button" class="cart-btn">장바구니 담기</button>
+    </div>
+
+</body>
+
+
+<script>
+ document.addEventListener('DOMContentLoaded', function () {
+        const subNavbarButtons = document.querySelectorAll('.sub-navbar-btn');
+
+        function handleClick(event) {
+            // 모든 버튼의 스타일을 초기화
+            subNavbarButtons.forEach(button => {
+                button.classList.remove('selected');
+            });
+
+            // 클릭된 버튼의 스타일 변경
+            event.target.classList.add('selected');
+        }
+
+        // 각 버튼에 클릭 이벤트 리스너 추가
+        subNavbarButtons.forEach(button => {
+            button.addEventListener('click', handleClick);
+        });
+    });
+
+
+
+
+    
+    // 단과대 선택 상자 클릭 이벤트 처리
+            const gridContainers = document.querySelectorAll('.grid-container div');
+                 gridContainers.forEach(container => {
+                container.addEventListener('click', () => {
+                    toggleSelectedStyle(container, gridContainers);
+                });
+    });
+
+            // 학부 및 학과 선택 상자 클릭 이벤트 처리
+            const departmentContainers = document.querySelectorAll('.department-container div');
+                departmentContainers.forEach(container => {
+                container.addEventListener('click', () => {
+                    toggleSelectedStyle(container, departmentContainers);
+                });
+    });
+
+            // 학년 선택 상자 클릭 이벤트 처리
+            const yearContainers = document.querySelectorAll('.year-container div');
+                yearContainers.forEach(container => {
+                container.addEventListener('click', () => {
+                    toggleSelectedStyle(container, yearContainers);
+                });
+    });
+
+            // 모든 상자 요소 선택
+            const boxes = document.querySelectorAll('.year-container div, .department-container div, .grid-container div');
+
+            // 선택된 상자의 스타일을 토글하는 함수
+            function toggleSelectedStyle(selectedContainer, containers) {
+                containers.forEach(container => {
+                    container.style.backgroundColor = 'white';
+                    container.style.color = 'rgb(104, 108, 109)';
+                });
+                 selectedContainer.style.backgroundColor = '#637ABF';
+                 selectedContainer.style.color = 'white';
+    }
+    
+
+</script>
+
+</html>

@@ -1,0 +1,139 @@
+<html>
+    <body>
+    <!-- 왼쪽 사이드바 -->
+    <div class="left-bar">
+        <div>
+            <div class="title">
+                <h3>
+                    한국대학교<br>
+                    <div>수강신청</div>
+                </h3>
+            </div>
+            <div class="user-info">
+                <div>이름 홍길동</div>
+                <div>학번 12345678</div>
+                <h4>학과 (부전공)</h4>
+                <div>컴퓨터공학과</div>
+                <div>(없음)</div>
+            </div>
+
+            <hr style="border: 1px solid white;">
+            <div class="credits-info">
+                <h4>학점 정보 (부전공)</h4>
+                <div>총합 /130</div>
+                <div>전핵 /24</div>
+                <div>전선 /48</div>
+                <div>전교 /9</div>
+                <div>전취 /3</div>
+            </div>
+            <h4>전체 정보 보기</h4>
+            <div>
+                <hr style="border: 1px solid white;">
+            </div>
+        </div>
+        <button>로그아웃</button>
+    </div>
+
+
+
+
+
+
+
+    <!-- 메인 컨텐츠 -->
+    <div class="main-content">
+        <!-- 상단 네비게이션 바 -->
+        <div class="navbar">
+            <button>공지사항</button>
+            <button>과목조회</button>
+            <button class="active">수강신청</button>
+            <button>마이페이지</button>
+        </div>
+
+        <!-- 하위 네비게이션 바 -->
+        <div class="sub-navbar">
+            <button class="active">예비수강신청</button>
+            <button>일반수강신청</button>
+        </div>
+
+        <!-- 단과대 선택 섹션 -->
+        <div class="section">
+            <div class="section-title">단과대 선택</div>
+            <div class="grid-container">
+                <div>ICT융합과학대학</div>
+                <div>음악대학</div>
+                <!-- 다른 단과대 추가 -->
+            </div>
+        </div>
+
+        <!-- 학부 및 학과 선택 섹션 -->
+        <div class="section">
+            <div class="section-title">학부 및 학과 선택</div>
+            <div class="department-container">
+                <div>컴퓨터공학부</div>
+                <div>전자공학부</div>
+                <!-- 다른 학부 및 학과 추가 -->
+            </div>
+        </div>
+
+        <!-- 학년 선택 섹션 -->
+        <div class="section">
+            <div class="section-title">학년 선택</div>
+            <div class="grid-container">
+                <div>1학년</div>
+                <div>2학년</div>
+                <div>3학년</div>
+                <div>4학년</div>
+            </div>
+        </div>
+
+        <!-- 강의 목록 섹션 -->
+        <div class="section">
+            <div class="section-title">강의 목록</div>
+            <div class="grid-container">
+                <div class="lecture-box">
+                    <div>과목코드: CS101</div>
+                    <div>강의이름: 컴퓨터 개론</div>
+                    <div>교수: 홍길동</div>
+                    <div>시간: 월/수 10:00 - 11:30</div>
+                    <button>장바구니</button>
+                    <button class="plan">강의 계획서</button>
+                </div>
+                <div class="lecture-box">
+                    <div>과목코드: CS102</div>
+                    <div>강의이름: 자료 구조</div>
+                    <div>교수: 이순신</div>
+                    <div>시간: 화/목 13:00 - 14:30</div>
+                    <button>장바구니</button>
+                    <button class="plan">강의 계획서</button>
+                </div>
+                <!-- 다른 강의들 추가 -->
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <!-- 오른쪽 사이드바 -->
+    <div class="right-bar">
+        <!-- 강의명으로 조회 후 신청 -->
+        <div class="section">
+            <div class="section-title">강의명으로 조회 후 신청</div>
+            <input type="text" placeholder="강의명 검색" />
+            <button type="button">더보기</button>
+        </div>
+
+        <!-- 과목 코드 직접 입력 -->
+        <div class="section">
+            <div class="section-title">과목 코드 직접 입력</div>
+            <input type="text" placeholder="과목 코드 입력" />
+            <input type="text" placeholder="분반 코드 입력" />
+            <button type="button">장바구니 담기</button>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -2,9 +2,6 @@
 <html lang="ko">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>예비수강신청 페이지</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -266,7 +263,7 @@
 
 
 
-         /*오른쪽바---------------------*/
+ /*오른쪽바---------------------*/
 
    .right-bar {
     padding: 5px;
@@ -274,12 +271,11 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    margin-top: 10px;    
+    margin-top: 150px;    
+    margin-left:20px;
 }
 
-.right-bar .section {
-    margin-bottom: 30px;
-}
+
 
 .right-bar input {
     width: 50%;
@@ -290,22 +286,19 @@
     background-color: #e7e7e7; 
     border-radius: 10px;
 }
-
+/*강의명 검색*/
 .section input {
-    width: 100%;
+    width: 77%;
     height: 15px; 
-    padding: 10px 10px;
-    margin: 5px;
+    margin:0px 0px;
     border: none;
     background-color: #e7e7e7; 
     border-radius: 10px;
 }
 
 .right-bar button {
-    width: 70%;
-    height: 30px; /* 높이 변경 */
-    padding: 0px 10px;
-    margin: 5px;
+    width: 85%;
+    height: 24px; 
     border: none;
     font-size: 10px;
     font-weight: bold;
@@ -314,83 +307,104 @@
     border-radius: 10px;
 }
 
-.right-bar .section-title {
+/*강의명으로 조회 후 신청*/
+.section .section-title {
     font-weight: bold;
-    margin-left: 5px;
+    margin:6px 0px;
     color: rgb(100, 101, 101); 
 }
 
-.section button.cart-btn {
-    background-color: #637ABF; 
-    width: 100%;
-    height: 30px; /* 높이 변경 */
-    padding: 0px 10px;
-    margin: 5px;
-    border: none;
-    font-weight: bold;
-    font-size:10px;
-    color:white;
-    border-radius: 10px;
-}
 
+
+/*강의 리스트들 전체적인 섹션*/
 .lecture-list {
     padding: 0;
     margin: 0;
+    margin-bottom: 90px;
 }
 
+/*강의 리스트*/
 .lecture-list .lecture-item {
     background-color: #e7e7e7;
     border-radius: 10px;
     padding: 3px;
     margin: 1px 1px;
-    width: 250px;
+    width: 230px;
+    height:25px;
+    margin-bottom:8px;
+    display:flex;
+    justify-content: space-between; /* 버튼 위치 조정 */
+    align-items: center; /* 버튼 수직 정렬 */
 }
 
+/*강의이름*/
 .lecture-list .lecture-name {
     margin-left: 10px;
     font-size: 11px;
     color: rgb(100, 101, 101);
+    flex:1;
 }
 
-.lecture-list .info-btn, .lecture-list .apply-btn {
+/*정보버튼*/
+.lecture-list .info-btn{
     width: 45px;
     height: 25px;
     margin-left: 5px;
-    background-color: rgb(204, 204, 204);
+    background-color: rgb(212, 216, 243);
     color: rgb(104, 108, 109);
-    border: none;
-    border-radius: 5px;
-    font-size: 10px;
+    border: 1px;
+    border-radius: 10px;
+    font-size: 11px;
     cursor: pointer;
+    border: 1px solid rgb(104, 108, 109);
 }
 
+/*신청 버튼*/
 .lecture-list .apply-btn {
+      width: 45px;
+    height: 25px;
+    margin-left: 5px;
     background-color: #637ABF;
     color: white;
+    border: 1px;
+    border-radius: 10px;
+    font-size: 11px;
+    cursor: pointer;
+
+
 }
 
-/* 과목 코드 직접 입력 섹션에 대한 CSS */
+/*----------------------*/
+
+/* 과목 코드 직접 입력 제목*/
+.section-subject .section-title {
+    font-weight: bold;
+    margin:6px 5px;
+    color: rgb(100, 101, 101); 
+}
+
+/*과목코드,분반코드 입력*/
 .section-subject input {
-    width: 100%;
-    height: 15px; 
+    width: 70%;
+    height: 10px; 
     padding: 10px 10px;
-    margin: 5px;
     border: none;
     background-color: #e7e7e7; 
     border-radius: 10px;
+    margin-bottom:1px;
 }
 
+/*장바구니 버튼*/
 .section-subject .cart-btn {
     background-color: #637ABF; 
-    width: 100%;
-    height: 30px; /* 높이 변경 */
-    padding: 0px 10px;
-    margin: 5px;
+    width: 77%;
+    height: 30px; 
     border: none;
     font-weight: bold;
-    font-size:10px;
+    font-size:15px;
     color:white;
-    border-radius: 10px;
+    border-radius: 13px;
+    margin:5px 5px;
 }
 
 
@@ -609,7 +623,6 @@
     <div class="section">
         <div class="section-title">강의명으로 조회 후 신청</div>
         <input type="text" placeholder="강의명 검색" />
-        <button type="button" clss="more">더보기</button>
     </div>
 
     <!-- 강의 리스트 -->
@@ -634,8 +647,10 @@
             <button class="info-btn">정보</button>
             <button class="apply-btn">신청</button>
         </div>
+        <button type="button" clss="more">더보기</button>
     </div>
-    </div>
+    
+    
 
     <!-- 과목 코드 직접 입력 -->
     <div class="section-subject">
@@ -644,6 +659,7 @@
         <input type="text" placeholder="분반 코드 입력" />
         <button type="button" class="cart-btn">장바구니 담기</button>
     </div>
+</div>
 
 </body>
 

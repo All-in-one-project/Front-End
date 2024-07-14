@@ -9,20 +9,19 @@ function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  {/*로그인 버튼 눌를시*/}
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
       const response = await axios.post('/login', {
         student_number: id,
         password: password,
-        token: 'generatedJWTToken',
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-        }
+        token: 'generatedJWTToken', // 실제로는 서버에서 생성된 JWT 토큰이어야 함
       });
 
-      if (response.data.student_id) {
+
+       // 서버로부터 받은 응답을 처리합니다.
+      if (response.status === 200 && response.data.student_id) {
         // 로그인 성공 시 토큰을 로컬 스토리지에 저장
         localStorage.setItem('token', response.data.token);
         navigate('/');
@@ -30,8 +29,13 @@ function Login() {
         setError('다시 입력하세요');
       }
     } catch (error) {
-      console.error('로그인 중 오류 발생:', error);
-      setError('로그인 중 오류가 발생했습니다.');
+      if (error.response) {
+        // 서버 응답이 있는 경우
+        setError(error.response.data.message || '로그인 중 오류가 발생했습니다.');
+      } else {
+        // 서버 응답이 없는 경우
+        setError('서버에 연결할 수 없습니다.');
+      }
     }
   };
 

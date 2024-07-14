@@ -1,10 +1,10 @@
-/* Styles applied to the entire App */
+/* 전체 App에 적용되는 스타일 */
 body {
     background-color: white;
     font-family: Arial, sans-serif;
 }
 
-/* Styles for the Login component */
+/* Login 컴포넌트에 대한 스타일 */
 .login-container {
     width: 300px;
     margin: 100px auto;
@@ -22,6 +22,7 @@ body {
     margin-bottom: 20px;
 }
 
+/*아이디 비번 입력창*/
 .login-input {
     width: 60%;
     padding: 10px;
@@ -32,12 +33,16 @@ body {
     height: 45px;
     background-color: rgb(212, 216, 243);
     font-size: 18px;
+   
 }
 
 .login-input::placeholder {
     color: black;
 }
 
+
+
+/*로그인 버튼*/
 .login-button {
     width: 60%;
     height: 45px;
@@ -61,7 +66,7 @@ body {
     margin-top: 10px;
 }
 
-/* Styles for the ForgotPasswordLink component */
+/* 아이디/ 비번 잃어버림 컴포넌트에 대한 스타일 */
 .forgot-password {
     font-size: 15px;
     color: black;
@@ -71,7 +76,7 @@ body {
     color: black;
 }
 
-/* Styles for the Separator component */
+/* 검정 줄 */
 .separator {
     width: 90%;
     height: 0.5px;
@@ -79,7 +84,7 @@ body {
     margin: 10px auto;
 }
 
-/* Styles for the CloseButton component */
+/* x동그라미 버튼 */
 .close-btn {
     position: absolute;
     top: 15px;
@@ -87,6 +92,7 @@ body {
     width: 24px;
     height: 24px;
     background-color: rgb(104, 103, 103);
+    color:white;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -94,13 +100,16 @@ body {
     cursor: pointer;
 }
 
+/*X표시를 뜻함*/
 .close-btn::before,
 .close-btn::after {
     content: '';
     position: absolute;
     width: 3px;
     height: 15px;
-    background-color: white;
+    background-color: white; /*X표시를 뜻함*/
+    
+    /* X 표시를 검정색으로 변경 */
 }
 
 .close-btn::before {

@@ -1,0 +1,6 @@
+{
+  "lectures": [
+    { "id": 1, "professor": "교수 A", "subject": "과목 A", "time": "월 1,2" },
+    { "id": 2, "professor": "교수 B", "subject": "과목 B", "time": "화 3,4" }
+  ]
+}

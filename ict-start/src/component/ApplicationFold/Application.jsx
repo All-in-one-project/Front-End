@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import './Application_css.css';
+import styles from './Application.module.css';
 import { useNavigate } from 'react-router-dom'; // React Router 사용
 
 function Application() {
@@ -27,8 +27,7 @@ function Application() {
   const navigate = useNavigate(); // React Router의 useNavigate 사용
   const handleNavClick = (path) => {
     navigate(path);
-    };
-
+  };
 
   useEffect(() => {
     if (selectedGridContainer && selectedDepartmentContainer && selectedYearContainer.length > 0) {
@@ -38,14 +37,10 @@ function Application() {
     }
   }, [selectedGridContainer, selectedDepartmentContainer, selectedYearContainer]);
 
-
-
- 
   const handleLogout = () => {
     console.log('로그아웃되었습니다.');
     navigate('/'); // 초기화면으로 리디렉션
   };
-
 
   /*단과대 섹션에서 단과대 선택을 뭘하냐에 따라 학부 나오게 하는*/
   const handleGridContainerClick = (container) => {
@@ -60,7 +55,6 @@ function Application() {
       alert('단과대는 1개만 선택할 수 있습니다.');
     }
   };
-
 
   const handleDepartmentContainerClick = (container) => {
     if (selectedDepartmentContainer === container) {
@@ -82,8 +76,6 @@ function Application() {
     }
   };
 
-
-
   const togglePopup = (type) => {
     setPopupType(type); // 팝업창 타입 설정
     setIsPopupVisible(!isPopupVisible); // 팝업창 토글 함수
@@ -93,19 +85,19 @@ function Application() {
     switch (popupType) {
       case 'totalInfo':
         return (
-          <button className="close-btn-totalInfo" onClick={() => togglePopup('')}>
+          <button className={styles['close-btn-totalInfo']} onClick={() => togglePopup('')}>
             ✖
           </button>
         );
       case 'moreLectures':
         return (
-          <button className="close-btn-moreLectures" onClick={() => togglePopup('')}>
+          <button className={styles['close-btn-moreLectures']} onClick={() => togglePopup('')}>
             ✖
           </button>
         );
       default:
         return (
-          <button className="close-btn" onClick={() => togglePopup('')}>
+          <button className={styles['close-btn']} onClick={() => togglePopup('')}>
             X
           </button>
         );
@@ -189,31 +181,31 @@ function Application() {
   }, [selectedGridContainer, selectedDepartmentContainer, selectedYearContainer]);
 
   const MainLectureItem = ({ lecture }) => (
-    <div className="lecture-box">
-      <div className="top-row">
+    <div className={styles['lecture-box']}>
+      <div className={styles['top-row']}>
         <div>{lecture.id}</div>
-        <div className="category">{lecture.category}</div> {/* category를 추가하여 오른쪽으로 배치 */}
+        <div className={styles['category']}>{lecture.category}</div> {/* category를 추가하여 오른쪽으로 배치 */}
       </div>
-      <div className="name">{lecture.name}</div> {/* name을 아래로 이동 */}
-      <div className="time">교수 {lecture.professor} | {lecture.time}</div> {/* 교수와 시간을 표시 */}
-      <div className="buttons">
-        <button className="plan" onClick={() => fetchLecturePlan(lecture.id)}>강의 계획서</button> {/* 강의 계획서 버튼 */}
+      <div className={styles['name']}>{lecture.name}</div> {/* name을 아래로 이동 */}
+      <div className={styles['time']}>교수 {lecture.professor} | {lecture.time}</div> {/* 교수와 시간을 표시 */}
+      <div className={styles['buttons']}>
+        <button className={styles['plan']} onClick={() => fetchLecturePlan(lecture.id)}>강의 계획서</button> {/* 강의 계획서 버튼 */}
       </div>
     </div>
   );
 
   /*장바구니 내역에서 장바구니 내용들*/
   const LectureItem = ({ lecture }) => (
-      <div className="lecture-item">
-        <span className="lecture-name">{lecture.name} {lecture.hours}</span>
-        <button className="info-btn" onClick={() => fetchLecturePlan(lecture.id)}>정보</button>
-      </div>
-    );
+    <div className={styles['lecture-item']}>
+      <span className={styles['lecture-name']}>{lecture.name} {lecture.hours}</span>
+      <button className={styles['info-btn']} onClick={() => fetchLecturePlan(lecture.id)}>정보</button>
+    </div>
+  );
 
   const PopupLectureItem = ({ lecture }) => (
-    <div className="lecture-item">
-      <span className="lecture-name">{lecture.name}</span>
-      <button className="info-btn" onClick={() => fetchLecturePlan(lecture.id)}>정보</button>
+    <div className={styles['lecture-item']}>
+      <span className={styles['lecture-name']}>{lecture.name}</span>
+      <button className={styles['info-btn']} onClick={() => fetchLecturePlan(lecture.id)}>정보</button>
     </div>
   );
 
@@ -243,13 +235,13 @@ function Application() {
   ];
 
   return (
-    <div className="body">
-      <div className="left-bar">
-        <div className="title">
+    <div className={styles['body']}>
+      <div className={styles['left-bar']}>
+        <div className={styles['title']}>
           <h3>한국대학교
             <div>수강신청</div></h3>
         </div>
-        <div className="user-info">
+        <div className={styles['user-info']}>
           <div>이름 홍길동</div>
           <div>학번 12345678</div>
           <h4>학과 (부전공)</h4>
@@ -259,7 +251,7 @@ function Application() {
 
         <div><hr style={{ border: '1px solid white' }} /></div>
 
-        <div className="credits-info">
+        <div className={styles['credits-info']}>
           <h4>학점 정보 (부전공)</h4>
           <div>총합 /130</div>
           <div>전핵 /24</div>
@@ -268,38 +260,38 @@ function Application() {
           <div>전취 /3</div>
         </div>
 
-        <div className="toggle-btn">
+        <div className={styles['toggle-btn']}>
           <button onClick={() => togglePopup('totalInfo')}>+</button>전체 정보 보기
         </div>
         <div><hr style={{ border: '1px solid white' }} /></div>
 
-        <div className="logout-btn">
+        <div className={styles['logout-btn']}>
           <button onClick={handleLogout}>로그아웃</button>
         </div>
       </div>
       
 
       {/*메인 섹션-----------------*/}
-      <div className="main-content">
+      <div className={styles['main-content']}>
         {/* 상단 네비게이션 바 */}
-      <div className="navbar">
-        <button onClick={() => handleNavClick('/notice')}>공지사항</button>
-        <button className="application">과목조회</button>
-        <button onClick={() => handleNavClick('/')}>수강신청</button>
-        <button onClick={() => handleNavClick('/mypage')}>마이페이지</button>
-      </div>
+        <div className={styles['navbar']}>
+          <button onClick={() => handleNavClick('/notice')}>공지사항</button>
+          <button className={styles['application']}>과목조회</button>
+          <button onClick={() => handleNavClick('/')}>수강신청</button>
+          <button onClick={() => handleNavClick('/mypage')}>마이페이지</button>
+        </div>
         {/* 하위 네비게이션 바 */}
-        <div className="sub-navbar">
-          <div className="long-box">
+        <div className={styles['sub-navbar']}>
+          <div className={styles['long-box']}>
             <div>해당 페이지는 과목 조회 페이지입니다.</div>
-            예비 수강신청 및 일반 수강신청을 희망하는 학생은 위 <span className="bold">[수강신청]</span> 카테고리를 이용해 주시기 바랍니다.
+            예비 수강신청 및 일반 수강신청을 희망하는 학생은 위 <span className={styles['bold']}>[수강신청]</span> 카테고리를 이용해 주시기 바랍니다.
           </div>
         </div>
 
         {/* 단과대 선택 섹션 */}
-        <div className="section">
-          <div className="section-title">단과대 선택</div>
-          <div className="grid-container">
+        <div className={styles['section']}>
+          <div className={styles['section-title']}>단과대 선택</div>
+          <div className={styles['grid-container']}>
             {['ICT융합과학대학', '건강과학대학', '음악대학', '법학대학', '자연과학대학', '공과대학', '인문사회대학', '미술대학', '체육대학', '교양대학'].map((name) => (
               <div
                 key={name}
@@ -316,9 +308,9 @@ function Application() {
         </div>
 
         {/* 학부 및 학과 선택 섹션 */}
-        <div className="section">
-          <div className="section-title">학부 및 학과 선택</div>
-          <div className="department-container">
+        <div className={styles['section']}>
+          <div className={styles['section-title']}>학부 및 학과 선택</div>
+          <div className={styles['department-container']}>
             {departmentList.map((name) => (
               <div
                 key={name}
@@ -335,9 +327,9 @@ function Application() {
         </div>
 
         {/* 학년 선택 섹션 */}
-        <div className="section">
-          <div className="section-title">학년 선택</div>
-          <div className="year-container">
+        <div className={styles['section']}>
+          <div className={styles['section-title']}>학년 선택</div>
+          <div className={styles['year-container']}>
             {['1학년', '2학년', '3학년', '4학년'].map((year) => (
               <div
                 key={year}
@@ -353,8 +345,8 @@ function Application() {
           </div>
         </div>
 
-        <div className="section">
-          <div className="lecture-container">
+        <div className={styles['section']}>
+          <div className={styles['lecture-container']}>
             {lectures.map((lecture, index) => (
               <MainLectureItem key={index} lecture={lecture} />
             ))}
@@ -362,56 +354,56 @@ function Application() {
         </div>
       </div>
 
-      <div className={`right-bar2`}>
+      <div className={styles['right-bar2']}>
         {/* 강의명으로 조회 및 검색 섹션 */}
-        <div className="section" style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
-          <div className="section-title">강의명으로 조회 후 신청</div>
-          <div className="search-container">
+        <div className={styles['section']} style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
+          <div className={styles['section-title']}>강의명으로 조회 후 신청</div>
+          <div className={styles['search-container']}>
             <input type="text" placeholder="강의명 검색" />
-            <FaSearch className="search-icon" />
+            <FaSearch className={styles['search-icon']} />
           </div>
         </div>
 
         {/* 강의 리스트 섹션 */}
-        <div className="lecture-list" style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
+        <div className={styles['lecture-list']} style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
           {lectureList.map((lecture) => (
             <LectureItem key={lecture.id} lecture={lecture} />
           ))}
-          <button type="button" className="more" onClick={() => togglePopup('moreLectures')}>더보기</button>
+          <button type="button" className={styles['more']} onClick={() => togglePopup('moreLectures')}>더보기</button>
         </div>
       </div>
 
       {isPopupVisible && (
-        <div className="popup">
-          <div className={`popup-inner ${popupType}`}>
+        <div className={styles['popup']}>
+          <div className={`${styles['popup-inner']} ${styles[popupType]}`}>
             {renderCloseButton()} {/* 조건부 렌더링된 닫기 버튼 */}
             {popupType === 'totalInfo' && (
               <div>
-                <h3 className="popup-title">전체 학점 정보 (부전공)</h3>
-                <ul className="info-list">
-                  <li><span className="label">총합</span> <span className="value">0 / 130</span></li>
-                  <li><span className="label">전공 핵심</span> <span className="value">0 / 24</span></li>
-                  <li><span className="label">전공 선택</span> <span className="value">0 / 48</span></li>
-                  <li><span className="label">전공 교양</span> <span className="value">0 / 9</span></li>
-                  <li><span className="label">전공 취업</span> <span className="value">0 / 3</span></li>
-                  <li><span className="label">중요 핵심</span> <span className="value">0 / 4</span></li>
-                  <li><span className="label">기술 교양</span> <span className="value">0 / 18</span></li>
-                  <li><span className="label">선택 교양</span> <span className="value">0 / 18</span></li>
-                  <li><span className="label">일반 선택</span> <span className="value">0 / 45</span></li>
-                  <li><span className="label">전공 교양</span> <span className="value">0 / 9</span></li>
-                  <li><span className="label">전공 필수</span> <span className="value">0 / 27</span></li>
-                  <li><span className="label">전공 선택</span> <span className="value">0 / 6</span></li>
+                <h3 className={styles['popup-title']}>전체 학점 정보 (부전공)</h3>
+                <ul className={styles['info-list']}>
+                  <li><span className={styles['label']}>총합</span> <span className={styles['value']}>0 / 130</span></li>
+                  <li><span className={styles['label']}>전공 핵심</span> <span className={styles['value']}>0 / 24</span></li>
+                  <li><span className={styles['label']}>전공 선택</span> <span className={styles['value']}>0 / 48</span></li>
+                  <li><span className={styles['label']}>전공 교양</span> <span className={styles['value']}>0 / 9</span></li>
+                  <li><span className={styles['label']}>전공 취업</span> <span className={styles['value']}>0 / 3</span></li>
+                  <li><span className={styles['label']}>중요 핵심</span> <span className={styles['value']}>0 / 4</span></li>
+                  <li><span className={styles['label']}>기술 교양</span> <span className={styles['value']}>0 / 18</span></li>
+                  <li><span className={styles['label']}>선택 교양</span> <span className={styles['value']}>0 / 18</span></li>
+                  <li><span className={styles['label']}>일반 선택</span> <span className={styles['value']}>0 / 45</span></li>
+                  <li><span className={styles['label']}>전공 교양</span> <span className={styles['value']}>0 / 9</span></li>
+                  <li><span className={styles['label']}>전공 필수</span> <span className={styles['value']}>0 / 27</span></li>
+                  <li><span className={styles['label']}>전공 선택</span> <span className={styles['value']}>0 / 6</span></li>
                 </ul>
               </div>
             )}
             {popupType === 'moreLectures' && (
               <div>
-                <h3 className="popup-title">강의명으로 조회 후 신청</h3>
-                <div className="search-container">
-                  <input className="lecture-search" type="text" placeholder="강의명 검색" />
-                  <FaSearch className="popup-search-icon" />
+                <h3 className={styles['popup-title']}>강의명으로 조회 후 신청</h3>
+                <div className={styles['search-container']}>
+                  <input className={styles['lecture-search']} type="text" placeholder="강의명 검색" />
+                  <FaSearch className={styles['popup-search-icon']} />
                 </div>
-                <div className="lecture-list popup-lecture-list">
+                <div className={`${styles['lecture-list']} ${styles['popup-lecture-list']}`}>
                   {[...lectureList, ...additionalLectures].map((lecture) => (
                     <PopupLectureItem key={lecture.id} lecture={lecture} />
                   ))}
@@ -420,7 +412,7 @@ function Application() {
             )}
             {popupType === 'lecturePlan' && (
               <div>
-                <h3 className="popup-title">강의 계획서</h3>
+                <h3 className={styles['popup-title']}>강의 계획서</h3>
                 <p>{lecturePlan}</p>
               </div>
             )}

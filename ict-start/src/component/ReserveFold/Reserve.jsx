@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import './Reserve_css.css';
+import styles from './Reserve.module.css'; 
 import { useNavigate } from 'react-router-dom'; // React Router 사용
 
 function Reserve() {  
@@ -27,7 +27,7 @@ function Reserve() {
   /*맨 위에 공지사항, 과목조회, 수강신청, 마이페이지 버튼 눌를시 페이지 이동시켜주는 React훅*/
   const navigate = useNavigate(); // React Router의 useNavigate 사용
   const handleNavClick = (path) => {
-  navigate(path);
+    navigate(path);
   };
 
   useEffect(() => {
@@ -103,19 +103,19 @@ function Reserve() {
     switch (popupType) {
       case 'totalInfo':
         return (
-          <button className="close-btn-totalInfo" onClick={() => togglePopup('')}>
+          <button className={styles.closeBtnTotalInfo} onClick={() => togglePopup('')}>
             ✖
           </button>
         );
       case 'moreLectures':
         return (
-          <button className="close-btn-moreLectures" onClick={() => togglePopup('')}>
+          <button className={styles.closeBtnMoreLectures} onClick={() => togglePopup('')}>
             ✖
           </button>
         );
       default:
         return (
-          <button className="close-btn" onClick={() => togglePopup('')}>
+          <button className={styles.closeBtn} onClick={() => togglePopup('')}>
             X
           </button>
         );
@@ -214,33 +214,33 @@ function Reserve() {
   }, [selectedGridContainer, selectedDepartmentContainer, selectedYearContainer]);
 
   const MainLectureItem = ({ lecture }) => (
-    <div className="lecture-box">
-      <div className="top-row">
+    <div className={styles.lectureBox}>
+      <div className={styles.topRow}>
         <div>{lecture.id}</div>
-        <div className="category">{lecture.category}</div> {/* category를 추가하여 오른쪽으로 배치 */}
+        <div className={styles.category}>{lecture.category}</div> {/* category를 추가하여 오른쪽으로 배치 */}
       </div>
-      <div className="name">{lecture.name}</div> {/* name을 아래로 이동 */}
-      <div className="time">교수 {lecture.professor} | {lecture.time}</div> {/* 교수와 시간을 표시 */}
-      <div className="buttons">
-        <button className="basket" onClick={() => handleAddLectureToSidebar(lecture)}>장바구니</button>
-        <button className="plan" onClick={() => fetchLecturePlan(lecture.id)}>강의 계획서</button> {/* 강의 계획서 버튼 */}
+      <div className={styles.name}>{lecture.name}</div> {/* name을 아래로 이동 */}
+      <div className={styles.time}>교수 {lecture.professor} | {lecture.time}</div> {/* 교수와 시간을 표시 */}
+      <div className={styles.buttons}>
+        <button className={styles.basket} onClick={() => handleAddLectureToSidebar(lecture)}>장바구니</button>
+        <button className={styles.plan} onClick={() => fetchLecturePlan(lecture.id)}>강의 계획서</button> {/* 강의 계획서 버튼 */}
       </div>
     </div>
   );
 
   const LectureItem = ({ lecture }) => (
-    <div className="lecture-item">
-      <span className="lecture-name">{lecture.name} {lecture.hours}</span>
-      <button className="info-btn" onClick={() => fetchLecturePlan(lecture.id)}>정보</button>
-      <button className="apply-btn" onClick={() => handleAddLectureToSidebar(lecture)}>추가</button>
+    <div className={styles.lectureItem}>
+      <span className={styles.lectureName}>{lecture.name} {lecture.hours}</span>
+      <button className={styles.infoBtn} onClick={() => fetchLecturePlan(lecture.id)}>정보</button>
+      <button className={styles.applyBtn} onClick={() => handleAddLectureToSidebar(lecture)}>추가</button>
     </div>
   );
 
   const PopupLectureItem = ({ lecture }) => (
-    <div className="lecture-item">
-      <span className="lecture-name">{lecture.name}</span>
-      <button className="info-btn" onClick={() => fetchLecturePlan(lecture.id)}>정보</button>
-      <button className="apply-btn" onClick={() => handleAddLectureToSidebar(lecture)}>추가</button>
+    <div className={styles.lectureItem}>
+      <span className={styles.lectureName}>{lecture.name}</span>
+      <button className={styles.infoBtn} onClick={() => fetchLecturePlan(lecture.id)}>정보</button>
+      <button className={styles.applyBtn} onClick={() => handleAddLectureToSidebar(lecture)}>추가</button>
     </div>
   );
 
@@ -270,13 +270,13 @@ function Reserve() {
   ];
 
   return (
-    <div className="body">
-      <div className="left-bar">
-        <div className="title">
+    <div className={styles.body}>
+      <div className={styles.leftBar}>
+        <div className={styles.title}>
           <h3>한국대학교
             <div>수강신청</div></h3>
         </div>
-        <div className="user-info">
+        <div className={styles.userInfo}>
           <div>이름 홍길동</div>
           <div>학번 12345678</div>
           <h4>학과 (부전공)</h4>
@@ -286,7 +286,7 @@ function Reserve() {
 
         <div><hr style={{ border: '1px solid white' }} /></div>
 
-        <div className="credits-info">
+        <div className={styles.creditsInfo}>
           <h4>학점 정보 (부전공)</h4>
           <div>총합 /130</div>
           <div>전핵 /24</div>
@@ -295,35 +295,35 @@ function Reserve() {
           <div>전취 /3</div>
         </div>
 
-        <div className="toggle-btn">
+        <div className={styles.toggleBtn}>
           <button onClick={() => togglePopup('totalInfo')}>+</button>전체 정보 보기
         </div>
         <div><hr style={{ border: '1px solid white' }} /></div>
 
-        <div className="logout-btn">
+        <div className={styles.logoutBtn}>
           <button onClick={handleLogout}>로그아웃</button>
         </div>
       </div>
       
-      <div className="main-content">
+      <div className={styles.mainContent}>
         {/* 상단 네비게이션 바 */}
-        <div className="navbar">
+        <div className={styles.navbar}>
           <button onClick={() => handleNavClick('/notice')}>공지사항</button>
           <button onClick={() => handleNavClick('/application')}>과목조회</button>
-          <button className="application">수강신청</button>
+          <button className={styles.application}>수강신청</button>
           <button onClick={() => handleNavClick('/mypage')}>마이페이지</button>
         </div>
 
         {/* 하위 네비게이션 바 */}
-        <div className="sub-navbar">
+        <div className={styles.subNavbar}>
           <button
-            className={`sub-navbar-btn ${selectedSubNav === '예비수강신청' ? 'selected' : ''}`}
+            className={`${styles.subNavbarBtn} ${selectedSubNav === '예비수강신청' ? styles.selected : ''}`}
             onClick={handleSubNavClick}
           >
             예비수강신청
           </button>
           <button
-            className={`sub-navbar-btn ${selectedSubNav === '일반수강신청' ? 'selected' : ''}`}
+            className={`${styles.subNavbarBtn} ${selectedSubNav === '일반수강신청' ? styles.selected : ''}`}
             onClick={handleSubNavClick}
           >
             일반수강신청
@@ -331,9 +331,9 @@ function Reserve() {
         </div>
 
         {/* 단과대 선택 섹션 */}
-        <div className="section">
-          <div className="section-title">단과대 선택</div>
-          <div className="grid-container">
+        <div className={styles.section}>
+          <div className={styles.sectionTitle}>단과대 선택</div>
+          <div className={styles.gridContainer}>
             {['ICT융합과학대학', '건강과학대학', '음악대학', '법학대학', '자연과학대학', '공과대학', '인문사회대학', '미술대학', '체육대학', '교양대학'].map((name) => (
               <div
                 key={name}
@@ -350,9 +350,9 @@ function Reserve() {
         </div>
 
         {/* 학부 및 학과 선택 섹션 */}
-        <div className="section">
-          <div className="section-title">학부 및 학과 선택</div>
-          <div className="department-container">
+        <div className={styles.section}>
+          <div className={styles.sectionTitle}>학부 및 학과 선택</div>
+          <div className={styles.departmentContainer}>
             {departmentList.map((name) => (
               <div
                 key={name}
@@ -369,9 +369,9 @@ function Reserve() {
         </div>
 
         {/* 학년 선택 섹션 */}
-        <div className="section">
-          <div className="section-title">학년 선택</div>
-          <div className="year-container">
+        <div className={styles.section}>
+          <div className={styles.sectionTitle}>학년 선택</div>
+          <div className={styles.yearContainer}>
             {['1학년', '2학년', '3학년', '4학년'].map((year) => (
               <div
                 key={year}
@@ -387,8 +387,8 @@ function Reserve() {
           </div>
         </div>
 
-        <div className="section">
-          <div className="lecture-container">
+        <div className={styles.section}>
+          <div className={styles.lectureContainer}>
             {lectures.map((lecture, index) => (
               <MainLectureItem key={index} lecture={lecture} />
             ))}
@@ -398,25 +398,25 @@ function Reserve() {
 
       {/* 슬라이드로 생기는 오른쪽 사이드바 */}
       {!isSidebarOpen && (
-        <button className="circle-button" onClick={toggleSidebar}>
+        <button className={styles.circleButton} onClick={toggleSidebar}>
           +
         </button>
       )}
-      <div className={`right-bar ${isSidebarOpen ? 'open' : ''}`}>
-        <button className="close-sidebar-button" onClick={toggleSidebar}>
+      <div className={`${styles.rightBar} ${isSidebarOpen ? styles.open : ''}`}>
+        <button className={styles.closeSidebarButton} onClick={toggleSidebar}>
             ㅡ
         </button>
-        <div className="sidebar-content">
-            <div className="sidebar-section">
-            <div className="basket-title">예비수강신청 내역</div>
+        <div className={styles.sidebarContent}>
+            <div className={styles.sidebarSection}>
+            <div className={styles.basketTitle}>예비수강신청 내역</div>
             {sidebarLectures.map((lecture, index) => (
-                <div key={index} className="lecture-box">
-                <div className="name">{lecture.name}</div> {/* 이름 위치 수정 */}
-                <div className="top-row">
+                <div key={index} className={styles.lectureBox}>
+                <div className={styles.name}>{lecture.name}</div> {/* 이름 위치 수정 */}
+                <div className={styles.topRow}>
                     <div>{lecture.id} {lecture.category}</div>
                 </div>
-                <div className="buttons">
-                    <button className="remove" onClick={() => handleRemoveLectureFromSidebar(lecture.id)}>X</button>
+                <div className={styles.buttons}>
+                    <button className={styles.remove} onClick={() => handleRemoveLectureFromSidebar(lecture.id)}>X</button>
                 </div>
                 </div>
             ))}
@@ -426,31 +426,31 @@ function Reserve() {
 
 
       {/*진짜 오른쪽 사이드바*/}
-      <div className={`right-bar2`}>
+      <div className={styles.rightBar2}>
         {/* 강의명으로 조회 및 검색 섹션 */}
-        <div className="section" style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
-          <div className="section-title">강의명으로 조회 후 신청</div>
-          <div className="search-container">
+        <div className={styles.section} style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
+          <div className={styles.sectionTitle}>강의명으로 조회 후 신청</div>
+          <div className={styles.searchContainer}>
             <input type="text" placeholder="강의명 검색" />
-            <FaSearch className="search-icon" />
+            <FaSearch className={styles.searchIcon} />
           </div>
         </div>
 
         {/* 강의 리스트 섹션 */}
-        <div className="lecture-list" style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
+        <div className={styles.lectureList} style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
           {lectureList.map((lecture) => (
             <LectureItem key={lecture.id} lecture={lecture} />
           ))}
-          <button type="button" className="more" onClick={() => togglePopup('moreLectures')}>더보기</button>
+          <button type="button" className={styles.more} onClick={() => togglePopup('moreLectures')}>더보기</button>
         </div>
 
         {/* 과목 코드 직접 입력 섹션 */}
-        <div className="section-subject" style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
-          <div className="section-title">과목 코드 직접 입력</div>
+        <div className={styles.sectionSubject} style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
+          <div className={styles.sectionTitle}>과목 코드 직접 입력</div>
           <input
             type="text"
             placeholder="과목 코드 입력"
-            className="subject-code"
+            className={styles.subjectCode}
             value={subjectCode}
             onChange={handleSubjectCodeChange}
           />
@@ -460,43 +460,43 @@ function Reserve() {
             value={divisionCode}
             onChange={handleDivisionCodeChange}
           />
-          <button type="button" className="cart-btn" onClick={handleAddToCart}>
+          <button type="button" className={styles.cartBtn} onClick={handleAddToCart}>
             장바구니 담기
           </button>
         </div>
       </div>
 
       {isPopupVisible && (
-        <div className="popup">
-          <div className={`popup-inner ${popupType}`}>
+        <div className={styles.popup}>
+          <div className={`${styles.popupInner} ${styles[popupType]}`}>
             {renderCloseButton()} {/* 조건부 렌더링된 닫기 버튼 */}
             {popupType === 'totalInfo' && (
               <div>
-                <h3 className="popup-title">전체 학점 정보 (부전공)</h3>
-                <ul className="info-list">
-                  <li><span className="label">총합</span> <span className="value">0 / 130</span></li>
-                  <li><span className="label">전공 핵심</span> <span className="value">0 / 24</span></li>
-                  <li><span className="label">전공 선택</span> <span className="value">0 / 48</span></li>
-                  <li><span className="label">전공 교양</span> <span className="value">0 / 9</span></li>
-                  <li><span className="label">전공 취업</span> <span className="value">0 / 3</span></li>
-                  <li><span className="label">중요 핵심</span> <span className="value">0 / 4</span></li>
-                  <li><span className="label">기술 교양</span> <span className="value">0 / 18</span></li>
-                  <li><span className="label">선택 교양</span> <span className="value">0 / 18</span></li>
-                  <li><span className="label">일반 선택</span> <span className="value">0 / 45</span></li>
-                  <li><span className="label">전공 교양</span> <span className="value">0 / 9</span></li>
-                  <li><span className="label">전공 필수</span> <span className="value">0 / 27</span></li>
-                  <li><span className="label">전공 선택</span> <span className="value">0 / 6</span></li>
+                <h3 className={styles.popupTitle}>전체 학점 정보 (부전공)</h3>
+                <ul className={styles.infoList}>
+                  <li><span className={styles.label}>총합</span> <span className={styles.value}>0 / 130</span></li>
+                  <li><span className={styles.label}>전공 핵심</span> <span className={styles.value}>0 / 24</span></li>
+                  <li><span className={styles.label}>전공 선택</span> <span className={styles.value}>0 / 48</span></li>
+                  <li><span className={styles.label}>전공 교양</span> <span className={styles.value}>0 / 9</span></li>
+                  <li><span className={styles.label}>전공 취업</span> <span className={styles.value}>0 / 3</span></li>
+                  <li><span className={styles.label}>중요 핵심</span> <span className={styles.value}>0 / 4</span></li>
+                  <li><span className={styles.label}>기술 교양</span> <span className={styles.value}>0 / 18</span></li>
+                  <li><span className={styles.label}>선택 교양</span> <span className={styles.value}>0 / 18</span></li>
+                  <li><span className={styles.label}>일반 선택</span> <span className={styles.value}>0 / 45</span></li>
+                  <li><span className={styles.label}>전공 교양</span> <span className={styles.value}>0 / 9</span></li>
+                  <li><span className={styles.label}>전공 필수</span> <span className={styles.value}>0 / 27</span></li>
+                  <li><span className={styles.label}>전공 선택</span> <span className={styles.value}>0 / 6</span></li>
                 </ul>
               </div>
             )}
             {popupType === 'moreLectures' && (
               <div>
-                <h3 className="popup-title">강의명으로 조회 후 신청</h3>
-                <div className="search-container">
-                  <input className="lecture-search" type="text" placeholder="강의명 검색" />
-                  <FaSearch className="popup-search-icon" />
+                <h3 className={styles.popupTitle}>강의명으로 조회 후 신청</h3>
+                <div className={styles.searchContainer}>
+                  <input className={styles.lectureSearch} type="text" placeholder="강의명 검색" />
+                  <FaSearch className={styles.popupSearchIcon} />
                 </div>
-                <div className="lecture-list popup-lecture-list">
+               <div className={`${styles['lectureList']} ${styles['popupLectureList']}`}>
                   {[...lectureList, ...additionalLectures].map((lecture) => (
                     <PopupLectureItem key={lecture.id} lecture={lecture} />
                   ))}
@@ -505,7 +505,7 @@ function Reserve() {
             )}
             {popupType === 'lecturePlan' && (
               <div>
-                <h3 className="popup-title">강의 계획서</h3>
+                <h3 className={styles.popupTitle}>강의 계획서</h3>
                 <p>{lecturePlan}</p>
               </div>
             )}

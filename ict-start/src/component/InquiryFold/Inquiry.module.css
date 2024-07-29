@@ -1,3 +1,4 @@
+/*과목조회 컴포넌트 css*/
 .body {
     font-family: Arial, sans-serif;
     display: flex;
@@ -98,17 +99,18 @@
     padding: 10px;
     display: flex;
     flex-direction: column;
-    margin-left: 20px;
+    margin-left: 35px;
     /* 좌측 여백 조정 */
     margin-right: 20px;
     /* 우측 여백 추가 */
 }
 
 .navbar,
-.sub-navbar {
+.subNavbar {
+    display: flex;
+    justify-content: space-around;
     padding: 10px;
 }
-
 .navbar button {
     padding: 10px;
     border: 1px solid rgb(104, 103, 103);
@@ -119,6 +121,7 @@
     font-size: 15px;
     color: rgb(104, 103, 103);
     width: 150px;
+    margin-left:20px;
 }
 
 .navbar button.application {
@@ -156,6 +159,8 @@
     margin: 10px 0;
     z-index: 1000;
     position: relative;
+
+
 }
 
 .section-title {
@@ -329,22 +334,25 @@
     justify-content: flex-start;
     right: 200px;
     margin-top: 150px;
+    margin-bottom:10px;
+    margin-left:10px;
 }
 
 .right-bar2 input {
-    width: 50%;
+    width: 80px;
     height: 15px;
     padding: 10px 10px;
     margin: 5px;
     border: none;
     background-color: #e7e7e7;
     border-radius: 10px;
+    
 }
 
-/* 강의명으로 조회 후 및 검색 */
+/* 강의명으로 조회 */
 .section input {
-    width: 72%;
-    height: 15px;
+    width: 83%;
+    height: 13px;
     margin: 0px 0px;
     border: none;
     background-color: #e7e7e7;
@@ -353,7 +361,7 @@
 
 /*더보기버튼 */
 .lecture-list button {
-    width: 80%;
+    width: 90%;
     height: 24px;
     border: none;
     font-size: 10px;
@@ -361,25 +369,22 @@
     color: rgb(104, 108, 109);
     background-color: rgb(204, 204, 204);
     border-radius: 10px;
+    margin-bottom:10px;
 }
 
-/* 강의명으로 조회 후 신청 */
-.section .section-title {
-    font-weight: bold;
-    margin: 6px 0px;
-    color: rgb(100, 101, 101);
-}
+
+
 
 /* 강의 리스트들 전체적인 섹션 */
 .lecture-list {
     padding: 0;
     margin: 0;
-    margin-bottom: 90px;
+    margin-bottom: 10px;
     z-index: 1000;
     position: relative;
 }
 
-/* 강의 리스트 */
+/*4개 강의 리스트 */
 .lecture-list .lecture-item {
     background-color: #e7e7e7;
     border-radius: 10px;
@@ -415,74 +420,8 @@
     font-size: 11px;
     cursor: pointer;
     border: 1px solid rgb(104, 108, 109);
+    margin-top:10px;
 }
-
-/* 신청 버튼 */
-.lecture-list .apply-btn {
-    width: 45px;
-    height: 25px;
-    margin-left: 5px;
-    background-color: #637ABF;
-    color: white;
-    border: 1px;
-    border-radius: 10px;
-    font-size: 11px;
-    cursor: pointer;
-}
-
-/* 과목 코드 직접 입력 제목 */
-.section-subject .section-title {
-    font-weight: bold;
-    margin: 6px 5px;
-    color: rgb(100, 101, 101);
-}
-
-/* 과목코드, 분반코드 입력 */
-.section-subject input {
-    width: 70%;
-    height: 10px;
-    padding: 10px 10px;
-    border: none;
-    background-color: #e7e7e7;
-    border-radius: 10px;
-    margin-bottom: 1px;
-}
-
-/* 장바구니 버튼 */
-.section-subject .cart-btn {
-    background-color: #637ABF;
-    width: 77%;
-    height: 30px;
-    border: none;
-    font-weight: bold;
-    font-size: 15px;
-    color: white;
-    border-radius: 13px;
-    margin: 5px 5px;
-}
-
-
-/* - 동그라미 버튼 (오른쪽 슬라이드) */
-.close-sidebar-button {
-    background-color: white;
-    color: #637ABF;
-    border: none;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    font-size: 20px;
-    font-weight: bold;
-    /* 글자의 굵기를 얇게 설정 */
-    display: flex;
-    justify-content: flex-start;
-    /* 텍스트를 왼쪽으로 정렬 */
-    align-items: center;
-    /* 수직으로 가운데 정렬 */
-    position: absolute;
-    top: 32px;
-    left: 20px;
-}
-
 
 /*강의명으로 조회 돋보기 아이콘 스타일 */
 .search-container {
@@ -494,12 +433,70 @@
 /*돋보기 아이콘*/
 .search-icon {
     position: absolute;
-    right: 60px;
+    right: 37px;
     top: 50%;
     transform: translateY(-50%);
     color: gray;
     cursor: pointer;
-    margin-right:20px;
+    margin-right:5px;
+}
+
+
+
+/* 나의 시간표 섹션 타이틀 스타일 */
+.schedule-title-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(212, 216, 243);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 5px;
+    width:210px;
+    height:8px;
+    border: 1px solid rgb(95, 95, 95);
+    margin-top: -10px;
+}
+
+.schedule-title {
+    font-weight: bold;
+    font-size: 13px;
+    color: #333;
+   
+}
+
+/* 나의 시간표 테이블 스타일 */
+.schedule-table {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+   
+    border: 1px solid black;
+    overflow: hidden;
+    width:230px;
+    margin-top: 10px;
+}
+
+.schedule-header,
+.schedule-row {
+    display: contents;
+}
+
+
+.schedule-cell {
+    padding: 8px;
+    background-color: #fff;
+    text-align: center;
+    border: 1px solid rgb(114, 113, 113);
+    /* 검정색 테두리 */
+    font-size: 14px;
+
+}
+
+.schedule-header .schedule-cell {
+    font-weight: bold;
+}
+.schedule-header{
+    padding:15px;
 }
 
 /* 팝업 스타일 */
@@ -520,7 +517,7 @@
 
 /*팝업 상자 스타일*/
 .popup-inner {
-    background-color: rgb(215, 215, 215);
+    background-color: rgb(205, 205, 205);
     /* 상자 배경색 회색 */
     padding: 10px;
     border-radius: 10px;
@@ -576,7 +573,7 @@
     font-size: 24px;
     /* 글자 크기 */
     /* 글자 색상 */
-    margin-top: 120px;
+    margin-top: 40px;
     margin-bottom: 10px;
     /* 아래 여백 */
     font-weight: bold;
@@ -594,22 +591,102 @@
 }
 
 .popup-lecture-list {
-    max-height: 300px;
+    max-height: 315px;
     /* 원하는 높이 설정 */
     overflow-y: auto;
     /* 스크롤 가능하도록 설정 */
 }
 
+
+
+
+
+
+/*단과대, 학부 2개 이상 팝업*/
+.popup-inner.error .popup-title {
+    color: rgb(107, 107, 107);
+    margin-bottom: -5px;
+
+}
+
+.popup-inner.error {
+    width: 380px;
+    height: 190px;
+    border-radius: 35px;
+    border: none;
+
+}
+
+/*단국대, 학부 2개 선택 팝업에서 닫기 버튼*/
+.colseBtnmultiple {
+    background-color: white;
+    color: black;
+    border: solid 1px rgb(146, 145, 145);
+    border-radius: 15px;
+    width: 330px;
+    height: 38px;
+    padding: 10px 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 17px;
+    margin-left: 25px;
+}
+
+/*x동그라미 버튼을 없앰*/
+.popup-inner.error .close-btn {
+    display: none;
+}
+
+
+
+/*더보기 팝업창의 스크롤*/
+.lecture-list {
+    max-height: 315px;
+    /* 스크롤을 위한 최대 높이 설정 */
+    overflow-y: auto;
+    /* 세로 스크롤 허용 */
+    /* 기존 lecture-list 클래스에 적용된 다른 스타일은 그대로 유지 */
+}
+
+.lecture-list::-webkit-scrollbar {
+    width: 8px;
+    /* 스크롤바 너비 */
+}
+
+.lecture-list::-webkit-scrollbar-thumb {
+    background-color: #888;
+    /* 스크롤바 색상 */
+    border-radius: 4px;
+    /* 스크롤바 모서리를 둥글게 */
+}
+
+.lecture-list::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+    /* 마우스 오버 시 스크롤바 색상 */
+}
+
+
+
+
+
+
+
+
 /*강의명으로 조회 후 신청 이거는 팝업창의 input*/
+/*강의명 검색 input*/
 .lecture-search {
-    width: 84%;
+    width: 205px;;
     height: 15px;
     padding: 10px 10px;
     margin: 5px;
     border: none;
     background-color: #e7e7e7;
     border-radius: 10px;
-    margin-right: 10px;
+
+ 
 }
 
 /* 팝업 내 정보 리스트 스타일 */

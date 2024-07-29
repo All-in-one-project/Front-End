@@ -23,6 +23,7 @@ function Reserve() {
   const [isPopupVisible, setIsPopupVisible] = useState(false); // 팝업창 상태 추가
   const [popupType, setPopupType] = useState(''); // 팝업창 타입 상태 추가
   const [lecturePlan, setLecturePlan] = useState(''); // 강의 계획서 상태 추가
+  const [popupMessage, setPopupMessage] = useState(''); // 팝업창 메시지 추가
 
   /*맨 위에 공지사항, 과목조회, 수강신청, 마이페이지 버튼 눌를시 페이지 이동시켜주는 React훅*/
   const navigate = useNavigate(); // React Router의 useNavigate 사용
@@ -65,10 +66,17 @@ function Reserve() {
       setSelectedGridContainer(container);
       setDepartmentList(departmentMapping[container]);
     } else {
-      alert('단과대는 1개만 선택할 수 있습니다.');
+        setPopupMessage(
+      <div>
+        해당 항목은 복수 선택이 불가능합니다!
+        <br/>
+        <span style={{ fontWeight: 'normal' }}>
+          (단과대 및 학과/학부 복수 선택 불가)
+        </span>
+      </div>);
+      togglePopup('error');
     }
   };
-
 
   const handleDepartmentContainerClick = (container) => {
     if (selectedDepartmentContainer === container) {
@@ -76,7 +84,15 @@ function Reserve() {
     } else if (selectedDepartmentContainer === '') {
       setSelectedDepartmentContainer(container);
     } else {
-      alert('학부는 1개만 선택할 수 있습니다.');
+      setPopupMessage(
+      <div>
+        해당 항목은 복수 선택이 불가능합니다!
+        <br/>
+        <span style={{ fontWeight: 'normal' }}>
+          (단과대 및 학과/학부 복수 선택 불가)
+        </span>
+      </div>);
+      togglePopup('error');
     }
   };
 
@@ -86,7 +102,8 @@ function Reserve() {
     } else if (selectedYearContainer.length < 4) {
       setSelectedYearContainer([...selectedYearContainer, container]);
     } else {
-      alert('학년은 4개까지 선택할 수 있습니다.');
+      setPopupMessage('학년은 4개까지 선택할 수 있습니다.');
+      togglePopup('error');
     }
   };
 
@@ -96,30 +113,22 @@ function Reserve() {
 
   const togglePopup = (type) => {
     setPopupType(type); // 팝업창 타입 설정
-    setIsPopupVisible(!isPopupVisible); // 팝업창 토글 함수
+    setIsPopupVisible(!isPopupVisible); 
   };
 
   const renderCloseButton = () => {
-    switch (popupType) {
-      case 'totalInfo':
-        return (
-          <button className={styles.closeBtnTotalInfo} onClick={() => togglePopup('')}>
-            ✖
-          </button>
-        );
-      case 'moreLectures':
-        return (
-          <button className={styles.closeBtnMoreLectures} onClick={() => togglePopup('')}>
-            ✖
-          </button>
-        );
-      default:
-        return (
-          <button className={styles.closeBtn} onClick={() => togglePopup('')}>
-            X
-          </button>
-        );
-    }
+    return (
+      <button className={styles.closeBtn} onClick={() => togglePopup('')}>
+        ✖
+      </button>
+    );
+  };
+   const renderErrorCloseButton = () => {
+    return (
+      <button className={styles.colseBtnmultiple} onClick={() => togglePopup('')}>
+        확인 및 다시 선택하기
+      </button>
+    );
   };
 
   const handleAddLectureToSidebar = (lecture) => {
@@ -217,9 +226,9 @@ function Reserve() {
     <div className={styles.lectureBox}>
       <div className={styles.topRow}>
         <div>{lecture.id}</div>
-        <div className={styles.category}>{lecture.category}</div> {/* category를 추가하여 오른쪽으로 배치 */}
+        <div className={styles.category}>{lecture.category}</div> 
       </div>
-      <div className={styles.name}>{lecture.name}</div> {/* name을 아래로 이동 */}
+      <div className={styles.name}>{lecture.name}</div> 
       <div className={styles.time}>교수 {lecture.professor} | {lecture.time}</div> {/* 교수와 시간을 표시 */}
       <div className={styles.buttons}>
         <button className={styles.basket} onClick={() => handleAddLectureToSidebar(lecture)}>장바구니</button>
@@ -259,7 +268,7 @@ function Reserve() {
 
   const [departmentList, setDepartmentList] = useState(departmentMapping['ICT융합과학대학']); // 초기값 설정
 
-  // 임의의 강의 리스트 추가
+  // 더보기 클릭 시 임의의 강의 리스트 추가
   const additionalLectures = [
     { id: 5, name: "철학 개론 (금1,2)" },
     { id: 6, name: "미적분학 (월1,2)" },
@@ -309,7 +318,7 @@ function Reserve() {
         {/* 상단 네비게이션 바 */}
         <div className={styles.navbar}>
           <button onClick={() => handleNavClick('/notice')}>공지사항</button>
-          <button onClick={() => handleNavClick('/application')}>과목조회</button>
+          <button onClick={() => handleNavClick('/inquiry')}>과목조회</button>
           <button className={styles.application}>수강신청</button>
           <button onClick={() => handleNavClick('/mypage')}>마이페이지</button>
         </div>
@@ -386,7 +395,9 @@ function Reserve() {
             ))}
           </div>
         </div>
+        <div><div style={{ width: '700px', height: '0.5px', backgroundColor: 'gray', marginTop:'4px'}} /></div> 
 
+            {/*강의 8개 리스트*/}
         <div className={styles.section}>
           <div className={styles.lectureContainer}>
             {lectures.map((lecture, index) => (
@@ -507,6 +518,13 @@ function Reserve() {
               <div>
                 <h3 className={styles.popupTitle}>강의 계획서</h3>
                 <p>{lecturePlan}</p>
+              </div>
+            )}
+            {popupType === 'error' && (
+              <div>
+                <h4 className={styles.popupTitle}>단과대 및 학과/학부 선택</h4>
+                <p>{popupMessage}</p>
+                {renderErrorCloseButton()}
               </div>
             )}
           </div>

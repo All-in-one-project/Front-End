@@ -153,6 +153,8 @@
     margin-right: 0;
 }
 
+
+
 /* 선택사항들 */
 .section {
     margin: 10px 0;
@@ -324,6 +326,7 @@
     justify-content: flex-start;
     right: 200px;
     margin-top: 150px;
+    margin-left: 20px;
 }
 
 .rightBar2 input {
@@ -556,7 +559,7 @@
 
 /*팝업 상자 스타일*/
 .popupInner {
-    background-color: rgb(215, 215, 215);
+    background-color: rgb(226, 226, 226);
     /* 상자 배경색 회색 */
     padding: 10px;
     border-radius: 10px;
@@ -636,6 +639,44 @@
     cursor: pointer;
 }
 
+
+
+
+
+/*단과대, 학부 2개 이상 팝업*/
+.popupInner.error .popupTitle {
+    color:rgb(107, 107, 107);
+    margin-bottom: -5px;
+   
+}
+.popupInner.error{
+     width: 380px;
+    height: 190px;
+    border-radius: 35px;
+    border: none;
+    
+}
+/*단국대, 학부 2개 선택 팝업에서 닫기 버튼*/
+.colseBtnmultiple{
+     background-color: white;
+    color: black;
+    border: solid 1px rgb(146, 145, 145);
+    border-radius: 15px;
+    width: 330px;
+    height:38px;
+    padding: 10px 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 17px;
+    margin-left:25px;
+}
+/*x동그라미 버튼을 없앰*/
+.popupInner.error .closeBtn {
+    display: none;
+}
 
 
 

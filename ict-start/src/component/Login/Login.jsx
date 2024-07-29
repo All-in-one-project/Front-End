@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Login_css.css';
 import axios from 'axios';
+import './Login_css.css';
 
 function Login() {
   const [id, setId] = useState('');
@@ -9,22 +9,20 @@ function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  {/*로그인 버튼 눌를시*/}
+  // 로그인 버튼 눌렀을 시
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('/login', {
+      const response = await axios.post('http://43.202.223.188/login', {
         student_number: id,
         password: password,
-        token: 'generatedJWTToken', // 실제로는 서버에서 생성된 JWT 토큰이어야 함
       });
 
-
-       // 서버로부터 받은 응답을 처리합니다.
+      // 서버로부터 받은 응답을 처리합니다.
       if (response.status === 200 && response.data.student_id) {
         // 로그인 성공 시 토큰을 로컬 스토리지에 저장
         localStorage.setItem('token', response.data.token);
-        navigate('/');
+        navigate('/'); // 로그인 후 메인 페이지로 이동
       } else {
         setError('다시 입력하세요');
       }
@@ -44,41 +42,43 @@ function Login() {
   };
 
   return (
-    <div className="login-container">
-      <span className="close-btn" onClick={handleClose}></span>
-      <h2>한국대학교 수강신청</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          <input
-            id="id"
-            type="text"
-            value={id}
-            onChange={(event) => setId(event.target.value)}
-            placeholder="아이디/학번 입력"
-            required
-            className="login-input"
-          />
+    <div className="login-page">
+      <div className="login-container">
+        <span className="close-btn" onClick={handleClose}></span>
+        <h2>한국대학교 수강신청</h2>
+        <form onSubmit={handleLogin}>
+          <div>
+            <input
+              id="id"
+              type="text"
+              value={id}
+              onChange={(event) => setId(event.target.value)}
+              placeholder="아이디/학번 입력"
+              required
+              className="login-input"
+            />
+          </div>
+
+          <div>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder="비밀번호 입력"
+              required
+              className="login-input"
+            />
+          </div>
+
+          {error && <div className="error-message">{error}</div>}
+
+          <button type="submit" className="login-button">로그인</button>
+        </form>
+        <div className="separator"></div>
+        <div className="forgot-password">
+          <a href="#">아이디 / 비밀번호 찾기</a>
         </div>
-
-        <div>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            placeholder="비밀번호 입력"
-            required
-            className="login-input"
-          />
-        </div>
-
-        {error && <div className="error-message">{error}</div>}
-
-        <button type="submit" className="login-button">로그인</button>
-      </form>
-      <div className="separator"></div>
-      <div className="forgot-password">
-        <a href="#">아이디 / 비밀번호 찾기</a>
       </div>
     </div>
   );

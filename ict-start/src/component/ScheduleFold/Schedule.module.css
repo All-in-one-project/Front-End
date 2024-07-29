@@ -1,0 +1,74 @@
+.body {
+    font-family: Arial, sans-serif;
+    display: flex;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: white;
+    padding: 20px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /* 상단부터 시작 */
+}
+
+.sidebarHeader {
+    text-align: center;
+    background-color: #CED7F2;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 20px;
+    border: 1px solid gray;
+    color: rgb(104, 108, 109);
+    font-weight: bold;
+    margin-bottom: 20px;
+    /* 여백을 적당히 설정 */
+}
+
+
+/*시간표*/
+.schedule-table {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    border: 1px solid black;
+    overflow: hidden;
+    width: 230px;
+    margin-left:10px;
+    margin-bottom:15px;
+}
+
+.schedule-header,
+.schedule-row {
+    display: contents;
+}
+
+.schedule-cell {
+    padding: 18px 8px;
+    background-color: #fff;
+    text-align: center;
+    border: 1px solid rgb(114, 113, 113);
+    font-size: 14px;
+}
+
+.schedule-header .schedule-cell {
+    padding: 10px 8px;
+    font-weight: bold;
+}
+
+
+/*전체학점*/
+.footer {
+    background-color: #CED7F2;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid #686c6d;
+    font-size:13px;
+    font-weight: bold;
+    color: rgb(104, 108, 109);
+}

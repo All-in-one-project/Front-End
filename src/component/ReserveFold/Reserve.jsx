@@ -48,7 +48,7 @@ function Reserve() {
 
   const handleLogout = () => {
     console.log('로그아웃되었습니다.');
-    navigate('/'); // 초기화면으로 리디렉션
+    navigate('/'); 
   };
 
   const handleSubNavClick = (event) => {
@@ -208,10 +208,7 @@ function Reserve() {
     setLectures(exampleLectures);
   };
 
-  const fetchLecturePlan = (id) => {
-    console.log('강의 계획서를 불러오는 데 실패했습니다.');
-    // 여기서 실제 데이터를 가져오는 로직을 추가해야 합니다.
-  };
+
 
   useEffect(() => {
     if (selectedGridContainer && selectedDepartmentContainer && selectedYearContainer.length > 0) {
@@ -221,6 +218,20 @@ function Reserve() {
       fetchLectures(collegeId, departmentId, gradeId);
     }
   }, [selectedGridContainer, selectedDepartmentContainer, selectedYearContainer]);
+  const fetchLecturePlan = (lectureId) => {
+    // 실제로는 서버로부터 데이터를 가져오는 부분이 있을 것입니다.
+    // 여기서는 예시로서 임의의 데이터를 사용합니다.
+    const lecturePlans = {
+      '21032-001': 'This is the lecture plan for 컴퓨터 네트워크.',
+      '21032-002': 'This is the lecture plan for 자바.',
+      '21032-003': 'This is the lecture plan for 웹 프로그래밍.',
+      '21032-004': 'This is the lecture plan for 소프트웨어 공학.',
+      // 다른 강의 계획서 내용 추가 가능
+    };
+
+    setLecturePlan(lecturePlans[lectureId] || '해당 강의의 계획서를 찾을 수 없습니다.');
+    togglePopup('lecturePlan');
+  };
 
   const MainLectureItem = ({ lecture }) => (
     <div className={styles.lectureBox}>

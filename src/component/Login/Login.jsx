@@ -9,7 +9,7 @@ function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // 로그인 버튼 눌렀을 시
+
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
@@ -18,20 +18,16 @@ function Login() {
         password: password,
       });
 
-      // 서버로부터 받은 응답을 처리합니다.
       if (response.status === 200 && response.data.student_id) {
-        // 로그인 성공 시 토큰을 로컬 스토리지에 저장
         localStorage.setItem('token', response.data.token);
-        navigate('/'); // 로그인 후 메인 페이지로 이동
+        navigate('/'); 
       } else {
         setError('다시 입력하세요');
       }
     } catch (error) {
       if (error.response) {
-        // 서버 응답이 있는 경우
         setError(error.response.data.message || '로그인 중 오류가 발생했습니다.');
       } else {
-        // 서버 응답이 없는 경우
         setError('서버에 연결할 수 없습니다.');
       }
     }

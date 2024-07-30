@@ -207,9 +207,6 @@ function Reserve() {
     ];
     setLectures(exampleLectures);
   };
-
-
-
   useEffect(() => {
     if (selectedGridContainer && selectedDepartmentContainer && selectedYearContainer.length > 0) {
       const collegeId = Object.keys(departmentMapping).indexOf(selectedGridContainer) + 1;
@@ -218,9 +215,9 @@ function Reserve() {
       fetchLectures(collegeId, departmentId, gradeId);
     }
   }, [selectedGridContainer, selectedDepartmentContainer, selectedYearContainer]);
+
+
   const fetchLecturePlan = (lectureId) => {
-    // 실제로는 서버로부터 데이터를 가져오는 부분이 있을 것입니다.
-    // 여기서는 예시로서 임의의 데이터를 사용합니다.
     const lecturePlans = {
       '21032-001': 'This is the lecture plan for 컴퓨터 네트워크.',
       '21032-002': 'This is the lecture plan for 자바.',

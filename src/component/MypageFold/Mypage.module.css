@@ -1,0 +1,48 @@
+ .container {
+     width: 60%;
+     margin: 0 auto;
+     font-family: Arial, sans-serif;
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+ }
+
+ .section {
+     border: 1px solid #ddd;
+     border-radius: 8px;
+     margin-bottom: 20px;
+     padding: 10px;
+     background-color: #f9f9f9;
+ }
+
+ .header {
+     font-weight: bold;
+     margin-bottom: 10px;
+ }
+
+ .content {
+     padding: 10px;
+     background-color: #e0e0e0;
+     border-radius: 8px;
+ }
+
+ .status,
+ .remaining,
+ .grade,
+ .link {
+     margin-bottom: 10px;
+ }
+
+ .score {
+    font-weight: bold;
+}
+
+
+ .status-highlight {
+     font-weight: bold;
+ }
+
+ .link a {
+     text-decoration: underline;
+ }

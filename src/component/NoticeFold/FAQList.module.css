@@ -1,0 +1,82 @@
+.body {
+    background-color: #ffffff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    /* 여백 추가 */
+    display: flex;
+    justify-content: center;
+    /* 수평 중앙 정렬 */
+    align-items: flex-start;
+    /* 상단 정렬 */
+    height: 100vh;
+    /* 전체 화면 높이 */
+    box-sizing: border-box;
+    /* 여백 포함 크기 계산 */
+}
+
+.faq-list {
+    width: 300px;
+    /* 너비 설정 */
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    /* 내부 여백 */
+    box-sizing: border-box;
+    /* 여백 포함 크기 계산 */
+    margin-left: 20px;
+    /* 사이드바와의 간격 */
+    height:100px;
+}
+
+.faq-item {
+    border-bottom: 1px solid #ddd;
+    padding: 15px 0;
+    justify-content: center;
+        /* 수평 중앙 정렬 */
+        align-items: flex-start;
+
+}
+
+.faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.faq-answer {
+    margin-top: 10px;
+    padding-left: 20px;
+    font-size: 16px;
+}
+
+.faq-icon {
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #000;
+    transition: transform 0.3s ease;
+}
+
+.faq-icon.open {
+    transform: rotate(180deg);
+}
+
+.notice-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.notice-button:hover {
+    background-color: #0056b3;
+}

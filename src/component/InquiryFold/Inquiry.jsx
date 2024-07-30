@@ -40,7 +40,7 @@ function Inquiry() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('http://43.202.223.188/api/college')
+    axios.get('https://43.202.223.188/api/college')
       .then(response => {
         setColleges(response.data);
       })
@@ -50,7 +50,8 @@ function Inquiry() {
   }, []);
 
   const fetchDepartments = (collegeId) => {
-    axios.get(`http://43.202.223.188/api/departments/${collegeId}`)
+    axios.get(`https://43.202.223.188/api/departments/${collegeId}`)
+
       .then(response => {
         setDepartments(response.data);
       })
@@ -60,7 +61,7 @@ function Inquiry() {
   };
 
   const fetchSubjects = (departmentId) => {
-    axios.get(`http://43.202.223.188/api/subjects/${departmentId}`)
+    axios.get(`https://43.202.223.188/api/subjects/${departmentId}`)
       .then(response => {
         setLectures(response.data);
       })
@@ -103,7 +104,7 @@ function Inquiry() {
     }
 
     try {
-      const response = await axios.post('http://43.202.223.188/api/logout', { token });
+      const response = await axios.post('https://43.202.223.188/api/logout', { token });
       
       if (response.status === 200) {
         console.log(response.data.message); // "Logout successful"
@@ -241,7 +242,7 @@ function Inquiry() {
   };
 
   const handleSearch = () => {
-    axios.get('http://43.202.223.188/subjects/search', {
+    axios.get('https://43.202.223.188/subjects/search', {
       params: { subjectName: searchTerm }
     })
     .then(response => {

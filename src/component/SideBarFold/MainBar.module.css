@@ -1,19 +1,10 @@
-
-.body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    height: 100vh;
-    text-align: center;
-}
 /* 중간 --------------------- */
 .mainContent {
     flex: 1;
     padding: 10px;
     display: flex;
     flex-direction: column;
-    margin-left: -20px;
+    margin-left: 250px;
 }
 
 .navbar,
@@ -53,6 +44,7 @@
     font-size: 15px;
     color: rgb(104, 103, 103);
     margin: 0px -10px;
+
 }
 
 .subNavbar button.selected {
@@ -66,60 +58,4 @@
 
 .subNavbar button:last-child {
     margin-right: 0;
-}
-
-.table {
-    width: 600px;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-
-thead {
-    background-color: #f2f2f2;
-}
-
-th,
-td {
-    border: 1px solid #ddd;
-    padding: 16px;
-    text-align: center;
-}
-
-th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-}
-
-tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-tr:hover {
-    background-color: #ddd;
-}
-
-.pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-}
-
-.pagination button {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    color: black;
-    padding: 8px 16px;
-    text-decoration: none;
-    cursor: pointer;
-    margin: 0 4px;
-}
-
-.pagination button.active {
-    background-color: #595959;
-    color: white;
-    border: 1px solid #595959;
-}
-
-.pagination button:hover:not(.active) {
-    background-color: #ddd;
 }

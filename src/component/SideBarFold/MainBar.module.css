@@ -1,10 +1,15 @@
 /* 중간 --------------------- */
+.body {
+    margin-top: -20px;
+
+    /* 추가된 부분: 전체적으로 위로 이동 */
+}
 .mainContent {
     flex: 1;
     padding: 10px;
     display: flex;
     flex-direction: column;
-    margin-left: 250px;
+    margin-left: 245px;
 }
 
 .navbar,
@@ -49,11 +54,8 @@
 
 .subNavbar button.selected {
     background-color: #637ABF;
-    /* 파란색 배경 */
     color: white;
-    /* 하얀색 글자 */
     transform: translateY(-1px);
-    /* 앞으로 튀어나오게  */
 }
 
 .subNavbar button:last-child {

@@ -99,9 +99,8 @@
     padding: 10px;
     display: flex;
     flex-direction: column;
-    margin-left: 35px;
-    /* 좌측 여백 조정 */
-    margin-right: 20px;
+    margin-left:26px;
+    margin-right: 30px;
     /* 우측 여백 추가 */
 }
 

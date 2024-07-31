@@ -8,6 +8,8 @@ import Schedule from './component/ScheduleFold/Schedule.jsx'
 import Notice from './component/NoticeFold/Notice.jsx'
 import LeftBar from './component/SideBarFold/LeftBar.jsx'
 import FAQList from './component/NoticeFold/FAQList.jsx'
+import Mypage from './component/MypageFold/Mypage.jsx'
+import Course from './component/MypageFold/Course.jsx'
 
 function App() {
   // 환경 변수 사용 구간
@@ -29,6 +31,8 @@ function App() {
         <Route path='/notice' element={<Notice />}/>
         <Route path='/leftbar' element={<LeftBar />}/>
         <Route path='/faq' element={<FAQList/>}/>
+        <Route path='/mypage' element={<Mypage/>}/>
+        <Route path='/course' element={<Course/>}/>
 
       </Routes>
     </BrowserRouter>

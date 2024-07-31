@@ -1,12 +1,74 @@
+ 
  .container {
      width: 60%;
      margin: 0 auto;
      font-family: Arial, sans-serif;
      position: absolute;
-     top: 50%;
+     top: 55%;
      left: 50%;
      transform: translate(-50%, -50%);
+
  }
+
+ /* 중간 --------------------- */
+ .mainContent {
+     flex: 1;
+     padding: 10px;
+     display: flex;
+     flex-direction: column;
+     margin-left: -20px;
+ }
+
+ .navbar,
+ .subNavbar {
+     display: flex;
+    justify-content: center;
+     padding: 10px;
+ }
+
+ .navbar button {
+     padding: 10px;
+     border: 1px solid rgb(104, 103, 103);
+     cursor: pointer;
+     background-color: rgb(212, 216, 243);
+     border-radius: 15px 15px;
+     font-weight: bold;
+     font-size: 15px;
+     color: rgb(104, 103, 103);
+     margin: 0 10px;
+     width: 150px;
+ }
+
+ .navbar button.application {
+     background: #637ABF;
+     color: white;
+ }
+
+ .subNavbar button {
+     padding: 0px 130px;
+     width: 360px;
+     height: 40px;
+     border: 1px solid rgb(104, 103, 103);
+     cursor: pointer;
+     background-color: rgb(212, 216, 243);
+     border-radius: 10px 10px;
+     font-weight: bold;
+     font-size: 15px;
+     color: rgb(104, 103, 103);
+     margin: 0px -10px;
+ }
+
+ .subNavbar button.selected {
+     background-color: #637ABF;
+     color: white;
+     transform: translateY(-1px);
+ }
+
+ .subNavbar button:last-child {
+     margin-right: 0;
+ }
+
+ /*-----------------*/
 
  .section {
      border: 1px solid #ddd;

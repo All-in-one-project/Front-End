@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './MainBar.module.css';
 
 const MainBar = () => {  
-  const [selectedSubNav, setSelectedSubNav] = useState('');
+  const [selectedSubNav, setSelectedSubNav] = useState('FAQ');
   const navigate = useNavigate();
 
   const handleNavClick = (path) => {
@@ -12,7 +12,7 @@ const MainBar = () => {
 
   const handleSubNavClick = (subNav) => {
     setSelectedSubNav(subNav);
-    if (subNav === '공지사항') {
+    if (subNav === '전체 공지사항') {
       navigate('/notice');
     } else if (subNav === 'FAQ') {
       navigate('/faq');

@@ -19,7 +19,7 @@
 .navbar,
 .subNavbar {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     padding: 10px;
 }
 
@@ -67,6 +67,10 @@
 .subNavbar button:last-child {
     margin-right: 0;
 }
+
+
+
+/*-----------*/
 
 .table {
     width: 600px;

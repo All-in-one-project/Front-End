@@ -14,7 +14,7 @@ const data = [
 
 const Notice = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedSubNav, setSelectedSubNav] = useState('');
+ const [selectedSubNav, setSelectedSubNav] = useState('전체 공지사항'); // 초기 상태 설정
   const navigate = useNavigate();
   const itemsPerPage = 5;
   const totalPages = Math.ceil(data.length / itemsPerPage);
@@ -26,7 +26,7 @@ const Notice = () => {
 
   const handleSubNavClick = (subNav) => {
     setSelectedSubNav(subNav);
-    if (subNav === '공지사항') {
+    if (subNav === '전체 공지사항') {
       navigate('/notice');
     } else if (subNav === 'FAQ') {
       navigate('/faq');

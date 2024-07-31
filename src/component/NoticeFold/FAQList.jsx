@@ -30,9 +30,6 @@ const FAQList = () => {
     <div className={styles['body']}>
       <LeftBar />
       <MainBar />
-      <button onClick={handleNotionClick} className={styles['notice-button']}>
-        전체 공지사항
-      </button>
       <div className={styles['faq-list']}>
         {faqs.map((faq, index) => (
           <div key={index} className={styles['faq-item']}>

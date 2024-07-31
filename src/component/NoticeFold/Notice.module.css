@@ -1,0 +1,129 @@
+
+.body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    text-align: center;
+}
+/* 중간 --------------------- */
+.mainContent {
+    flex: 1;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    margin-left: -20px;
+}
+
+.navbar,
+.subNavbar {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.navbar button {
+    padding: 10px;
+    border: 1px solid rgb(104, 103, 103);
+    cursor: pointer;
+    background-color: rgb(212, 216, 243);
+    border-radius: 15px 15px;
+    font-weight: bold;
+    font-size: 15px;
+    color: rgb(104, 103, 103);
+    margin: 0 10px;
+    width: 150px;
+}
+
+.navbar button.application {
+    background: #637ABF;
+    color: white;
+}
+
+.subNavbar button {
+    padding: 0px 130px;
+    width:360px;
+    height: 40px;
+    border: 1px solid rgb(104, 103, 103);
+    cursor: pointer;
+    background-color: rgb(212, 216, 243);
+    border-radius: 10px 10px;
+    font-weight: bold;
+    font-size: 15px;
+    color: rgb(104, 103, 103);
+    margin: 0px -10px;
+}
+
+.subNavbar button.selected {
+    background-color: #637ABF;
+    /* 파란색 배경 */
+    color: white;
+    /* 하얀색 글자 */
+    transform: translateY(-1px);
+    /* 앞으로 튀어나오게  */
+}
+
+.subNavbar button:last-child {
+    margin-right: 0;
+}
+
+
+
+/*-----------*/
+
+.table {
+    width: 600px;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+thead {
+    background-color: #f2f2f2;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 16px;
+    text-align: center;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #ddd;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.pagination button {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    color: black;
+    padding: 8px 16px;
+    text-decoration: none;
+    cursor: pointer;
+    margin: 0 4px;
+}
+
+.pagination button.active {
+    background-color: #595959;
+    color: white;
+    border: 1px solid #595959;
+}
+
+.pagination button:hover:not(.active) {
+    background-color: #ddd;
+}

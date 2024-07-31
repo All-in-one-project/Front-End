@@ -1,0 +1,144 @@
+.body {
+    background-color: #ffffff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    /* 여백 추가 */
+    display: flex;
+    justify-content: center;
+    /* 수평 중앙 정렬 */
+    align-items: flex-start;
+    /* 상단 정렬 */
+    height: 100vh;
+    /* 전체 화면 높이 */
+    box-sizing: border-box;
+    /* 여백 포함 크기 계산 */
+}
+
+.faq-list {
+    width: 300px;
+    /* 너비 설정 */
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    /* 내부 여백 */
+    box-sizing: border-box;
+    /* 여백 포함 크기 계산 */
+    margin-left: 20px;
+    /* 사이드바와의 간격 */
+    height:100px;
+}
+
+.faq-item {
+    border-bottom: 1px solid #ddd;
+    padding: 15px 0;
+    justify-content: center;
+        /* 수평 중앙 정렬 */
+        align-items: flex-start;
+
+}
+
+.faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.faq-answer {
+    margin-top: 10px;
+    padding-left: 20px;
+    font-size: 16px;
+}
+
+.faq-icon {
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #000;
+    transition: transform 0.3s ease;
+}
+
+.faq-icon.open {
+    transform: rotate(180deg);
+}
+
+.notice-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.notice-button:hover {
+    background-color: #0056b3;
+}
+
+
+/* 중간 --------------------- */
+.mainContent {
+    flex: 1;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    margin-left: -20px;
+}
+
+.navbar,
+.subNavbar {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+}
+
+.navbar button {
+    padding: 10px;
+    border: 1px solid rgb(104, 103, 103);
+    cursor: pointer;
+    background-color: rgb(212, 216, 243);
+    border-radius: 15px 15px;
+    font-weight: bold;
+    font-size: 15px;
+    color: rgb(104, 103, 103);
+    margin: 0 10px;
+    width: 150px;
+}
+
+.navbar button.application {
+    background: #637ABF;
+    color: white;
+}
+
+.subNavbar button {
+    padding: 0px 130px;
+    width: 360px;
+    height: 40px;
+    border: 1px solid rgb(104, 103, 103);
+    cursor: pointer;
+    background-color: rgb(212, 216, 243);
+    border-radius: 10px 10px;
+    font-weight: bold;
+    font-size: 15px;
+    color: rgb(104, 103, 103);
+    margin: 0px -10px;
+}
+
+.subNavbar button.selected {
+    background-color: #637ABF;
+    /* 파란색 배경 */
+    color: white;
+    /* 하얀색 글자 */
+    transform: translateY(-1px);
+    /* 앞으로 튀어나오게  */
+}
+
+.subNavbar button:last-child {
+    margin-right: 0;
+}

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import styles from './Application.module.css';
+import styles from './Reserve.module.css'; 
 import { useNavigate } from 'react-router-dom'; // React Router 사용
 
-function Application() {
+function Reserve() {  
   const [lectures, setLectures] = useState([]);
   const lecturelist = [
     { id: 1, name: "20세기 한국사", hours: "(월4,5)", lecture: "21032-001" },
@@ -19,9 +19,11 @@ function Application() {
   const [selectedDepartmentContainer, setSelectedDepartmentContainer] = useState('');
   const [selectedYearContainer, setSelectedYearContainer] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // 사이드바 상태 추가
+  const [sidebarLectures, setSidebarLectures] = useState([]); // 사이드바에 추가될 강의 상태
   const [isPopupVisible, setIsPopupVisible] = useState(false); // 팝업창 상태 추가
   const [popupType, setPopupType] = useState(''); // 팝업창 타입 상태 추가
   const [lecturePlan, setLecturePlan] = useState(''); // 강의 계획서 상태 추가
+  const [popupMessage, setPopupMessage] = useState(''); // 팝업창 메시지 추가
 
   /*맨 위에 공지사항, 과목조회, 수강신청, 마이페이지 버튼 눌를시 페이지 이동시켜주는 React훅*/
   const navigate = useNavigate(); // React Router의 useNavigate 사용
@@ -37,12 +39,24 @@ function Application() {
     }
   }, [selectedGridContainer, selectedDepartmentContainer, selectedYearContainer]);
 
+  const handleSubjectCodeChange = (e) => setSubjectCode(e.target.value);
+  const handleDivisionCodeChange = (e) => setDivisionCode(e.target.value);
+
+  const handleAddToCart = () => {
+    console.log('장바구니에 담겼습니다.');
+  };
+
   const handleLogout = () => {
     console.log('로그아웃되었습니다.');
-    navigate('/'); // 초기화면으로 리디렉션
+    navigate('/'); 
+  };
+
+  const handleSubNavClick = (event) => {
+    setSelectedSubNav(event.target.innerText);
   };
 
   /*단과대 섹션에서 단과대 선택을 뭘하냐에 따라 학부 나오게 하는*/
+
   const handleGridContainerClick = (container) => {
     if (selectedGridContainer === container) {
       setSelectedGridContainer('');
@@ -52,7 +66,15 @@ function Application() {
       setSelectedGridContainer(container);
       setDepartmentList(departmentMapping[container]);
     } else {
-      alert('단과대는 1개만 선택할 수 있습니다.');
+        setPopupMessage(
+      <div>
+        해당 항목은 복수 선택이 불가능합니다!
+        <br/>
+        <span style={{ fontWeight: 'normal' }}>
+          (단과대 및 학과/학부 복수 선택 불가)
+        </span>
+      </div>);
+      togglePopup('error');
     }
   };
 
@@ -62,7 +84,15 @@ function Application() {
     } else if (selectedDepartmentContainer === '') {
       setSelectedDepartmentContainer(container);
     } else {
-      alert('학부는 1개만 선택할 수 있습니다.');
+      setPopupMessage(
+      <div>
+        해당 항목은 복수 선택이 불가능합니다!
+        <br/>
+        <span style={{ fontWeight: 'normal' }}>
+          (단과대 및 학과/학부 복수 선택 불가)
+        </span>
+      </div>);
+      togglePopup('error');
     }
   };
 
@@ -72,36 +102,48 @@ function Application() {
     } else if (selectedYearContainer.length < 4) {
       setSelectedYearContainer([...selectedYearContainer, container]);
     } else {
-      alert('학년은 4개까지 선택할 수 있습니다.');
+      setPopupMessage('학년은 4개까지 선택할 수 있습니다.');
+      togglePopup('error');
     }
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen); // 사이드바 토글 함수
   };
 
   const togglePopup = (type) => {
     setPopupType(type); // 팝업창 타입 설정
-    setIsPopupVisible(!isPopupVisible); // 팝업창 토글 함수
+    setIsPopupVisible(!isPopupVisible); 
   };
 
   const renderCloseButton = () => {
-    switch (popupType) {
-      case 'totalInfo':
-        return (
-          <button className={styles['close-btn-totalInfo']} onClick={() => togglePopup('')}>
-            ✖
-          </button>
-        );
-      case 'moreLectures':
-        return (
-          <button className={styles['close-btn-moreLectures']} onClick={() => togglePopup('')}>
-            ✖
-          </button>
-        );
-      default:
-        return (
-          <button className={styles['close-btn']} onClick={() => togglePopup('')}>
-            X
-          </button>
-        );
-    }
+    return (
+      <button className={styles.closeBtn} onClick={() => togglePopup('')}>
+        ✖
+      </button>
+    );
+  };
+   const renderErrorCloseButton = () => {
+    return (
+      <button className={styles.colseBtnmultiple} onClick={() => togglePopup('')}>
+        확인 및 다시 선택하기
+      </button>
+    );
+  };
+
+  const handleAddLectureToSidebar = (lecture) => {
+    console.log('장바구니에 담겼습니다.');
+    setSidebarLectures([...sidebarLectures, lecture]);
+  };
+
+  const handleApplyLecture = (lecture) => {
+    console.log('수강신청이 완료되었습니다.');
+    setSidebarLectures([...sidebarLectures, lecture]);
+  };
+
+  const handleRemoveLectureFromSidebar = (id) => {
+    console.log('장바구니에서 삭제되었습니다.');
+    setSidebarLectures(sidebarLectures.filter((lecture) => lecture.id !== id));
   };
 
   const fetchLectures = (collegeId, departmentId, gradeId) => {
@@ -165,12 +207,6 @@ function Application() {
     ];
     setLectures(exampleLectures);
   };
-
-  const fetchLecturePlan = (id) => {
-    console.log('강의 계획서를 불러오는 데 실패했습니다.');
-    // 여기서 실제 데이터를 가져오는 로직을 추가해야 합니다.
-  };
-
   useEffect(() => {
     if (selectedGridContainer && selectedDepartmentContainer && selectedYearContainer.length > 0) {
       const collegeId = Object.keys(departmentMapping).indexOf(selectedGridContainer) + 1;
@@ -180,32 +216,48 @@ function Application() {
     }
   }, [selectedGridContainer, selectedDepartmentContainer, selectedYearContainer]);
 
+
+  const fetchLecturePlan = (lectureId) => {
+    const lecturePlans = {
+      '21032-001': 'This is the lecture plan for 컴퓨터 네트워크.',
+      '21032-002': 'This is the lecture plan for 자바.',
+      '21032-003': 'This is the lecture plan for 웹 프로그래밍.',
+      '21032-004': 'This is the lecture plan for 소프트웨어 공학.',
+      // 다른 강의 계획서 내용 추가 가능
+    };
+
+    setLecturePlan(lecturePlans[lectureId] || '해당 강의의 계획서를 찾을 수 없습니다.');
+    togglePopup('lecturePlan');
+  };
+
   const MainLectureItem = ({ lecture }) => (
-    <div className={styles['lecture-box']}>
-      <div className={styles['top-row']}>
+    <div className={styles.lectureBox}>
+      <div className={styles.topRow}>
         <div>{lecture.id}</div>
-        <div className={styles['category']}>{lecture.category}</div> {/* category를 추가하여 오른쪽으로 배치 */}
+        <div className={styles.category}>{lecture.category}</div> 
       </div>
-      <div className={styles['name']}>{lecture.name}</div> {/* name을 아래로 이동 */}
-      <div className={styles['time']}>교수 {lecture.professor} | {lecture.time}</div> {/* 교수와 시간을 표시 */}
-      <div className={styles['buttons']}>
-        <button className={styles['plan']} onClick={() => fetchLecturePlan(lecture.id)}>강의 계획서</button> {/* 강의 계획서 버튼 */}
+      <div className={styles.name}>{lecture.name}</div> 
+      <div className={styles.time}>교수 {lecture.professor} | {lecture.time}</div> {/* 교수와 시간을 표시 */}
+      <div className={styles.buttons}>
+        <button className={styles.basket} onClick={() => handleAddLectureToSidebar(lecture)}>장바구니</button>
+        <button className={styles.plan} onClick={() => fetchLecturePlan(lecture.id)}>강의 계획서</button> {/* 강의 계획서 버튼 */}
       </div>
     </div>
   );
 
-  /*장바구니 내역에서 장바구니 내용들*/
   const LectureItem = ({ lecture }) => (
-    <div className={styles['lecture-item']}>
-      <span className={styles['lecture-name']}>{lecture.name} {lecture.hours}</span>
-      <button className={styles['info-btn']} onClick={() => fetchLecturePlan(lecture.id)}>정보</button>
+    <div className={styles.lectureItem}>
+      <span className={styles.lectureName}>{lecture.name} {lecture.hours}</span>
+      <button className={styles.infoBtn} onClick={() => fetchLecturePlan(lecture.id)}>정보</button>
+      <button className={styles.applyBtn} onClick={() => handleAddLectureToSidebar(lecture)}>추가</button>
     </div>
   );
 
   const PopupLectureItem = ({ lecture }) => (
-    <div className={styles['lecture-item']}>
-      <span className={styles['lecture-name']}>{lecture.name}</span>
-      <button className={styles['info-btn']} onClick={() => fetchLecturePlan(lecture.id)}>정보</button>
+    <div className={styles.lectureItem}>
+      <span className={styles.lectureName}>{lecture.name}</span>
+      <button className={styles.infoBtn} onClick={() => fetchLecturePlan(lecture.id)}>정보</button>
+      <button className={styles.applyBtn} onClick={() => handleAddLectureToSidebar(lecture)}>추가</button>
     </div>
   );
 
@@ -224,7 +276,7 @@ function Application() {
 
   const [departmentList, setDepartmentList] = useState(departmentMapping['ICT융합과학대학']); // 초기값 설정
 
-  // 임의의 강의 리스트 추가
+  // 더보기 클릭 시 임의의 강의 리스트 추가
   const additionalLectures = [
     { id: 5, name: "철학 개론 (금1,2)" },
     { id: 6, name: "미적분학 (월1,2)" },
@@ -235,13 +287,13 @@ function Application() {
   ];
 
   return (
-    <div className={styles['body']}>
-      <div className={styles['left-bar']}>
-        <div className={styles['title']}>
+    <div className={styles.body}>
+      <div className={styles.leftBar}>
+        <div className={styles.title}>
           <h3>한국대학교
             <div>수강신청</div></h3>
         </div>
-        <div className={styles['user-info']}>
+        <div className={styles.userInfo}>
           <div>이름 홍길동</div>
           <div>학번 12345678</div>
           <h4>학과 (부전공)</h4>
@@ -251,7 +303,7 @@ function Application() {
 
         <div><hr style={{ border: '1px solid white' }} /></div>
 
-        <div className={styles['credits-info']}>
+        <div className={styles.creditsInfo}>
           <h4>학점 정보 (부전공)</h4>
           <div>총합 /130</div>
           <div>전핵 /24</div>
@@ -260,38 +312,45 @@ function Application() {
           <div>전취 /3</div>
         </div>
 
-        <div className={styles['toggle-btn']}>
+        <div className={styles.toggleBtn}>
           <button onClick={() => togglePopup('totalInfo')}>+</button>전체 정보 보기
         </div>
         <div><hr style={{ border: '1px solid white' }} /></div>
 
-        <div className={styles['logout-btn']}>
+        <div className={styles.logoutBtn}>
           <button onClick={handleLogout}>로그아웃</button>
         </div>
       </div>
       
-
-      {/*메인 섹션-----------------*/}
-      <div className={styles['main-content']}>
+      <div className={styles.mainContent}>
         {/* 상단 네비게이션 바 */}
-        <div className={styles['navbar']}>
+        <div className={styles.navbar}>
           <button onClick={() => handleNavClick('/notice')}>공지사항</button>
-          <button className={styles['application']}>과목조회</button>
-          <button onClick={() => handleNavClick('/')}>수강신청</button>
+          <button onClick={() => handleNavClick('/inquiry')}>과목조회</button>
+          <button className={styles.application}>수강신청</button>
           <button onClick={() => handleNavClick('/mypage')}>마이페이지</button>
         </div>
+
         {/* 하위 네비게이션 바 */}
-        <div className={styles['sub-navbar']}>
-          <div className={styles['long-box']}>
-            <div>해당 페이지는 과목 조회 페이지입니다.</div>
-            예비 수강신청 및 일반 수강신청을 희망하는 학생은 위 <span className={styles['bold']}>[수강신청]</span> 카테고리를 이용해 주시기 바랍니다.
-          </div>
+        <div className={styles.subNavbar}>
+          <button
+            className={`${styles.subNavbarBtn} ${selectedSubNav === '예비수강신청' ? styles.selected : ''}`}
+            onClick={handleSubNavClick}
+          >
+            예비수강신청
+          </button>
+          <button
+            className={`${styles.subNavbarBtn} ${selectedSubNav === '일반수강신청' ? styles.selected : ''}`}
+            onClick={handleSubNavClick}
+          >
+            일반수강신청
+          </button>
         </div>
 
         {/* 단과대 선택 섹션 */}
-        <div className={styles['section']}>
-          <div className={styles['section-title']}>단과대 선택</div>
-          <div className={styles['grid-container']}>
+        <div className={styles.section}>
+          <div className={styles.sectionTitle}>단과대 선택</div>
+          <div className={styles.gridContainer}>
             {['ICT융합과학대학', '건강과학대학', '음악대학', '법학대학', '자연과학대학', '공과대학', '인문사회대학', '미술대학', '체육대학', '교양대학'].map((name) => (
               <div
                 key={name}
@@ -308,9 +367,9 @@ function Application() {
         </div>
 
         {/* 학부 및 학과 선택 섹션 */}
-        <div className={styles['section']}>
-          <div className={styles['section-title']}>학부 및 학과 선택</div>
-          <div className={styles['department-container']}>
+        <div className={styles.section}>
+          <div className={styles.sectionTitle}>학부 및 학과 선택</div>
+          <div className={styles.departmentContainer}>
             {departmentList.map((name) => (
               <div
                 key={name}
@@ -327,9 +386,9 @@ function Application() {
         </div>
 
         {/* 학년 선택 섹션 */}
-        <div className={styles['section']}>
-          <div className={styles['section-title']}>학년 선택</div>
-          <div className={styles['year-container']}>
+        <div className={styles.section}>
+          <div className={styles.sectionTitle}>학년 선택</div>
+          <div className={styles.yearContainer}>
             {['1학년', '2학년', '3학년', '4학년'].map((year) => (
               <div
                 key={year}
@@ -344,9 +403,11 @@ function Application() {
             ))}
           </div>
         </div>
+        <div><div style={{ width: '700px', height: '0.5px', backgroundColor: 'gray', marginTop:'4px'}} /></div> 
 
-        <div className={styles['section']}>
-          <div className={styles['lecture-container']}>
+            {/*강의 8개 리스트*/}
+        <div className={styles.section}>
+          <div className={styles.lectureContainer}>
             {lectures.map((lecture, index) => (
               <MainLectureItem key={index} lecture={lecture} />
             ))}
@@ -354,56 +415,107 @@ function Application() {
         </div>
       </div>
 
-      <div className={styles['right-bar2']}>
+      {/* 슬라이드로 생기는 오른쪽 사이드바 */}
+      {!isSidebarOpen && (
+        <button className={styles.circleButton} onClick={toggleSidebar}>
+          +
+        </button>
+      )}
+      <div className={`${styles.rightBar} ${isSidebarOpen ? styles.open : ''}`}>
+        <button className={styles.closeSidebarButton} onClick={toggleSidebar}>
+            ㅡ
+        </button>
+        <div className={styles.sidebarContent}>
+            <div className={styles.sidebarSection}>
+            <div className={styles.basketTitle}>예비수강신청 내역</div>
+            {sidebarLectures.map((lecture, index) => (
+                <div key={index} className={styles.lectureBox}>
+                <div className={styles.name}>{lecture.name}</div> {/* 이름 위치 수정 */}
+                <div className={styles.topRow}>
+                    <div>{lecture.id} {lecture.category}</div>
+                </div>
+                <div className={styles.buttons}>
+                    <button className={styles.remove} onClick={() => handleRemoveLectureFromSidebar(lecture.id)}>X</button>
+                </div>
+                </div>
+            ))}
+            </div>
+        </div>
+    </div>
+
+
+      {/*진짜 오른쪽 사이드바*/}
+      <div className={styles.rightBar2}>
         {/* 강의명으로 조회 및 검색 섹션 */}
-        <div className={styles['section']} style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
-          <div className={styles['section-title']}>강의명으로 조회 후 신청</div>
-          <div className={styles['search-container']}>
+        <div className={styles.section} style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
+          <div className={styles.sectionTitle}>강의명으로 조회 후 신청</div>
+          <div className={styles.searchContainer}>
             <input type="text" placeholder="강의명 검색" />
-            <FaSearch className={styles['search-icon']} />
+            <FaSearch className={styles.searchIcon} />
           </div>
         </div>
 
         {/* 강의 리스트 섹션 */}
-        <div className={styles['lecture-list']} style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
+        <div className={styles.lectureList} style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
           {lectureList.map((lecture) => (
             <LectureItem key={lecture.id} lecture={lecture} />
           ))}
-          <button type="button" className={styles['more']} onClick={() => togglePopup('moreLectures')}>더보기</button>
+          <button type="button" className={styles.more} onClick={() => togglePopup('moreLectures')}>더보기</button>
+        </div>
+
+        {/* 과목 코드 직접 입력 섹션 */}
+        <div className={styles.sectionSubject} style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
+          <div className={styles.sectionTitle}>과목 코드 직접 입력</div>
+          <input
+            type="text"
+            placeholder="과목 코드 입력"
+            className={styles.subjectCode}
+            value={subjectCode}
+            onChange={handleSubjectCodeChange}
+          />
+          <input
+            type="text"
+            placeholder="분반 코드 입력"
+            value={divisionCode}
+            onChange={handleDivisionCodeChange}
+          />
+          <button type="button" className={styles.cartBtn} onClick={handleAddToCart}>
+            장바구니 담기
+          </button>
         </div>
       </div>
 
       {isPopupVisible && (
-        <div className={styles['popup']}>
-          <div className={`${styles['popup-inner']} ${styles[popupType]}`}>
+        <div className={styles.popup}>
+          <div className={`${styles.popupInner} ${styles[popupType]}`}>
             {renderCloseButton()} {/* 조건부 렌더링된 닫기 버튼 */}
             {popupType === 'totalInfo' && (
               <div>
-                <h3 className={styles['popup-title']}>전체 학점 정보 (부전공)</h3>
-                <ul className={styles['info-list']}>
-                  <li><span className={styles['label']}>총합</span> <span className={styles['value']}>0 / 130</span></li>
-                  <li><span className={styles['label']}>전공 핵심</span> <span className={styles['value']}>0 / 24</span></li>
-                  <li><span className={styles['label']}>전공 선택</span> <span className={styles['value']}>0 / 48</span></li>
-                  <li><span className={styles['label']}>전공 교양</span> <span className={styles['value']}>0 / 9</span></li>
-                  <li><span className={styles['label']}>전공 취업</span> <span className={styles['value']}>0 / 3</span></li>
-                  <li><span className={styles['label']}>중요 핵심</span> <span className={styles['value']}>0 / 4</span></li>
-                  <li><span className={styles['label']}>기술 교양</span> <span className={styles['value']}>0 / 18</span></li>
-                  <li><span className={styles['label']}>선택 교양</span> <span className={styles['value']}>0 / 18</span></li>
-                  <li><span className={styles['label']}>일반 선택</span> <span className={styles['value']}>0 / 45</span></li>
-                  <li><span className={styles['label']}>전공 교양</span> <span className={styles['value']}>0 / 9</span></li>
-                  <li><span className={styles['label']}>전공 필수</span> <span className={styles['value']}>0 / 27</span></li>
-                  <li><span className={styles['label']}>전공 선택</span> <span className={styles['value']}>0 / 6</span></li>
+                <h3 className={styles.popupTitle}>전체 학점 정보 (부전공)</h3>
+                <ul className={styles.infoList}>
+                  <li><span className={styles.label}>총합</span> <span className={styles.value}>0 / 130</span></li>
+                  <li><span className={styles.label}>전공 핵심</span> <span className={styles.value}>0 / 24</span></li>
+                  <li><span className={styles.label}>전공 선택</span> <span className={styles.value}>0 / 48</span></li>
+                  <li><span className={styles.label}>전공 교양</span> <span className={styles.value}>0 / 9</span></li>
+                  <li><span className={styles.label}>전공 취업</span> <span className={styles.value}>0 / 3</span></li>
+                  <li><span className={styles.label}>중요 핵심</span> <span className={styles.value}>0 / 4</span></li>
+                  <li><span className={styles.label}>기술 교양</span> <span className={styles.value}>0 / 18</span></li>
+                  <li><span className={styles.label}>선택 교양</span> <span className={styles.value}>0 / 18</span></li>
+                  <li><span className={styles.label}>일반 선택</span> <span className={styles.value}>0 / 45</span></li>
+                  <li><span className={styles.label}>전공 교양</span> <span className={styles.value}>0 / 9</span></li>
+                  <li><span className={styles.label}>전공 필수</span> <span className={styles.value}>0 / 27</span></li>
+                  <li><span className={styles.label}>전공 선택</span> <span className={styles.value}>0 / 6</span></li>
                 </ul>
               </div>
             )}
             {popupType === 'moreLectures' && (
               <div>
-                <h3 className={styles['popup-title']}>강의명으로 조회 후 신청</h3>
-                <div className={styles['search-container']}>
-                  <input className={styles['lecture-search']} type="text" placeholder="강의명 검색" />
-                  <FaSearch className={styles['popup-search-icon']} />
+                <h3 className={styles.popupTitle}>강의명으로 조회 후 신청</h3>
+                <div className={styles.searchContainer}>
+                  <input className={styles.lectureSearch} type="text" placeholder="강의명 검색" />
+                  <FaSearch className={styles.popupSearchIcon} />
                 </div>
-                <div className={`${styles['lecture-list']} ${styles['popup-lecture-list']}`}>
+               <div className={`${styles['lectureList']} ${styles['popupLectureList']}`}>
                   {[...lectureList, ...additionalLectures].map((lecture) => (
                     <PopupLectureItem key={lecture.id} lecture={lecture} />
                   ))}
@@ -412,8 +524,15 @@ function Application() {
             )}
             {popupType === 'lecturePlan' && (
               <div>
-                <h3 className={styles['popup-title']}>강의 계획서</h3>
+                <h3 className={styles.popupTitle}>강의 계획서</h3>
                 <p>{lecturePlan}</p>
+              </div>
+            )}
+            {popupType === 'error' && (
+              <div>
+                <h4 className={styles.popupTitle}>단과대 및 학과/학부 선택</h4>
+                <p>{popupMessage}</p>
+                {renderErrorCloseButton()}
               </div>
             )}
           </div>
@@ -423,4 +542,4 @@ function Application() {
   );
 }
 
-export default Application;
+export default Reserve;

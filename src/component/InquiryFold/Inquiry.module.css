@@ -1,3 +1,4 @@
+/*과목조회 컴포넌트 css*/
 .body {
     font-family: Arial, sans-serif;
     display: flex;
@@ -9,7 +10,7 @@
 }
 
 /* 왼쪽바 --------------------- */
-.leftBar {
+.left-bar {
     width: 200px;
     height: 620px;
     padding: 25px;
@@ -20,9 +21,7 @@
     color: white;
 }
 
-/* 나머지 스타일들 동일하게 수정 */
-
-.leftBar .title h3 {
+.left-bar .title h3 {
     color: white;
     margin: 10px;
     margin-top: 15px;
@@ -30,12 +29,12 @@
     padding-left: 10px;
 }
 
-.leftBar .title h3 div {
+.left-bar .title h3 div {
     margin-left: 10px;
     /* 수강신청 div를 오른쪽으로 이동 */
 }
 
-.leftBar .title {
+.left-bar .title {
     width: 150px;
     height: 80px;
     border: 1px solid white;
@@ -45,7 +44,7 @@
 }
 
 /* 전체 학점 정보 + 버튼 스타일 */
-.toggleBtn button {
+.toggle-btn button {
     width: 20px;
     height: 20px;
     background-color: white;
@@ -61,27 +60,27 @@
     margin-right: 8px;
 }
 
-.toggleBtn {
+.toggle-btn {
     margin-right: 5px;
     margin-top: 5px;
 }
 
-.leftBar .userInfo,
-.leftBar .creditsInfo {
+.left-bar .user-info,
+.left-bar .credits-info {
     margin-top: 5px;
     padding-left: 10px;
 }
 
-.leftBar .creditsInfo {
+.left-bar .credits-info {
     margin-top: -30px;
 }
 
-.leftBar .userInfo div,
-.leftBar .creditsInfo div {
+.left-bar .user-info div,
+.left-bar .credits-info div {
     margin-top: 8px;
 }
 
-.logoutBtn button {
+.logout-btn button {
     margin-top: 5px;
     padding: 15px;
     width: 180px;
@@ -93,13 +92,16 @@
     border-radius: 10px 10px;
 }
 
+/* 메인 섹션*--------------------------- */
 /* 중간 --------------------- */
-.mainContent {
+.main-content {
     flex: 1;
     padding: 10px;
     display: flex;
     flex-direction: column;
-    margin-left: 35px;
+    margin-left:26px;
+    margin-right: 30px;
+    /* 우측 여백 추가 */
 }
 
 .navbar,
@@ -108,7 +110,6 @@
     justify-content: space-around;
     padding: 10px;
 }
-
 .navbar button {
     padding: 10px;
     border: 1px solid rgb(104, 103, 103);
@@ -118,8 +119,8 @@
     font-weight: bold;
     font-size: 15px;
     color: rgb(104, 103, 103);
-    margin: 0 10px;
     width: 150px;
+    margin-left:20px;
 }
 
 .navbar button.application {
@@ -127,52 +128,53 @@
     color: white;
 }
 
-.subNavbar button {
-    padding: 0px 130px;
-    height: 40px;
-    border: 1px solid rgb(104, 103, 103);
-    cursor: pointer;
+/* 하위 네비게이션 바 */
+.sub-navbar {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.sub-navbar .long-box {
     background-color: rgb(212, 216, 243);
-    border-radius: 10px 10px;
     font-weight: bold;
-    font-size: 15px;
-    color: rgb(104, 103, 103);
-    margin: 0px -10px;
+    color: rgb(111, 111, 111);
+    padding: 10px 20px;
+    border-radius: 10px;
+    text-align: left;
+    font-size: 14px;
+    /* 글자 크기 설정 */
+    width: 100%;
+    /* 가로로 긴 상자 */
 }
 
-.subNavbar button.selected {
-    background-color: #637ABF;
-    /* 파란색 배경 */
-    color: white;
-    /* 하얀색 글자 */
-    transform: translateY(-1px);
-    /* 앞으로 튀어나오게  */
+.sub-navbar .long-box .bold {
+    font-weight: bold;
+    color: rgb(69, 69, 69);
 }
 
-.subNavbar button:last-child {
-    margin-right: 0;
-}
-
-/* 선택사항들 */
+/* 대학, 학부, 학년 선택사항들 */
 .section {
     margin: 10px 0;
     z-index: 1000;
     position: relative;
+
+
 }
 
-.sectionTitle {
+.section-title {
     font-size: 15px;
     margin-bottom: 10px;
     font-weight: bold;
 }
 
-.gridContainer {
+.grid-container {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     gap: 10px;
 }
 
-.gridContainer div {
+.grid-container div {
     border: 2px solid #637ABF;
     padding: 7px;
     text-align: center;
@@ -183,15 +185,15 @@
     color: rgb(104, 108, 109);
 }
 
-.departmentContainer,
-.yearContainer {
+.department-container,
+.year-container {
     display: flex;
     justify-content: flex-start;
     gap: 10px;
 }
 
-.departmentContainer div,
-.yearContainer div {
+.department-container div,
+.year-container div {
     border: 2px solid #637ABF;
     padding: 5px;
     text-align: center;
@@ -206,15 +208,15 @@
     color: rgb(104, 108, 109);
 }
 
-/* 강의 목록 상자들 */
-.lectureContainer {
+/* 메인 섹션에서 8개 강의 목록 상자들 */
+.lecture-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(2, 1fr);
     gap: 10px;
 }
 
-.lectureBox {
+.lecture-box {
     border: 2px solid #637ABF;
     width: 163px;
     height: 90px;
@@ -228,24 +230,25 @@
     justify-content: space-between;
 }
 
-.lectureBox .category {
+.lecture-box .category {
     margin-left: auto;
     /* category를 오른쪽으로 배치 */
     color: rgb(104, 108, 109);
+    
 }
 
-.lectureBox div {
+.lecture-box div {
     margin-left: 10px;
     font-size: 13px;
 }
 
-.lectureBox .name {
+.lecture-box .name {
     font-size: 15px;
     font-weight: bold;
     color: black;
 }
 
-.lectureBox .topRow {
+.lecture-box .top-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -253,45 +256,50 @@
     margin-top: -3px;
 }
 
-.lectureBox .topRow div:first-child {
+.lecture-box .top-row div:first-child {
     transform: translateX(-10px);
     /* 첫 번째 항목을 왼쪽으로 이동 */
 }
 
-.lectureBox button {
-    width: 200px;
-    height: 20px;
+
+/*장바구니, 강의계획서 버튼들*/
+.lecture-box button {
+    width: 150px;
+    height: 22px;
     padding: 0px 0px;
     font-weight: bold;
     border-radius: 8px;
     cursor: pointer;
-    margin: 0 2px;
     /* 버튼 사이 간격 추가 */
     font-size: 11px;
 }
 
-.lectureBox .buttons {
+.lecture-box .buttons {
     display: flex;
     justify-content: space-between;
     margin-top: 3px;
 }
 
-.lectureBox button.plan {
+/*강의계획서 버튼*/
+.lecture-box button.plan {
     background-color: rgb(212, 216, 243);
     border: 1px solid black;
     color: rgb(104, 108, 109);
     font-weight: bold;
+    width: 70px;
+    margin-left: 70px;
 }
 
-.lectureBox button.basket {
+.lecture-box button.basket {
     background-color: #637ABF;
     border: none;
     color: white;
     font-weight: bold;
+    width: 70px;
 }
 
 /* + 버튼 클릭하면 왼쪽으로 슬라이드 되는거 */
-.rightBar {
+.right-bar {
     width: 280px;
     height: 100vh;
     padding: 5px;
@@ -309,13 +317,14 @@
     z-index: 1000;
 }
 
-.rightBar.open {
+.right-bar.open {
     right: 0;
     /* 버튼 클릭 시 슬라이드되도록 설정 */
 }
 
+/* 오른쪽 사이드바--------------------- */
 /* 오른쪽 바2 */
-.rightBar2 {
+.right-bar2 {
     width: 300px;
     padding: 5px;
     background-color: white;
@@ -324,31 +333,34 @@
     justify-content: flex-start;
     right: 200px;
     margin-top: 150px;
+    margin-bottom:10px;
+    margin-left:10px;
 }
 
-.rightBar2 input {
-    width: 50%;
+.right-bar2 input {
+    width: 80px;
     height: 15px;
     padding: 10px 10px;
     margin: 5px;
     border: none;
     background-color: #e7e7e7;
     border-radius: 10px;
+    
 }
 
-/* 강의명으로 조회 후 및 검색 */
+/* 강의명으로 조회 */
 .section input {
-    width: 75%;
-    height: 15px;
+    width: 83%;
+    height: 13px;
     margin: 0px 0px;
     border: none;
     background-color: #e7e7e7;
     border-radius: 10px;
 }
 
-
-.lectureList button {
-    width: 85%;
+/*더보기버튼 */
+.lecture-list button {
+    width: 90%;
     height: 24px;
     border: none;
     font-size: 10px;
@@ -356,26 +368,23 @@
     color: rgb(104, 108, 109);
     background-color: rgb(204, 204, 204);
     border-radius: 10px;
+    margin-bottom:10px;
 }
 
-/* 강의명으로 조회 후 신청 */
-.section .sectionTitle {
-    font-weight: bold;
-    margin: 6px 0px;
-    color: rgb(100, 101, 101);
-}
+
+
 
 /* 강의 리스트들 전체적인 섹션 */
-.lectureList {
+.lecture-list {
     padding: 0;
     margin: 0;
-    margin-bottom: 90px;
+    margin-bottom: 10px;
     z-index: 1000;
     position: relative;
 }
 
-/* 강의 리스트 */
-.lectureList .lectureItem {
+/*4개 강의 리스트 */
+.lecture-list .lecture-item {
     background-color: #e7e7e7;
     border-radius: 10px;
     padding: 3px;
@@ -391,7 +400,7 @@
 }
 
 /* 강의이름 */
-.lectureList .lectureName {
+.lecture-list .lecture-name {
     margin-left: 10px;
     font-size: 11px;
     color: rgb(100, 101, 101);
@@ -399,7 +408,7 @@
 }
 
 /* 정보버튼 */
-.lectureList .infoBtn {
+.lecture-list .info-btn {
     width: 45px;
     height: 25px;
     margin-left: 5px;
@@ -410,133 +419,84 @@
     font-size: 11px;
     cursor: pointer;
     border: 1px solid rgb(104, 108, 109);
-}
-
-/* 신청 버튼 */
-.lectureList .applyBtn {
-    width: 45px;
-    height: 25px;
-    margin-left: 5px;
-    background-color: #637ABF;
-    color: white;
-    border: 1px;
-    border-radius: 10px;
-    font-size: 11px;
-    cursor: pointer;
-}
-
-/* 과목 코드 직접 입력 제목 */
-.sectionSubject .sectionTitle {
-    font-weight: bold;
-    margin: 6px 5px;
-    color: rgb(100, 101, 101);
-}
-
-/* 과목코드, 분반코드 입력 */
-.sectionSubject input {
-    width: 70%;
-    height: 10px;
-    padding: 10px 10px;
-    border: none;
-    background-color: #e7e7e7;
-    border-radius: 10px;
-    margin-bottom: 1px;
-}
-
-/* 장바구니 버튼 */
-.sectionSubject .cartBtn {
-    background-color: #637ABF;
-    width: 77%;
-    height: 30px;
-    border: none;
-    font-weight: bold;
-    font-size: 15px;
-    color: white;
-    border-radius: 13px;
-    margin: 5px 5px;
-}
-
-
-
-/*슬라이드 오른쪽 사이드바*/
-
-.rightBar.open {
-    right: 0;
-    /* 버튼 클릭 시 슬라이드되도록 설정 */
-}
-
-.basketTitle {
-    font-size: 20px;
-    color: white;
-    font-weight: bold;
-    margin-left: 50px;
-    margin-top: 5px;
-}
-
-/* + 동그라미 버튼 스타일 */
-.circleButton {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: #637ABF;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    cursor: pointer;
-    position: fixed;
-    top: 10px;
-    right: 30px;
-    z-index: 1001;
-    font-size: 40px;
-}
-
-/* - 동그라미 버튼 (오른쪽 슬라이드) */
-.closeSidebarButton {
-    background-color: white;
-    color: #637ABF;
-    border: none;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    font-size: 20px;
-    font-weight: bold;
-    /* 글자의 굵기를 얇게 설정 */
-
-    display: flex;
-    justify-content: flex-start;
-    /* 텍스트를 왼쪽으로 정렬 */
-    align-items: center;
-    /* 수직으로 가운데 정렬 */
-
-    position: absolute;
-    top: 32px;
-    left: 20px;
+    margin-top:10px;
 }
 
 /*강의명으로 조회 돋보기 아이콘 스타일 */
-.searchContainer {
+.search-container {
     display: flex;
     align-items: center;
     position: relative;
-
 }
 
-.searchIcon {
+/*돋보기 아이콘*/
+.search-icon {
     position: absolute;
-    right: 60px;
-    /* 조정된 위치 */
+    right: 37px;
     top: 50%;
-    /* 수직 중앙 정렬 */
     transform: translateY(-50%);
-    /* 수직 중앙 정렬 */
     color: gray;
     cursor: pointer;
+    margin-right:5px;
 }
 
 
 
+/* 나의 시간표 섹션 타이틀 스타일 */
+.schedule-title-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(212, 216, 243);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 5px;
+    width:210px;
+    height:8px;
+    border: 1px solid rgb(95, 95, 95);
+    margin-top: -10px;
+}
+
+.schedule-title {
+    font-weight: bold;
+    font-size: 13px;
+    color: #333;
+   
+}
+
+/* 나의 시간표 테이블 스타일 */
+.schedule-table {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+   
+    border: 1px solid black;
+    overflow: hidden;
+    width:230px;
+    margin-top: 10px;
+}
+
+.schedule-header,
+.schedule-row {
+    display: contents;
+}
+
+
+.schedule-cell {
+    padding: 8px;
+    background-color: #fff;
+    text-align: center;
+    border: 1px solid rgb(114, 113, 113);
+    /* 검정색 테두리 */
+    font-size: 14px;
+
+}
+
+.schedule-header .schedule-cell {
+    font-weight: bold;
+}
+.schedule-header{
+    padding:15px;
+}
 
 /* 팝업 스타일 */
 .popup {
@@ -555,8 +515,8 @@
 }
 
 /*팝업 상자 스타일*/
-.popupInner {
-    background-color: rgb(215, 215, 215);
+.popup-inner {
+    background-color: rgb(205, 205, 205);
     /* 상자 배경색 회색 */
     padding: 10px;
     border-radius: 10px;
@@ -569,15 +529,11 @@
     height: 400px;
     border: 1px solid black;
     justify-content: flex-start;
-
     align-items: center;
-
-
 }
 
-
 /*전체정보보기*/
-.popupInner.totalInfo {
+.popup-inner.totalInfo {
     width: 250px;
     height: 420px;
     font-size: 15px;
@@ -585,41 +541,38 @@
     /* 내용이 많으면 스크롤 가능하도록 설정 */
     max-height: 100%;
     /* 최대 높이를 설정 */
-
 }
 
 /* 전체 학점정보 팝업창에서 스크롤바 두께*/
-.popupInner.totalInfo::-webkit-scrollbar {
+.popup-inner.totalInfo::-webkit-scrollbar {
     width: 8px;
     /* 스크롤바 너비 */
 }
 
-.popupInner.totalInfo::-webkit-scrollbar-thumb {
+.popup-inner.totalInfo::-webkit-scrollbar-thumb {
     background-color: #888;
     /* 스크롤바 색상 */
     border-radius: 4px;
     /* 스크롤바 둥글게 */
 }
 
-.popupInner.totalInfo::-webkit-scrollbar-thumb:hover {
+.popup-inner.totalInfo::-webkit-scrollbar-thumb:hover {
     background-color: #555;
     /* 스크롤바에 마우스를 올렸을 때 색상 */
 }
 
-
-.popupInner.moreLectures {
+.popup-inner.moreLectures {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
 }
 
-.popupInner.moreLectures .popupTitle {
+.popup-inner.moreLectures .popup-title {
     font-size: 24px;
     /* 글자 크기 */
     /* 글자 색상 */
-    margin-top: 120px;
+    margin-top: 40px;
     margin-bottom: 10px;
     /* 아래 여백 */
     font-weight: bold;
@@ -628,7 +581,7 @@
     /* 중앙 정렬 */
 }
 
-.popupInner .popupSearchIcon {
+.popup-inner .popup-search-icon {
     position: absolute;
     right: 30px;
     /* 원하는 위치로 조정 */
@@ -636,30 +589,107 @@
     cursor: pointer;
 }
 
-
-
-
-.popupLectureList {
-    max-height: 300px;
+.popup-lecture-list {
+    max-height: 315px;
     /* 원하는 높이 설정 */
     overflow-y: auto;
     /* 스크롤 가능하도록 설정 */
 }
 
+
+
+
+
+
+/*단과대, 학부 2개 이상 팝업*/
+.popup-inner.error .popup-title {
+    color: rgb(107, 107, 107);
+    margin-bottom: -5px;
+
+}
+
+.popup-inner.error {
+    width: 380px;
+    height: 190px;
+    border-radius: 35px;
+    border: none;
+
+}
+
+/*단국대, 학부 2개 선택 팝업에서 닫기 버튼*/
+.colseBtnmultiple {
+    background-color: white;
+    color: black;
+    border: solid 1px rgb(146, 145, 145);
+    border-radius: 15px;
+    width: 330px;
+    height: 38px;
+    padding: 10px 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 17px;
+    margin-left: 25px;
+}
+
+/*x동그라미 버튼을 없앰*/
+.popup-inner.error .close-btn {
+    display: none;
+}
+
+
+
+/*더보기 팝업창의 스크롤*/
+.lecture-list {
+    max-height: 315px;
+    /* 스크롤을 위한 최대 높이 설정 */
+    overflow-y: auto;
+    /* 세로 스크롤 허용 */
+    /* 기존 lecture-list 클래스에 적용된 다른 스타일은 그대로 유지 */
+}
+
+.lecture-list::-webkit-scrollbar {
+    width: 8px;
+    /* 스크롤바 너비 */
+}
+
+.lecture-list::-webkit-scrollbar-thumb {
+    background-color: #888;
+    /* 스크롤바 색상 */
+    border-radius: 4px;
+    /* 스크롤바 모서리를 둥글게 */
+}
+
+.lecture-list::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+    /* 마우스 오버 시 스크롤바 색상 */
+}
+
+
+
+
+
+
+
+
 /*강의명으로 조회 후 신청 이거는 팝업창의 input*/
-.lectureSearch {
-    width: 84%;
+/*강의명 검색 input*/
+.lecture-search {
+    width: 205px;;
     height: 15px;
     padding: 10px 10px;
     margin: 5px;
     border: none;
     background-color: #e7e7e7;
     border-radius: 10px;
-    margin-right: 10px;
+
+ 
 }
 
 /* 팝업 내 정보 리스트 스타일 */
-.infoList {
+.info-list {
     list-style-type: none;
     /* 기본 리스트 스타일 제거 */
     padding: 0;
@@ -670,7 +700,7 @@
     margin-top: 30px;
 }
 
-.infoList li {
+.info-list li {
     padding: 5px 0;
     /* 각 항목의 상하 여백 설정 */
     border-bottom: 1px solid #ccc;
@@ -684,21 +714,20 @@
     /* 항목을 수직으로 가운데 정렬 */
 }
 
-
 /*총합 등등등 , 숫자들*/
-.infoList .label {
+.info-list .label {
     font-weight: bold;
     /* 글자를 두껍게 설정 */
     margin-right: -100px;
     /* 글자와 숫자 간 간격 설정 */
 }
 
-.infoList .value {
+.info-list .value {
     margin-right: 10px;
-    font-weight: normal
+    font-weight: normal;
 }
 
-.closeBtn {
+.close-btn {
     background-color: gray;
     color: white;
     position: absolute;
@@ -708,7 +737,6 @@
     border-radius: 50%;
     width: 20px;
     height: 20px;
-
     cursor: pointer;
     font-weight: bold;
     display: flex;
@@ -717,7 +745,7 @@
 }
 
 /*전체학점정보 X 동그라미 버튼*/
-.closeBtnTotalInfo {
+.close-btn-totalInfo {
     background-color: gray;
     color: white;
     /* font-color가 아닌 color 사용 */
@@ -728,19 +756,14 @@
     border-radius: 50%;
     width: 20px;
     height: 20px;
-
     cursor: pointer;
     font-weight: bold;
     display: flex;
     justify-content: center;
     align-items: center;
-
-
 }
 
-
-
-.closeBtnMoreLectures {
+.close-btn-moreLectures {
     background-color: gray;
     color: white;
     /* font-color가 아닌 color 사용 */
@@ -752,7 +775,6 @@
     border-radius: 50%;
     width: 30px;
     height: 30px;
-
     cursor: pointer;
     font-weight: bold;
     display: flex;
@@ -760,18 +782,14 @@
     align-items: center;
 }
 
-
-
-
-
-/* 사이드바 내의 강의 항목 */
+/* 예비수강신청 내역 (장바구니들) 사이드바 내의 강의 항목 */
 /* 기존 강의 박스 스타일과 동일하게 설정 */
-.sidebarContent {
+.sidebar-content {
     padding: 20px;
     /* 패딩을 추가하여 위치를 아래로 이동 */
 }
 
-.sidebarSection .lectureBox {
+.sidebar-section .lecture-box {
     border: 2px solid #637ABF;
     width: 180px;
     height: 100px;
@@ -793,7 +811,7 @@
 }
 
 /*장바구니 상자에 각 강의명 스타일*/
-.sidebarSection .lectureBox .name {
+.sidebar-section .lecture-box .name {
     font-size: 15px;
     /* 글자 크기 증가 */
     font-weight: bold;
@@ -810,7 +828,7 @@
 }
 
 /*강의 코드와 강의 카테고리 (ex 전선)*/
-.sidebarSection .lectureBox .topRow {
+.sidebar-section .lecture-box .top-row {
     display: flex;
     text-align: left;
     /* 왼쪽 정렬 */
@@ -820,7 +838,7 @@
     margin-top: 10px;
 }
 
-.sidebarSection .lectureBox .buttons {
+.sidebar-section .lecture-box .buttons {
     display: flex;
     justify-content: flex-end;
     /* 오른쪽 정렬 */
@@ -829,7 +847,7 @@
     /* 버튼 영역 너비 설정 */
 }
 
-.sidebarSection .lectureBox button {
+.sidebar-section .lecture-box button {
     width: auto;
     height: 20px;
     padding: 0 10px;
@@ -845,7 +863,7 @@
     background-color: white;
 }
 
-.sidebarSection .lectureBox button.remove {
+.sidebar-section .lecture-box button.remove {
     background-color: white;
     /* 버튼 배경색 하얀색으로 변경 */
     color: #637ABF;

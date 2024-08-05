@@ -7,18 +7,20 @@ import Inquiry from './component/InquiryFold/Inquiry.jsx'
 import Schedule from './component/ScheduleFold/Schedule.jsx'
 import Notice from './component/NoticeFold/Notice.jsx'
 import LeftBar from './component/SideBarFold/LeftBar.jsx'
-import FAQList from './component/NoticeFold/FAQList.jsx'
+import FAQ from './component/NoticeFold/FAQ.jsx'
 import Mypage from './component/MypageFold/Mypage.jsx'
 import Course from './component/MypageFold/Course.jsx'
 
 function App() {
+  const apiUrl ='http://43.202.223.188:8080';
+
   // 환경 변수 사용 구간
-  if (typeof process !== 'undefined' && process.env.NODE_ENV === 'production') {
-    // 서버 환경에서 실행되는 코드
-    console.log('Running in production mode on the server');
+  if (apiUrl) {
+    // 환경 변수가 설정된 경우
+    console.log('API URL:', apiUrl);
   } else {
-    // 브라우저 환경에서 실행되는 코드
-    console.log('Running in the browser');
+    // 환경 변수가 설정되지 않은 경우
+    console.warn('API URL이 설정되지 않았습니다.');
   }
 
   return (
@@ -30,7 +32,7 @@ function App() {
         <Route path='/schedule' element={<Schedule />}/>
         <Route path='/notice' element={<Notice />}/>
         <Route path='/leftbar' element={<LeftBar />}/>
-        <Route path='/faq' element={<FAQList/>}/>
+        <Route path='/faq' element={<FAQ/>}/>
         <Route path='/mypage' element={<Mypage/>}/>
         <Route path='/course' element={<Course/>}/>
 

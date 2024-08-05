@@ -75,7 +75,8 @@
 .table {
     width: 600px;
     border-collapse: collapse;
-    margin-bottom: 20px;
+    margin-top: 40px;
+    margin-left:80px;
 }
 
 thead {
@@ -115,7 +116,7 @@ tr:hover {
     padding: 8px 16px;
     text-decoration: none;
     cursor: pointer;
-    margin: 0 4px;
+    margin-top:20px;
 }
 
 .pagination button.active {

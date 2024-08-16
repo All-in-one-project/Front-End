@@ -73,58 +73,79 @@
 /*-----------*/
 
 .table {
-    width: 600px;
+    width: 100%;
+    max-width: 1200px;
+    /* 가로로 더 넓게 변경 */
     border-collapse: collapse;
-    margin-top: 40px;
-    margin-left:80px;
-}
-
-thead {
-    background-color: #f2f2f2;
+    margin-top: 20px;
+    /* 위치를 "전체 공지사항" "FAQ" 버튼 바로 밑으로 변경 */
 }
 
 th,
 td {
-    border: 1px solid #ddd;
+    border-top: none;
+    border-bottom: 1px solid black;
     padding: 16px;
     text-align: center;
+    background-color: white;
+    /* 테두리와 색상을 하얗게 변경 */
 }
 
 th {
-    background-color: #f2f2f2;
     font-weight: bold;
+    border-bottom: 1.5px solid rgb(41, 41, 41);
+        /* 제목 아래 선을 굵게 변경 */
 }
 
-tr:nth-child(even) {
-    background-color: #f9f9f9;
+tr:last-child td {
+    border-bottom: 1.5px solid rgb(41, 41, 41);
+    /* 테이블에서 마지막 선 굵게 변경 */
 }
+
+
 
 tr:hover {
     background-color: #ddd;
 }
 
+
+
+
+/*밑에 페이지네이션*/
 .pagination {
     display: flex;
     justify-content: center;
     margin-top: 10px;
+
 }
 
 .pagination button {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    color: black;
+    background-color: transparent;
+    border: none;
+    color: gray;
+ 
     padding: 8px 16px;
     text-decoration: none;
     cursor: pointer;
-    margin-top:20px;
+    margin-top: 20px;
+    font-size: 16px;
 }
 
 .pagination button.active {
-    background-color: #595959;
-    color: white;
-    border: 1px solid #595959;
+    font-weight: bold;
+    color: black;
 }
 
 .pagination button:hover:not(.active) {
-    background-color: #ddd;
+    text-decoration: underline;
+}
+
+.pagination .separator {
+    color: black;
+    padding: 8px 0;
+    font-size: 16px;
+    line-height: 0;
+    position: relative;
+    top: 26px;
+  
 }

@@ -923,12 +923,15 @@
     border-radius: 10px;
     font-size: 18px;
     margin-bottom: 10px;
+    width: 240px;
+    text-align: center;
   }
   
   .scheduleTable {
     border-collapse: collapse;
     margin-bottom: 10px;
   }
+  
   
   .scheduleTable th,
   .scheduleTable td {

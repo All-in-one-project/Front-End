@@ -521,17 +521,17 @@ function Reserve() {
         <h3 className={styles.scheduleTitle}>나의 시간표</h3>
         <table className={styles.scheduleTable}>
           <thead>
-            <tr>
-              <th>월</th>
-              <th>화</th>
-              <th>수</th>
-              <th>목</th>
-              <th>금</th>
+            <tr >
+              <th style={{backgroundColor:'white'}}>월</th>
+              <th style={{backgroundColor:'white'}}>화</th>
+              <th style={{backgroundColor:'white'}}>수</th>
+              <th style={{backgroundColor:'white'}}>목</th>
+              <th style={{backgroundColor:'white'}}>금</th>
             </tr>
           </thead>
           <tbody>
             {[...Array(9)].map((_, timeSlot) => (
-              <tr key={timeSlot}>
+              <tr key={timeSlot} style={{ backgroundColor: 'white' }}>
                 {schedule.map((day, dayIndex) => (
                   <td key={dayIndex} style={{ backgroundColor: day[timeSlot] ? '#637ABF' : 'transparent', height: '50px', width: '50px' }}></td>
                 ))}

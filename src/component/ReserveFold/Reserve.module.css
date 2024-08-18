@@ -848,6 +848,7 @@
     /* justify-content: space-between; */
     gap: 30px;
     margin-top: 20px;
+    height: 260px;
 }
 
 .section,

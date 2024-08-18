@@ -25,7 +25,7 @@ function Reserve() {
   const [lecturePlan, setLecturePlan] = useState(''); 
   const [popupMessage, setPopupMessage] = useState(''); 
   const [appliedLectures, setAppliedLectures] = useState([]); 
-  const [schedule, setSchedule] = useState(Array(5).fill(null).map(() => Array(5).fill(null))); 
+  const [schedule, setSchedule] = useState(Array(5).fill(null).map(() => Array(9).fill(null))); 
 
   const navigate = useNavigate(); 
 
@@ -45,10 +45,8 @@ function Reserve() {
   const handleDivisionCodeChange = (e) => setDivisionCode(e.target.value);
 
   const handleAddToCart = (lecture) => {
-    // Check if the lecture is already in the cart
     const isAlreadyInCart = sidebarLectures.some(item => item.id === lecture.id);
 
-    // If it's not in the cart, add it
     if (!isAlreadyInCart) {
       setSidebarLectures([...sidebarLectures, lecture]);
     } else {
@@ -58,11 +56,8 @@ function Reserve() {
 
   const handleRemoveLectureFromSidebar = (id) => {
     const lectureToRemove = sidebarLectures.find((lecture) => lecture.id === id);
-
-    // Remove the lecture from the sidebar
     setSidebarLectures(sidebarLectures.filter((lecture) => lecture.id !== id));
 
-    // Update the schedule to remove the lecture
     if (lectureToRemove) {
       removeLectureFromSchedule(lectureToRemove);
     }
@@ -89,8 +84,6 @@ function Reserve() {
     });
 
     setSchedule(newSchedule);
-
-    // Remove the lecture from applied lectures list
     setAppliedLectures(appliedLectures.filter((appliedLecture) => appliedLecture.id !== lecture.id));
   };
 
@@ -143,14 +136,15 @@ function Reserve() {
       setSelectedGridContainer(container);
       setDepartmentList(departmentMapping[container]);
     } else {
-        setPopupMessage(
-      <div>
-        해당 항목은 복수 선택이 불가능합니다!
-        <br/>
-        <span style={{ fontWeight: 'normal' }}>
-          (단과대 및 학과/학부 복수 선택 불가능)
-        </span>
-      </div>);
+      setPopupMessage(
+        <div>
+          해당 항목은 복수 선택이 불가능합니다!
+          <br/>
+          <span style={{ fontWeight: 'normal' }}>
+            (단과대 및 학과/학부 복수 선택 불가)
+          </span>
+        </div>
+      );
       togglePopup('error');
     }
   };
@@ -162,13 +156,14 @@ function Reserve() {
       setSelectedDepartmentContainer(container);
     } else {
       setPopupMessage(
-      <div>
-        해당 항목은 복수 선택이 불가능합니다!
-        <br/>
-        <span style={{ fontWeight: 'normal' }}>
-          (단과대 및 학과/학부 복수 선택 불가)
-        </span>
-      </div>);
+        <div>
+          해당 항목은 복수 선택이 불가능합니다!
+          <br/>
+          <span style={{ fontWeight: 'normal' }}>
+            (단과대 및 학과/학부 복수 선택 불가)
+          </span>
+        </div>
+      );
       togglePopup('error');
     }
   };
@@ -201,7 +196,7 @@ function Reserve() {
     );
   };
 
-   const renderErrorCloseButton = () => {
+  const renderErrorCloseButton = () => {
     return (
       <button className={styles.colseBtnmultiple} onClick={() => togglePopup('')}>
         확인 및 다시 선택하기
@@ -470,33 +465,6 @@ function Reserve() {
                 ))}
               </div>
             </div>
-
-            {!isSidebarOpen && (
-              <button className={styles.circleButton} onClick={toggleSidebar}>
-                +
-              </button>
-            )}
-            <div className={`${styles.rightBar} ${isSidebarOpen ? styles.open : ''}`}>
-              <button className={styles.closeSidebarButton} onClick={toggleSidebar}>
-                  ㅡ
-              </button>
-              <div className={styles.sidebarContent}>
-                  <div className={styles.sidebarSection}>
-                  <div className={styles.basketTitle}>예비수강신청 내역</div>
-                  {sidebarLectures.map((lecture, index) => (
-                      <div key={index} className={styles.lectureBox}>
-                      <div className={styles.name}>{lecture.name}</div> 
-                      <div className={styles.topRow}>
-                          <div>{lecture.id} {lecture.category}</div>
-                      </div>
-                      <div className={styles.buttons}>
-                          <button className={styles.remove} onClick={() => handleRemoveLectureFromSidebar(lecture.id)}>X</button>
-                      </div>
-                      </div>
-                  ))}
-                  </div>
-              </div>
-          </div>
           </>
         )}
 
@@ -504,146 +472,191 @@ function Reserve() {
           <>
             <div className={styles.generalApply}>
               <div className={styles.cartList}>
-              <h3>장바구니 신청 내역</h3>
-      <table style={{ backgroundColor: 'white', borderCollapse: 'collapse', width: '100%' }}>
-        <thead >
-          <tr >
-            <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', width: '40px', height: '30px' ,backgroundColor:'white'}}>No</th>
-            <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' ,backgroundColor:'white' }}>과목명</th>
-            <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' ,backgroundColor:'white'}}>분류</th>
-            <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' ,backgroundColor:'white' }}>교수명</th>
-            <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' ,backgroundColor:'white' }}>강의 정보</th>
-            <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' ,backgroundColor:'white' }}>신청 여부</th>
-            <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' ,backgroundColor:'white' }}>과목 코드</th>
-          </tr>
-        </thead>
+                <h3>장바구니 신청 내역</h3>
+                <table style={{ backgroundColor: 'white', borderCollapse: 'collapse', width: '100%' }}>
+                  <thead >
+                    <tr >
+                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', width: '40px', height: '30px' ,backgroundColor:'white'}}>No</th>
+                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' ,backgroundColor:'white' }}>과목명</th>
+                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' ,backgroundColor:'white'}}>분류</th>
+                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' ,backgroundColor:'white' }}>교수명</th>
+                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' ,backgroundColor:'white' }}>강의 정보</th>
+                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' ,backgroundColor:'white' }}>신청 여부</th>
+                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' ,backgroundColor:'white' }}>과목 코드</th>
+                    </tr>
+                  </thead>
 
-        <tbody>
-          {sidebarLectures.map((lecture, index) => (
-            <tr key={index} style={{ backgroundColor: 'white' }}>
-              <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{index + 1}</td>
-              <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'left', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' }}>{lecture.name}</td>
-              <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{lecture.category.replace(/[\[\]]/g, '')}</td>
-              <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{lecture.professor}</td>
-              <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{lecture.time}</td>
-              <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>
-                <button 
-                  onClick={() => handleApplyLecture(lecture)}
-                  style={{ 
-                    backgroundColor: appliedLectures.includes(lecture) ? '#637ABF' : 'rgb(212, 216, 243)', 
-                    color: appliedLectures.includes(lecture) ? 'white' : 'black',
-                    border: 'none',
-                    fontWeight: '700',
-                    padding: '2px 5px',  // padding 줄이기
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    width: '60px',
-                    textAlign: 'center',
-                    height: '26px'  // 높이 줄이기
-                  }}
-                >
-                  {appliedLectures.includes(lecture) ? '완료' : '신청'}
-                </button>
-              </td>
-              <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{lecture.id}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                  <tbody>
+                    {sidebarLectures.map((lecture, index) => (
+                      <tr key={index} style={{ backgroundColor: 'white' }}>
+                        <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{index + 1}</td>
+                        <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'left', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' }}>{lecture.name}</td>
+                        <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{lecture.category.replace(/[\[\]]/g, '')}</td>
+                        <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{lecture.professor}</td>
+                        <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{lecture.time}</td>
+                        <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>
+                          <button 
+                            onClick={() => handleApplyLecture(lecture)}
+                            style={{ 
+                              backgroundColor: appliedLectures.includes(lecture) ? '#637ABF' : 'rgb(212, 216, 243)', 
+                              color: appliedLectures.includes(lecture) ? 'white' : 'black',
+                              border: 'none',
+                              fontWeight: '700',
+                              padding: '2px 5px',  
+                              borderRadius: '8px',
+                              cursor: 'pointer',
+                              width: '60px',
+                              textAlign: 'center',
+                              height: '26px'  
+                            }}
+                          >
+                            {appliedLectures.includes(lecture) ? '완료' : '신청'}
+                          </button>
+                        </td>
+                        <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{lecture.id}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-              <div className={styles.scheduleContainer}>
-        <h3 className={styles.scheduleTitle}>나의 시간표</h3>
-        <table className={styles.scheduleTable}>
-          <thead>
-            <tr >
-              <th style={{backgroundColor:'white'}}>월</th>
-              <th style={{backgroundColor:'white'}}>화</th>
-              <th style={{backgroundColor:'white'}}>수</th>
-              <th style={{backgroundColor:'white'}}>목</th>
-              <th style={{backgroundColor:'white'}}>금</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[...Array(9)].map((_, timeSlot) => (
-              <tr key={timeSlot} style={{ backgroundColor: 'white' }}>
-                {schedule.map((day, dayIndex) => (
-                  <td key={dayIndex} style={{ backgroundColor: day[timeSlot] ? '#637ABF' : 'transparent', height: '50px', width: '50px' }}></td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className={styles.creditsInfoSchedule }>
-          현재 수강 학점 (/최대 수강 가능 학점):<br/><br/>  {appliedLectures.length * 3} / 21
-        </div>
-      </div>
             </div>
-            {!isSidebarOpen && (
-              <button className={styles.circleButton} onClick={toggleSidebar}>
-                +
-              </button>
-            )}
-            <div className={`${styles.rightBar} ${isSidebarOpen ? styles.open : ''}`}>
-              <button className={styles.closeSidebarButton} onClick={toggleSidebar}>
-                  ㅡ
-              </button>
-              <div className={styles.sidebarContent}>
-                  <div className={styles.sidebarSection}>
-                  <div className={styles.basketTitle}>예비수강신청 내역</div>
-                  {sidebarLectures.map((lecture, index) => (
-                      <div key={index} className={styles.lectureBox}>
-                      <div className={styles.name}>{lecture.name}</div> 
-                      <div className={styles.topRow}>
-                          <div>{lecture.id} {lecture.category}</div>
-                      </div>
-                      <div className={styles.buttons}>
-                          <button className={styles.remove} onClick={() => handleRemoveLectureFromSidebar(lecture.id)}>X</button>
-                      </div>
-                      </div>
-                  ))}
-                  </div>
-              </div>
-          </div>
           </>
         )}
       </div>
 
       <div className={styles.rightBar2}>
-        <div className={styles.section} style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
-          <div className={styles.sectionTitle}>강의명으로 조회 후 신청</div>
-          <div className={styles.searchContainer}>
-            <input type="text" placeholder="강의명 검색" />
-            <FaSearch className={styles.searchIcon} />
-          </div>
-        </div>
+        {selectedSubNav === '예비수강신청' && (
+          <>
+            <div className={styles.section}>
+              <div className={styles.sectionTitle}>과목명으로 조회 후 신청</div>
+              <div className={styles.searchContainer}>
+                <input type="text" placeholder="강의명 검색" />
+                <FaSearch className={styles.searchIcon} />
+              </div>
+            </div>
 
-        <div className={styles.lectureList} style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
-          {lectureList.map((lecture) => (
-            <LectureItem key={lecture.id} lecture={lecture} />
-          ))}
-          <button type="button" className={styles.more} onClick={() => togglePopup('moreLectures')}>더보기</button>
-        </div>
+            <div className={styles.lectureList}>
+              {lectureList.map((lecture) => (
+                <LectureItem key={lecture.id} lecture={lecture} />
+              ))}
+              <button type="button" className={styles.more} onClick={() => togglePopup('moreLectures')}>더보기</button>
+            </div>
 
-        <div className={styles.sectionSubject} style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
-          <div className={styles.sectionTitle}>과목 코드 직접 입력</div>
-          <input
-            type="text"
-            placeholder="과목 코드 입력"
-            className={styles.subjectCode}
-            value={subjectCode}
-            onChange={handleSubjectCodeChange}
-          />
-          <input
-            type="text"
-            placeholder="분반 코드 입력"
-            value={divisionCode}
-            onChange={handleDivisionCodeChange}
-          />
-          <button type="button" className={styles.cartBtn} onClick={handleAddToCart}>
-            장바구니 담기
-          </button>
-        </div>
+            <div className={styles.sectionSubject}>
+              <div className={styles.sectionTitle}>과목 코드 직접 입력</div>
+              <input
+                type="text"
+                placeholder="과목 코드 입력"
+                className={styles.subjectCode}
+                value={subjectCode}
+                onChange={handleSubjectCodeChange}
+              />
+              <input
+                type="text"
+                placeholder="분반 코드 입력"
+                value={divisionCode}
+                onChange={handleDivisionCodeChange}
+              />
+              <button type="button" className={styles.cartBtn} onClick={handleAddToCart}>
+                장바구니 담기
+              </button>
+            </div>
+          </>
+        )}
+
+        {selectedSubNav === '일반수강신청' && (
+          <>
+            <div className={styles.scheduleContainer}>
+              <h3 className={styles.scheduleTitle}>나의 시간표</h3>
+              <table className={styles.scheduleTable}>
+                <thead>
+                  <tr >
+                    <th style={{backgroundColor:'white'}}>월</th>
+                    <th style={{backgroundColor:'white'}}>화</th>
+                    <th style={{backgroundColor:'white'}}>수</th>
+                    <th style={{backgroundColor:'white'}}>목</th>
+                    <th style={{backgroundColor:'white'}}>금</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[...Array(9)].map((_, timeSlot) => (
+                    <tr key={timeSlot} style={{ backgroundColor: 'white' }}>
+                      {schedule.map((day, dayIndex) => (
+                        <td key={dayIndex} style={{ backgroundColor: day[timeSlot] ? '#637ABF' : 'transparent', height: '50px', width: '50px' }}></td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className={styles.creditsInfoSchedule}>
+                현재 수강 학점 (/최대 수강 가능 학점):<br/><br/>  {appliedLectures.length * 3} / 21
+              </div>
+            </div>
+
+            <div className={styles.section}>
+              <div className={styles.sectionTitle}>과목명으로 조회 후 신청</div>
+              <div className={styles.searchContainer}>
+                <input type="text" placeholder="강의명 검색" />
+                <FaSearch className={styles.searchIcon} />
+              </div>
+            </div>
+
+            <div className={styles.lectureList}>
+              {lectureList.map((lecture) => (
+                <LectureItem key={lecture.id} lecture={lecture} />
+              ))}
+              <button type="button" className={styles.more} onClick={() => togglePopup('moreLectures')}>더보기</button>
+            </div>
+
+            <div className={styles.sectionSubject}>
+              <div className={styles.sectionTitle}>과목 코드 직접 입력</div>
+              <input
+                type="text"
+                placeholder="과목 코드 입력"
+                className={styles.subjectCode}
+                value={subjectCode}
+                onChange={handleSubjectCodeChange}
+              />
+              <input
+                type="text"
+                placeholder="분반 코드 입력"
+                value={divisionCode}
+                onChange={handleDivisionCodeChange}
+              />
+              <button type="button" className={styles.cartBtn} onClick={handleAddToCart}>
+                장바구니 담기
+              </button>
+            </div>
+          </>
+        )}
       </div>
+
+      {!isSidebarOpen && (
+        <button className={styles.circleButton} onClick={toggleSidebar}>
+          +
+        </button>
+      )}
+      <div className={`${styles.rightBar} ${isSidebarOpen ? styles.open : ''}`}>
+        <button className={styles.closeSidebarButton} onClick={toggleSidebar}>
+            ㅡ
+        </button>
+        <div className={styles.sidebarContent}>
+            <div className={styles.sidebarSection}>
+            <div className={styles.basketTitle}>예비수강신청 내역</div>
+            {sidebarLectures.map((lecture, index) => (
+                <div key={index} className={styles.lectureBox}>
+                <div className={styles.name}>{lecture.name}</div> 
+                <div className={styles.topRow}>
+                    <div>{lecture.id} {lecture.category}</div>
+                </div>
+                <div className={styles.buttons}>
+                    <button className={styles.remove} onClick={() => handleRemoveLectureFromSidebar(lecture.id)}>X</button>
+                </div>
+                </div>
+            ))}
+            </div>
+        </div>
+    </div>
 
       {isPopupVisible && (
         <div className={styles.popup}>
@@ -675,7 +688,7 @@ function Reserve() {
                   <input className={styles.lectureSearch} type="text" placeholder="강의명 검색" />
                   <FaSearch className={styles.popupSearchIcon} />
                 </div>
-               <div className={`${styles.lectureList} ${styles.popupLectureList}`}>
+                <div className={`${styles.lectureList} ${styles.popupLectureList}`}>
                   {[...lectureList, ...additionalLectures].map((lecture) => (
                     <PopupLectureItem key={lecture.id} lecture={lecture} />
                   ))}

@@ -88,13 +88,22 @@ function Reserve() {
   };
 
   const handleApplyLecture = (lecture) => {
-    if (appliedLectures.length < 21) {
-      setAppliedLectures([...appliedLectures, lecture]);
-      updateSchedule(lecture);
-    } else {
-      alert('최대 21학점까지만 신청할 수 있습니다.');
+    // 이미 신청된 강의인지 확인
+    const isAlreadyApplied = appliedLectures.some(appliedLecture => appliedLecture.id === lecture.id);
+
+    if (isAlreadyApplied) {
+        alert('이미 신청된 과목입니다.');
+        return; // 이미 신청된 경우 아무 작업도 하지 않음
     }
-  };
+
+    if (appliedLectures.length < 7) {
+        setAppliedLectures([...appliedLectures, lecture]);
+        updateSchedule(lecture);
+    } else {
+        alert('최대 21학점까지만 신청할 수 있습니다.');
+    }
+};
+
 
   const updateSchedule = (lecture) => {
     const timeMapping = {

@@ -57,7 +57,41 @@ function Reserve() {
   };
 
   const handleRemoveLectureFromSidebar = (id) => {
+    const lectureToRemove = sidebarLectures.find((lecture) => lecture.id === id);
+
+    // Remove the lecture from the sidebar
     setSidebarLectures(sidebarLectures.filter((lecture) => lecture.id !== id));
+
+    // Update the schedule to remove the lecture
+    if (lectureToRemove) {
+      removeLectureFromSchedule(lectureToRemove);
+    }
+  };
+
+  const removeLectureFromSchedule = (lecture) => {
+    const timeMapping = {
+      '월': 0,
+      '화': 1,
+      '수': 2,
+      '목': 3,
+      '금': 4,
+    };
+
+    const days = lecture.time.match(/(월|화|수|목|금)/g);
+    const times = lecture.time.match(/\d/g).map(Number);
+
+    const newSchedule = [...schedule];
+
+    days.forEach(day => {
+      times.forEach(time => {
+        newSchedule[timeMapping[day]][time - 1] = null;
+      });
+    });
+
+    setSchedule(newSchedule);
+
+    // Remove the lecture from applied lectures list
+    setAppliedLectures(appliedLectures.filter((appliedLecture) => appliedLecture.id !== lecture.id));
   };
 
   const handleApplyLecture = (lecture) => {

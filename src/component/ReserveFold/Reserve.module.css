@@ -20,8 +20,6 @@
     color: white;
 }
 
-/* 나머지 스타일들 동일하게 수정 */
-
 .leftBar .title h3 {
     color: white;
     margin: 10px;
@@ -32,7 +30,6 @@
 
 .leftBar .title h3 div {
     margin-left: 10px;
-    /* 수강신청 div를 오른쪽으로 이동 */
 }
 
 .leftBar .title {
@@ -142,18 +139,13 @@
 
 .subNavbar button.selected {
     background-color: #637ABF;
-    /* 파란색 배경 */
     color: white;
-    /* 하얀색 글자 */
     transform: translateY(-1px);
-    /* 앞으로 튀어나오게  */
 }
 
 .subNavbar button:last-child {
     margin-right: 0;
 }
-
-
 
 /* 선택사항들 */
 .section {
@@ -201,7 +193,6 @@
     grid-column: span 1;
     font-size: 15px;
     width: 100px;
-    /* 상자 너비 */
     height: 20px;
     font-size: 13px;
     font-weight: bold;
@@ -232,7 +223,6 @@
 
 .lectureBox .category {
     margin-left: auto;
-    /* category를 오른쪽으로 배치 */
     color: rgb(104, 108, 109);
 }
 
@@ -257,7 +247,6 @@
 
 .lectureBox .topRow div:first-child {
     transform: translateX(-10px);
-    /* 첫 번째 항목을 왼쪽으로 이동 */
 }
 
 .lectureBox button {
@@ -268,7 +257,6 @@
     border-radius: 8px;
     cursor: pointer;
     margin: 0 2px;
-    /* 버튼 사이 간격 추가 */
     font-size: 11px;
 }
 
@@ -298,25 +286,20 @@
     height: 100vh;
     padding: 5px;
     background-color: #637ABF;
-    /* 배경색 파란색으로 변경 */
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     position: fixed;
     top: 0;
     right: -350px;
-    /* 초기 위치를 화면 밖으로 설정 */
     transition: right 0.3s ease;
-    /* 슬라이드 애니메이션 추가 */
     z-index: 1000;
 }
 
 .rightBar.open {
     right: 0;
-    /* 버튼 클릭 시 슬라이드되도록 설정 */
 }
 
-/* 오른쪽 바2 */
 .rightBar2 {
     width: 300px;
     padding: 5px;
@@ -325,7 +308,7 @@
     flex-direction: column;
     justify-content: flex-start;
     right: 200px;
-    margin-top: 150px;
+    margin-top: 60px;
     margin-left: 20px;
 }
 
@@ -348,7 +331,6 @@
     background-color: #e7e7e7;
     border-radius: 10px;
 }
-
 
 .lectureList button {
     width: 85%;
@@ -377,7 +359,6 @@
     position: relative;
 }
 
-/* 강의 리스트 */
 .lectureList .lectureItem {
     background-color: #e7e7e7;
     border-radius: 10px;
@@ -388,9 +369,7 @@
     margin-bottom: 8px;
     display: flex;
     justify-content: space-between;
-    /* 버튼 위치 조정 */
     align-items: center;
-    /* 버튼 수직 정렬 */
 }
 
 /* 강의이름 */
@@ -459,13 +438,10 @@
     margin: 5px 5px;
 }
 
-
-
 /*슬라이드 오른쪽 사이드바*/
 
 .rightBar.open {
     right: 0;
-    /* 버튼 클릭 시 슬라이드되도록 설정 */
 }
 
 .basketTitle {
@@ -505,14 +481,9 @@
     height: 30px;
     font-size: 20px;
     font-weight: bold;
-    /* 글자의 굵기를 얇게 설정 */
-
     display: flex;
     justify-content: flex-start;
-    /* 텍스트를 왼쪽으로 정렬 */
     align-items: center;
-    /* 수직으로 가운데 정렬 */
-
     position: absolute;
     top: 32px;
     left: 20px;
@@ -523,23 +494,16 @@
     display: flex;
     align-items: center;
     position: relative;
-
 }
 
 .searchIcon {
     position: absolute;
     right: 60px;
-    /* 조정된 위치 */
     top: 50%;
-    /* 수직 중앙 정렬 */
     transform: translateY(-50%);
-    /* 수직 중앙 정렬 */
     color: gray;
     cursor: pointer;
 }
-
-
-
 
 /* 팝업 스타일 */
 .popup {
@@ -549,7 +513,6 @@
     transform: translate(-50%, -50%);
     z-index: 2000;
     background-color: white;
-    /* 어두운 배경 */
     width: 100%;
     height: 100%;
     display: flex;
@@ -557,10 +520,8 @@
     align-items: center;
 }
 
-/*팝업 상자 스타일*/
 .popupInner {
     background-color: rgb(226, 226, 226);
-    /* 상자 배경색 회색 */
     padding: 10px;
     border-radius: 10px;
     font-size: 20px;
@@ -572,12 +533,8 @@
     height: 400px;
     border: 1px solid black;
     justify-content: flex-start;
-
     align-items: center;
-
-
 }
-
 
 /*전체정보보기*/
 .popupInner.totalInfo {
@@ -585,85 +542,65 @@
     height: 420px;
     font-size: 15px;
     overflow-y: auto;
-    /* 내용이 많으면 스크롤 가능하도록 설정 */
     max-height: 100%;
-    /* 최대 높이를 설정 */
-
 }
 
 /* 전체 학점정보 팝업창에서 스크롤바 두께*/
 .popupInner.totalInfo::-webkit-scrollbar {
     width: 8px;
-    /* 스크롤바 너비 */
 }
 
 .popupInner.totalInfo::-webkit-scrollbar-thumb {
     background-color: #888;
-    /* 스크롤바 색상 */
     border-radius: 4px;
-    /* 스크롤바 둥글게 */
 }
 
 .popupInner.totalInfo::-webkit-scrollbar-thumb:hover {
     background-color: #555;
-    /* 스크롤바에 마우스를 올렸을 때 색상 */
 }
-
 
 .popupInner.moreLectures {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
 }
 
 .popupInner.moreLectures .popupTitle {
     font-size: 24px;
-    /* 글자 크기 */
-    /* 글자 색상 */
     margin-top: 120px;
     margin-bottom: 10px;
-    /* 아래 여백 */
     font-weight: bold;
-    /* 글자 굵기 */
     text-align: center;
-    /* 중앙 정렬 */
 }
 
 .popupInner .popupSearchIcon {
     position: absolute;
     right: 30px;
-    /* 원하는 위치로 조정 */
     color: gray;
     cursor: pointer;
 }
-
-
-
-
 
 /*단과대, 학부 2개 이상 팝업*/
 .popupInner.error .popupTitle {
     color:rgb(107, 107, 107);
     margin-bottom: -5px;
-   
 }
-.popupInner.error{
-     width: 380px;
+
+.popupInner.error {
+    width: 380px;
     height: 190px;
     border-radius: 35px;
     border: none;
-    
 }
-/*단국대, 학부 2개 선택 팝업에서 닫기 버튼*/
-.colseBtnmultiple{
-     background-color: white;
+
+.colseBtnmultiple {
+    background-color: white;
     color: black;
     border: solid 1px rgb(146, 145, 145);
     border-radius: 15px;
     width: 330px;
-    height:38px;
+    height: 38px;
     padding: 10px 20px;
     cursor: pointer;
     display: flex;
@@ -671,20 +608,17 @@
     align-items: center;
     margin-top: 10px;
     font-size: 17px;
-    margin-left:25px;
+    margin-left: 25px;
 }
+
 /*x동그라미 버튼을 없앰*/
 .popupInner.error .closeBtn {
     display: none;
 }
 
-
-
 .popupLectureList {
     max-height: 300px;
-    /* 원하는 높이 설정 */
     overflow-y: auto;
-    /* 스크롤 가능하도록 설정 */
 }
 
 /*강의명으로 조회 후 신청 이거는 팝업창의 input*/
@@ -702,7 +636,6 @@
 /* 팝업 내 정보 리스트 스타일 */
 .infoList {
     list-style-type: none;
-    /* 기본 리스트 스타일 제거 */
     padding: 0;
     margin: 0;
     display: flex;
@@ -713,30 +646,22 @@
 
 .infoList li {
     padding: 5px 0;
-    /* 각 항목의 상하 여백 설정 */
     border-bottom: 1px solid #ccc;
-    /* 항목 사이에 구분선 추가 */
     width: 80%;
-    /* 리스트 항목의 너비를 설정하여 중앙 정렬 */
     display: flex;
     justify-content: space-between;
-    /* 항목을 좌우로 정렬 */
     align-items: center;
-    /* 항목을 수직으로 가운데 정렬 */
 }
-
 
 /*총합 등등등 , 숫자들*/
 .infoList .label {
     font-weight: bold;
-    /* 글자를 두껍게 설정 */
     margin-right: -100px;
-    /* 글자와 숫자 간 간격 설정 */
 }
 
 .infoList .value {
     margin-right: 10px;
-    font-weight: normal
+    font-weight: normal;
 }
 
 .closeBtn {
@@ -749,7 +674,6 @@
     border-radius: 50%;
     width: 20px;
     height: 20px;
-
     cursor: pointer;
     font-weight: bold;
     display: flex;
@@ -761,7 +685,6 @@
 .closeBtnTotalInfo {
     background-color: gray;
     color: white;
-    /* font-color가 아닌 color 사용 */
     position: absolute;
     top: 30px;
     right: 4px;
@@ -769,22 +692,16 @@
     border-radius: 50%;
     width: 20px;
     height: 20px;
-
     cursor: pointer;
     font-weight: bold;
     display: flex;
     justify-content: center;
     align-items: center;
-
-
 }
-
-
 
 .closeBtnMoreLectures {
     background-color: gray;
     color: white;
-    /* font-color가 아닌 color 사용 */
     position: absolute;
     top: 30px;
     right: 10px;
@@ -793,7 +710,6 @@
     border-radius: 50%;
     width: 30px;
     height: 30px;
-
     cursor: pointer;
     font-weight: bold;
     display: flex;
@@ -801,15 +717,9 @@
     align-items: center;
 }
 
-
-
-
-
 /* 사이드바 내의 강의 항목 */
-/* 기존 강의 박스 스타일과 동일하게 설정 */
 .sidebarContent {
     padding: 20px;
-    /* 패딩을 추가하여 위치를 아래로 이동 */
 }
 
 .sidebarSection .lectureBox {
@@ -828,25 +738,18 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* 중앙 정렬 */
     align-items: center;
-    /* 중앙 정렬 */
 }
 
 /*장바구니 상자에 각 강의명 스타일*/
 .sidebarSection .lectureBox .name {
     font-size: 15px;
-    /* 글자 크기 증가 */
     font-weight: bold;
     color: #637ABF;
     text-align: left;
-    /* 왼쪽 정렬 */
     align-self: flex-start;
-    /* 부모 컨테이너에서 왼쪽으로 정렬 */
     margin-left: 10px;
-    /* 왼쪽으로 약간의 여백 추가 */
     white-space: nowrap;
-    /* 한 줄로 표시 */
     margin-top: 15px;
 }
 
@@ -854,9 +757,7 @@
 .sidebarSection .lectureBox .topRow {
     display: flex;
     text-align: left;
-    /* 왼쪽 정렬 */
     align-self: flex-start;
-    /* 부모 컨테이너에서 왼쪽으로 정렬 */
     margin-left: 10px;
     margin-top: 10px;
 }
@@ -864,10 +765,8 @@
 .sidebarSection .lectureBox .buttons {
     display: flex;
     justify-content: flex-end;
-    /* 오른쪽 정렬 */
     margin-top: 3px;
     width: 100%;
-    /* 버튼 영역 너비 설정 */
 }
 
 .sidebarSection .lectureBox button {
@@ -888,9 +787,7 @@
 
 .sidebarSection .lectureBox button.remove {
     background-color: white;
-    /* 버튼 배경색 하얀색으로 변경 */
     color: #637ABF;
-    /* 글자 색깔 파란색으로 변경 */
     font-weight: bold;
     width: auto;
     padding: 0 10px;
@@ -899,55 +796,76 @@
     align-items: center;
     justify-content: center;
     border-radius: 8px;
-    /* 둥근 모서리 */
     position: absolute;
-    /* 절대 위치 설정 */
     top: 5px;
-    /* 상단에서 5px 아래로 */
     right: 5px;
-    /* 오른쪽에서 5px 왼쪽으로 */
     border: none;
-    /* 테두리 제거 */
     font-size: 15px;
-    /* 글자 크기 */
 }
+
 .scheduleContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  
-  .scheduleTitle {
+}
+
+.scheduleTitle {
     background-color: #d0d9f0;
     padding: 10px;
     border-radius: 10px;
     font-size: 18px;
     margin-bottom: 10px;
-    width: 240px;
+    width: 280px;
     text-align: center;
-  }
-  
-  .scheduleTable {
+    color: rgb(104, 103, 103);
+}
+
+.scheduleTable {
     border-collapse: collapse;
     margin-bottom: 10px;
-  }
-  
-  
-  .scheduleTable th,
-  .scheduleTable td {
+}
+
+.scheduleTable th,
+.scheduleTable td {
     border: 1px solid #ddd;
     text-align: center;
     padding: 0;
-    height: 50px; /* 원하는 높이로 조정 */
-    width: 50px; /* 원하는 너비로 조정 */
-  }
-  
-  .creditsInfoSchedule {
+    height: 50px;
+    width: 50px;
+}
+
+.creditsInfoSchedule {
     background-color: #d0d9f0;
     padding: 10px;
     border-radius: 10px;
     font-size: 14px;
     text-align: center;
-    width: 240px;
-  }
-  
+    width: 280px;
+}
+
+.searchAndInputContainer {
+    display: flex;
+    /* justify-content: space-between; */
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.section,
+.sectionSubject {
+    /* flex: 1; */
+}
+
+.searchContainer {
+    display: flex;
+    align-items: center;
+}
+
+.subjectCode {
+    display: block;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.cartBtn {
+    width: 100%;
+}

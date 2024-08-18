@@ -519,6 +519,49 @@ function Reserve() {
                   </tbody>
                 </table>
               </div>
+
+<hr style={{marginTop:'30px'}}/>
+<div className={styles.searchAndInputContainer}> {/* 새로운 가로 배치 div */}
+  <div className={styles.sectionContainer} style={{borderRight:'1px solid grey',paddingRight:'30px'}}>
+    <div className={styles.section}>
+      <div className={styles.sectionTitle}>과목 검색 및 신청</div>
+      <div className={styles.searchContainer}>
+        <input type="text" placeholder="과목명 검색" style={{width:'210px',marginRight:'50px',height:'30px',paddingLeft:'14px'}}/>
+        <FaSearch className={styles.searchIcon} />
+      </div>
+    </div>
+    <div className={styles.lectureList}>
+              {lectureList.map((lecture) => (
+                <LectureItem key={lecture.id} lecture={lecture} />
+              ))}
+              <button type="button" className={styles.more} onClick={() => togglePopup('moreLectures') } style={{width:'226px'}}>더보기</button>
+            </div>
+  </div>
+
+  <div className={styles.sectionContainer}>
+    <div className={styles.sectionSubject}>
+      <div className={styles.sectionTitle}>과목 코드 직접 입력</div>
+      <input
+        type="text"
+        placeholder="과목 코드 입력"
+        className={styles.subjectCode}
+        value={subjectCode}
+        onChange={handleSubjectCodeChange}
+        style={{marginBottom:'10px',marginLeft:'5px'}}
+      />
+      <input
+        type="text"
+        placeholder="분반 코드 입력"
+        value={divisionCode}
+        onChange={handleDivisionCodeChange}
+        style={{marginLeft:'5px'}}
+      />
+      <button type="button" className={styles.cartBtn} onClick={handleAddToCart}>
+        수강신청
+      </button>
+    </div>
+  </div>
+</div>
             </div>
           </>
         )}
@@ -569,63 +612,31 @@ function Reserve() {
             <div className={styles.scheduleContainer}>
               <h3 className={styles.scheduleTitle}>나의 시간표</h3>
               <table className={styles.scheduleTable}>
-                <thead>
-                  <tr >
-                    <th style={{backgroundColor:'white'}}>월</th>
-                    <th style={{backgroundColor:'white'}}>화</th>
-                    <th style={{backgroundColor:'white'}}>수</th>
-                    <th style={{backgroundColor:'white'}}>목</th>
-                    <th style={{backgroundColor:'white'}}>금</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[...Array(9)].map((_, timeSlot) => (
-                    <tr key={timeSlot} style={{ backgroundColor: 'white' }}>
-                      {schedule.map((day, dayIndex) => (
-                        <td key={dayIndex} style={{ backgroundColor: day[timeSlot] ? '#637ABF' : 'transparent', height: '50px', width: '50px' }}></td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+  <thead>
+    <tr>
+      <th style={{ backgroundColor: 'white' }}>월</th>
+      <th style={{ backgroundColor: 'white' }}>화</th>
+      <th style={{ backgroundColor: 'white' }}>수</th>
+      <th style={{ backgroundColor: 'white' }}>목</th>
+      <th style={{ backgroundColor: 'white' }}>금</th>
+      <th style={{ backgroundColor: 'white' }}>토</th> 
+    </tr>
+  </thead>
+  <tbody>
+    {[...Array(9)].map((_, timeSlot) => (
+      <tr key={timeSlot} style={{ backgroundColor: 'white' }}>
+        {schedule.map((day, dayIndex) => (
+          <td key={dayIndex} style={{ backgroundColor: day[timeSlot] ? '#637ABF' : 'transparent', height: '50px', width: '50px' }}></td>
+        ))}
+        <td style={{ backgroundColor: 'transparent', height: '50px', width: '50px' }}></td> {/* 토요일 시간 슬롯 추가 */}
+      </tr>
+    ))}
+  </tbody>
+</table>
+
               <div className={styles.creditsInfoSchedule}>
                 현재 수강 학점 (/최대 수강 가능 학점):<br/><br/>  {appliedLectures.length * 3} / 21
               </div>
-            </div>
-
-            <div className={styles.section}>
-              <div className={styles.sectionTitle}>과목명으로 조회 후 신청</div>
-              <div className={styles.searchContainer}>
-                <input type="text" placeholder="강의명 검색" />
-                <FaSearch className={styles.searchIcon} />
-              </div>
-            </div>
-
-            <div className={styles.lectureList}>
-              {lectureList.map((lecture) => (
-                <LectureItem key={lecture.id} lecture={lecture} />
-              ))}
-              <button type="button" className={styles.more} onClick={() => togglePopup('moreLectures')}>더보기</button>
-            </div>
-
-            <div className={styles.sectionSubject}>
-              <div className={styles.sectionTitle}>과목 코드 직접 입력</div>
-              <input
-                type="text"
-                placeholder="과목 코드 입력"
-                className={styles.subjectCode}
-                value={subjectCode}
-                onChange={handleSubjectCodeChange}
-              />
-              <input
-                type="text"
-                placeholder="분반 코드 입력"
-                value={divisionCode}
-                onChange={handleDivisionCodeChange}
-              />
-              <button type="button" className={styles.cartBtn} onClick={handleAddToCart}>
-                장바구니 담기
-              </button>
             </div>
           </>
         )}

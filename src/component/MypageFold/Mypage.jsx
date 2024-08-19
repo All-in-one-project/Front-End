@@ -34,7 +34,7 @@ const Mypage = () => {
         <div className={styles.navbar}>
           <button onClick={() => handleNavClick('/notice')}>공지사항</button>
           <button onClick={() => handleNavClick('/inquiry')}>과목조회</button>
-          <button onClick={() => handleNavClick('/application')}>수강신청</button>
+          <button onClick={() => handleNavClick('/reserve')}>수강신청</button>
           <button className={styles.application} onClick={() => handleNavClick('/mypage')}>마이페이지</button>
         </div>
 
@@ -58,8 +58,12 @@ const Mypage = () => {
         <div className={styles.section}>
           <div className={styles.header}>재학 상태</div>
           <div className={styles.content}>
-            <div className={styles.status}>재학 중 (현재 2학기 수강 중)</div>
-            <div className={styles.remaining}>졸업까지 총 6학기 남아 있습니다.</div>
+            <div className={styles.status}>
+              <span className={styles.boldText}>재학 중</span> (현재 2학기 수강 중)
+            </div>
+             <div className={styles.remaining}>
+              졸업까지 총 <span className={styles.boldText}>6학기</span> 남아 있습니다.
+            </div>
           </div>
         </div>
         <div className={styles.section}>

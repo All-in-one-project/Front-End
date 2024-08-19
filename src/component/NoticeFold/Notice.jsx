@@ -1,3 +1,5 @@
+/*공지사항*/
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Notice.module.css';
@@ -17,7 +19,7 @@ const Notice = () => {
  const [selectedSubNav, setSelectedSubNav] = useState('전체 공지사항'); // 초기 상태 설정
   const navigate = useNavigate();
   const itemsPerPage = 5;
-  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const totalPages = 5;/*페이지네이션*/
   const displayData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const handleNavClick = (path) => {
@@ -33,6 +35,11 @@ const Notice = () => {
     }
   };
 
+  const handlePageClick = (pageNumber) => {
+  setCurrentPage(pageNumber);
+};
+
+
   return (
     <div className={styles.body}>
       <LeftBar />
@@ -41,7 +48,7 @@ const Notice = () => {
         <div className={styles.navbar}>
           <button className={styles.application} onClick={() => handleNavClick('/notice')}>공지사항</button>
           <button onClick={() => handleNavClick('/inquiry')}>과목조회</button>
-          <button onClick={() => handleNavClick('/application')}>수강신청</button>
+          <button onClick={() => handleNavClick('/reserve')}>수강신청</button>
           <button onClick={() => handleNavClick('/mypage')}>마이페이지</button>
         </div>
 
@@ -81,18 +88,23 @@ const Notice = () => {
           </tbody>
         </table>
 
-        {/* 페이지네이션 */}
-        <div className={styles.pagination}>
-          {Array.from({ length: totalPages }, (_, index) => (
+              {/* 페이지네이션 */}
+      <div className={styles.pagination}>
+        {Array.from({ length: totalPages }, (_, index) => (
+          <React.Fragment key={index + 1}>
             <button
-              key={index + 1}
               onClick={() => setCurrentPage(index + 1)}
               className={currentPage === index + 1 ? styles.active : ''}
             >
               {index + 1}
             </button>
-          ))}
-        </div>
+            {index + 1 < totalPages && (
+              <span className={styles.separator}>|</span>
+            )}
+          </React.Fragment>
+        ))}
+      </div>
+
         <Schedule />
       </div>
     </div>

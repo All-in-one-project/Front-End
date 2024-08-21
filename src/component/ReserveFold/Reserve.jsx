@@ -26,6 +26,7 @@ function Reserve() {
   const [popupMessage, setPopupMessage] = useState(''); 
   const [appliedLectures, setAppliedLectures] = useState([]); 
   const [schedule, setSchedule] = useState(Array(5).fill(null).map(() => Array(9).fill(null))); 
+  const [sidebarTitle, setSidebarTitle] = useState('예비수강신청');
 
   const navigate = useNavigate(); 
 
@@ -88,12 +89,11 @@ function Reserve() {
   };
 
   const handleApplyLecture = (lecture) => {
-    // 이미 신청된 강의인지 확인
     const isAlreadyApplied = appliedLectures.some(appliedLecture => appliedLecture.id === lecture.id);
 
     if (isAlreadyApplied) {
         alert('이미 신청된 과목입니다.');
-        return; // 이미 신청된 경우 아무 작업도 하지 않음
+        return;
     }
 
     if (appliedLectures.length < 7) {
@@ -190,6 +190,13 @@ function Reserve() {
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen); 
+
+    // selectedSubNav에 따라 sidebarTitle을 변경합니다.
+    if (selectedSubNav === '예비수강신청') {
+      setSidebarTitle('예비수강신청');
+    } else if (selectedSubNav === '일반수강신청') {
+      setSidebarTitle('일반수강신청');
+    }
   };
 
   const togglePopup = (type) => {
@@ -657,7 +664,7 @@ function Reserve() {
         </button>
         <div className={styles.sidebarContent}>
             <div className={styles.sidebarSection}>
-            <div className={styles.basketTitle}>예비수강신청 내역</div>
+            <div className={styles.basketTitle}>{sidebarTitle}</div>
             {sidebarLectures.map((lecture, index) => (
                 <div key={index} className={styles.lectureBox}>
                 <div className={styles.name}>{lecture.name}</div> 

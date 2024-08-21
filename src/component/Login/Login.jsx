@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Login_css.css';
@@ -7,7 +7,27 @@ function Login() {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [serverStatus, setServerStatus] = useState(null);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+  const checkServerStatus = async () => {
+    try {
+      const response = await axios.get('http://43.202.223.188/health'); // 서버 상태 확인용 엔드포인트
+      if (response.status === 200) {
+        setServerStatus('서버 연결 정상');
+      } else {
+        setServerStatus('서버 연결 문제 발생');
+      }
+    } catch (error) {
+      setServerStatus('서버에 연결할 수 없습니다.');
+    }
+  };
+
+  checkServerStatus();
+}, []);
+
 
 
   const handleLogin = async (event) => {

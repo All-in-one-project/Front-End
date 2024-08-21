@@ -1,5 +1,3 @@
-/*과목조회 컴포넌트*/
-
 import React, { useState, useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import axios from 'axios';
@@ -38,20 +36,22 @@ function Inquiry() {
   ];
 
   const navigate = useNavigate();
+  const apiUrl = "http://43.202.223.188:8080"; // 하드코딩된 URL
 
   useEffect(() => {
     axios.get('https://43.202.223.188:8080/api/college')
       .then(response => {
+        console.log('Received response:', response); // 응답 전체 확인
         setColleges(response.data);
+        console.log('Fetched Colleges:', response.data); // 데이터가 설정되었는지 확인
       })
       .catch(error => {
-        console.error('There was an error fetching the colleges!', error);
+        console.error('There was an error fetching the colleges!', error); // 에러 메시지 확인
       });
   }, []);
 
   const fetchDepartments = (collegeId) => {
     axios.get(`https://43.202.223.188:8080/api/departments/${collegeId}`)
-
       .then(response => {
         setDepartments(response.data);
       })
@@ -72,29 +72,25 @@ function Inquiry() {
 
   useEffect(() => {
     if (selectedGridContainer) {
+      console.log('Fetching departments for selected college:', selectedGridContainer);
       fetchDepartments(selectedGridContainer);
     }
   }, [selectedGridContainer]);
 
   useEffect(() => {
     if (selectedDepartmentContainer) {
+      console.log('Fetching subjects for selected department:', selectedDepartmentContainer);
       fetchSubjects(selectedDepartmentContainer);
     }
   }, [selectedDepartmentContainer]);
-
-  useEffect(() => {
-    if (selectedYearContainer.length > 0) {
-      filterLecturesByGrade(selectedYearContainer);
-    }
-  }, [selectedYearContainer]);
 
   const handleNavClick = (path) => {
     navigate(path);
   };
 
-  /*로그아웃 API*/
-  /*일단은 로그아웃 누르면 원래 화면 path:'' 인 곳에 이동함*/
- const handleLogout = async () => {
+  /* 로그아웃 API */
+  /* 일단은 로그아웃 누르면 원래 화면 path:'' 인 곳에 이동함 */
+  const handleLogout = async () => {
     const token = localStorage.getItem('token');
     
     if (!token) {
@@ -119,6 +115,7 @@ function Inquiry() {
   };
 
   const handleGridContainerClick = (collegeId) => {
+    console.log('College clicked:', collegeId); // 추가된 로그
     if (selectedGridContainer === collegeId) {
       setSelectedGridContainer('');
       setSelectedDepartmentContainer('');
@@ -142,6 +139,7 @@ function Inquiry() {
         setSelectedDepartmentContainer('');
         setDepartments([]);
         setLectures([]);
+        console.log('Selected College:', collegeId); 
         setFilteredLectures([]);
         fetchDepartments(collegeId);
       }
@@ -170,6 +168,7 @@ function Inquiry() {
         setSelectedYearContainer([]);
         setLectures([]);
         setFilteredLectures([]);
+         console.log('Selected Department:', departmentId); 
         fetchSubjects(departmentId);
       }
     }

@@ -81,6 +81,7 @@
  .header {
      font-weight: bold;
      margin-bottom: 10px;
+     color:black;
  }
 
  .content {
@@ -95,16 +96,12 @@
  .link {
      margin-bottom: 10px;
  }
-
- .score {
+ /*재학중 등등 두꺼운 글꼴*/
+.boldText, .score, .status-highlight {
+    color: black;
     font-weight: bold;
 }
-
-
- .status-highlight {
-     font-weight: bold;
- }
-
+ 
  .link a {
      text-decoration: underline;
  }

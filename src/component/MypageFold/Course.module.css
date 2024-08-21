@@ -3,81 +3,206 @@
      margin: 0;
      font-family: Arial, sans-serif;
  }
-
- .container {
-     position: absolute;
-     top: 50%;
-     left: 50%;
-     transform: translate(-50%, -50%);
-     width: 80%;
-     max-width: 800px;
-     height: 50%;
-     padding: 20px;
-     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-     background-color: white;
-     overflow-y: auto;
- }
-
- .dropdown {
-     display: flex;
-     align-items: center;
-     justify-content: space-between;
-     margin-bottom: 20px;
- }
-
- .dropdown label {
-     margin-right: 10px;
- }
-
- .dropdown select {
-     padding: 5px;
- }
-
- .dropdown button {
-     padding: 5px 10px;
- }
-
- .semester {
-     margin-bottom: 20px;
- }
-
- .semester h2 {
-     margin-bottom: 10px;
- }
-
- .courses {
-     display: flex;
-     justify-content: space-between;
- }
-
- .major,
- .non-major {
-     width: 48%;
- }
-
- .major h3,
- .non-major h3 {
-     margin-bottom: 10px;
- }
-
- .major ul,
- .non-major ul {
-     list-style-type: none;
-     padding: 0;
-     margin: 0;
- }
-
- .major li,
- .non-major li {
-     background-color: #f9f9f9;
+ 
+ /* 중간 --------------------- */
+ .mainContent {
+     flex: 1;
      padding: 10px;
-     margin-bottom: 5px;
-     border: 1px solid #ddd;
+     display: flex;
+     flex-direction: column;
+     margin-left: -20px;
  }
 
- .major p,
- .non-major p {
-     background-color: #f9f9f9;
+ .navbar,
+ .subNavbar {
+     display: flex;
+     justify-content: center;
      padding: 10px;
-     border: 1px solid #ddd;
  }
+
+ .navbar button {
+     padding: 10px;
+     border: 1px solid rgb(104, 103, 103);
+     cursor: pointer;
+     background-color: rgb(212, 216, 243);
+     border-radius: 15px 15px;
+     font-weight: bold;
+     font-size: 15px;
+     color: rgb(104, 103, 103);
+     margin: 0 10px;
+     width: 150px;
+ }
+
+ .navbar button.application {
+     background: #637ABF;
+     color: white;
+ }
+
+ .subNavbar button {
+     padding: 0px 130px;
+     width: 360px;
+     height: 40px;
+     border: 1px solid rgb(104, 103, 103);
+     cursor: pointer;
+     background-color: rgb(212, 216, 243);
+     border-radius: 10px 10px;
+     font-weight: bold;
+     font-size: 15px;
+     color: rgb(104, 103, 103);
+     margin: 0px -10px;
+ }
+
+ .subNavbar button.selected {
+     background-color: #637ABF;
+     color: white;
+     transform: translateY(-1px);
+ }
+
+ .subNavbar button:last-child {
+     margin-right: 0;
+ }
+
+
+
+
+
+
+
+.container {
+    position: absolute;
+    top: 46%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 700px;
+    height: 50%;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.container::-webkit-scrollbar {
+    width: 12px;
+}
+
+.container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+    /* 스크롤바 드래그 표시 둥글게 */
+}
+
+.container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.yearLabel {
+    color: rgb(104, 103, 103);
+    font-weight: bold;
+    margin-left:-10px;
+}
+
+/*select 부분*/
+.dropdown {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.dropdown label {
+    margin-right: 10px;
+}
+
+.dropdown select {
+    padding: 8px;
+    width: 500px;
+    border: 1px solid black;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    margin-left: 0px;
+    margin-right: 5px;
+}
+
+.dropdown button {
+    padding: 5px 10px;
+    width: 100px;
+    font-weight: bold;
+    background-color: rgb(209, 208, 208);
+    border: none;
+}
+
+
+
+.semester {
+    margin-bottom: 20px;
+    margin-top: -10px;
+    padding: 10px;
+}
+
+.semester h2 {
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+.courses {
+    display: flex;
+    justify-content: space-between;
+    background-color: rgb(222, 222, 222);
+    position: relative;
+    border-radius: 10px;
+    border: 0.5px solid black;
+
+}
+
+.courses::before {
+    content: "";
+    position: absolute;
+    top: 10%;
+    bottom: 10%;
+    left: 50%;
+    width: 2px;
+    background-color: black;
+    transform: translateX(-50%);
+}
+
+.major,
+.nonMajor {
+    width: 50%;
+    padding: 0 15px;
+    box-sizing: border-box;
+}
+
+.major h3,
+.nonMajor h3 {
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: rgb(76, 76, 76);
+    font-weight: bold;
+    text-align: center;
+    /* 위치를 오른쪽으로 */
+}
+
+.major ul,
+.nonMajor ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.major li,
+.nonMajor li {
+    padding: 10px;
+    margin-bottom: 5px;
+    border: 1px solid #ddd;
+    color:black;
+    font-weight: bold;
+}
+
+.major p,
+.nonMajor p {
+    padding: 10px;
+    border: 1px solid #ddd;
+}

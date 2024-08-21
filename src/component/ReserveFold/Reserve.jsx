@@ -3,6 +3,9 @@ import { FaSearch } from 'react-icons/fa';
 import styles from './Reserve.module.css'; 
 import { useNavigate } from 'react-router-dom';
 
+// ReserveWating 컴포넌트를 import
+import ReserveWating from './ReserveWating';
+
 function Reserve() {  
   const [lectures, setLectures] = useState([]);
   const lecturelist = [
@@ -27,6 +30,7 @@ function Reserve() {
   const [appliedLectures, setAppliedLectures] = useState([]); 
   const [schedule, setSchedule] = useState(Array(5).fill(null).map(() => Array(9).fill(null))); 
   const [sidebarTitle, setSidebarTitle] = useState('예비수강신청');
+  const [isWaiting, setIsWaiting] = useState(false); // 대기 상태를 관리하는 state
 
   const navigate = useNavigate(); 
 
@@ -97,12 +101,19 @@ function Reserve() {
     }
 
     if (appliedLectures.length < 7) {
-        setAppliedLectures([...appliedLectures, lecture]);
-        updateSchedule(lecture);
+        // 신청 후 대기 화면으로 전환
+        setIsWaiting(true);
+        setTimeout(() => {
+            setIsWaiting(false); // 대기 화면에서 돌아온 후
+
+            // 신청 처리
+            setAppliedLectures([...appliedLectures, lecture]);
+            updateSchedule(lecture);
+        }, 5000); // 5초 후에 다시 돌아옴
     } else {
         alert('최대 21학점까지만 신청할 수 있습니다.');
     }
-};
+  };
 
 
   const updateSchedule = (lecture) => {
@@ -357,6 +368,11 @@ function Reserve() {
     { id: 9, name: "생물학 (목4,5)" },
     { id: 10, name: "통계학 (금3,4)" },
   ];
+
+  // 대기 중이면 ReserveWating 컴포넌트를 렌더링
+  if (isWaiting) {
+    return <ReserveWating />;
+  }
 
   return (
     <div className={styles.body}>

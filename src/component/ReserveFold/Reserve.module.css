@@ -416,7 +416,7 @@
 
 /* 과목코드, 분반코드 입력 */
 .sectionSubject input {
-    width: 70%;
+    width: 200px;
     height: 10px;
     padding: 10px 10px;
     border: none;
@@ -428,7 +428,7 @@
 /* 장바구니 버튼 */
 .sectionSubject .cartBtn {
     background-color: #637ABF;
-    width: 77%;
+    width: 220px;
     height: 30px;
     border: none;
     font-weight: bold;

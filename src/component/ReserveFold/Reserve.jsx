@@ -558,13 +558,13 @@ function Reserve() {
         onChange={handleSubjectCodeChange}
         style={{marginBottom:'10px',marginLeft:'5px'}}
       />
-      <input
+      {/* <input
         type="text"
         placeholder="분반 코드 입력"
         value={divisionCode}
         onChange={handleDivisionCodeChange}
         style={{marginLeft:'5px'}}
-      />
+      /> */}
       <button type="button" className={styles.cartBtn} onClick={handleAddToCart}>
         수강신청
       </button>
@@ -603,12 +603,7 @@ function Reserve() {
                 value={subjectCode}
                 onChange={handleSubjectCodeChange}
               />
-              <input
-                type="text"
-                placeholder="분반 코드 입력"
-                value={divisionCode}
-                onChange={handleDivisionCodeChange}
-              />
+              
               <button type="button" className={styles.cartBtn} onClick={handleAddToCart}>
                 장바구니 담기
               </button>

@@ -14,6 +14,7 @@ import Initial from './component/InitialFold/Initial.jsx';
 import Disabled from './component/DisabledFold/Disabled.jsx';
 import ReserveWating from './component/ReserveFold/ReserveWating.jsx';
 import ReserveDelete from './component/ReserveFold/ReserveDelete.jsx';
+import ReserveClassInputAgain from './component/ReserveFold/ReserveClassInputAgain.jsx';
 
 function App() {
   const apiUrl = 'http://43.202.223.188:8080';
@@ -36,6 +37,7 @@ function App() {
         <Route path='/reserve' element={<Reserve />} /> {/* /reserve 경로에 Reserve 컴포넌트 */}
         <Route path='/reserveWating' element={<ReserveWating />} /> 
         <Route path='/reserveDelete' element={<ReserveDelete />} /> 
+        <Route path='/reserveClassInputAgain' element={<ReserveClassInputAgain />} /> 
         <Route path='/inquiry' element={<Inquiry />} />
         <Route path='/schedule' element={<Schedule />} />
         <Route path='/notice' element={<Notice />} />

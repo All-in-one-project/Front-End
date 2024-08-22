@@ -1,0 +1,55 @@
+.reserveClassInputAgainTotalBox {
+    margin: auto;
+    margin-top: 30%;
+    border-radius: 50px;
+    background-color: rgb(231, 231, 231);
+    width: 540px;
+    height: 260px;
+    position: relative;
+}
+
+.reserveClassInputAgainTitle {
+    font-weight: 900;
+    color: rgb(100, 100, 100);
+    font-size: 24px;
+    padding-top: 30px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.reserveDeleteClassName{
+    font-weight: 900;
+    font-size: 30px;
+    text-align: center;
+    margin: 0;
+}
+
+.reserveClassInputAgainNotice{
+    text-align: center;
+    font-weight: 600;
+    font-size: 26px;
+    color: rgb(61, 60, 60);
+    margin: 0;
+}
+
+.reserveClassInputAgainButtonContainer {
+    display: flex;
+    justify-content: center;
+ 
+    margin-top: 20px;
+}
+
+.reserveClassInputAgainButtonDelete {
+    background-color: white;
+    color: black;
+    font-weight: 600;
+    font-size: 18px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    width: 300px;
+    text-align: center;
+
+}
+
+

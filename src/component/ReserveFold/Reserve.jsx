@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './Reserve.module.css';
 import ReserveWating from './ReserveWating'; // 대기 화면 컴포넌트
 import ReserveDelete from './ReserveDelete'; // 삭제 확인 화면 컴포넌트
+import ReserveClassInputAgain from './ReserveClassInputAgain'; // 과목 코드 입력 오류 확인 화면 컴포넌트
 
 function Reserve() {
   const [lectures, setLectures] = useState([]);
@@ -32,6 +33,7 @@ function Reserve() {
   const [isWaiting, setIsWaiting] = useState(false); // 대기 상태를 관리하는 state
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // 삭제 확인 화면 제어
   const [lectureToRemove, setLectureToRemove] = useState(null); // 삭제할 강의 정보
+  const [showInputError, setShowInputError] = useState(false); // 과목 코드 오류 화면 제어
 
   const navigate = useNavigate();
 
@@ -344,6 +346,20 @@ function Reserve() {
     togglePopup('lecturePlan');
   };
 
+  const handleSubjectCodeInput = () => {
+    const foundLecture = lectureList.find((lecture) => lecture.lecture === subjectCode);
+
+    if (foundLecture) {
+      handleAddToCart(foundLecture);
+    } else {
+      setShowInputError(true); // 과목 코드 오류 화면 표시
+    }
+  };
+
+  const handleConfirmInputError = () => {
+    setShowInputError(false); // 오류 화면 숨김
+  };
+
   const MainLectureItem = ({ lecture }) => (
     <div className={styles.lectureBox}>
       <div className={styles.topRow}>
@@ -396,6 +412,15 @@ function Reserve() {
         lecture={lectureToRemove}
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
+      />
+    );
+  }
+
+  // 과목 코드 오류 화면을 보여줍니다.
+  if (showInputError) {
+    return (
+      <ReserveClassInputAgain
+        onConfirm={handleConfirmInputError}
       />
     );
   }
@@ -607,7 +632,7 @@ function Reserve() {
                       onChange={handleSubjectCodeChange}
                       style={{ marginBottom: '10px', marginLeft: '5px' }}
                     />
-                    <button type="button" className={styles.cartBtn} onClick={handleAddToCart}>
+                    <button type="button" className={styles.cartBtn} onClick={handleSubjectCodeInput}>
                       수강신청
                     </button>
                   </div>
@@ -646,7 +671,7 @@ function Reserve() {
                 onChange={handleSubjectCodeChange}
               />
 
-              <button type="button" className={styles.cartBtn} onClick={handleAddToCart}>
+              <button type="button" className={styles.cartBtn} onClick={handleSubjectCodeInput}>
                 장바구니 담기
               </button>
             </div>

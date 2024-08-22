@@ -1,5 +1,3 @@
-/*과목조회 컴포넌트*/
-
 import React, { useState, useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import axios from 'axios';
@@ -38,11 +36,10 @@ function Inquiry() {
   ];
 
   const navigate = useNavigate();
-    const apiUrl = "http://43.202.223.188:8080"; // 하드코딩된 URL
+  const apiUrl = "http://43.202.223.188:8080"; // 하드코딩된 URL
 
   useEffect(() => {
-    console.log('Fetching colleges');
-    axios.get(`${apiUrl}/api/college`)
+    axios.get('https://43.202.223.188:8080/api/college')
       .then(response => {
         console.log('Received response:', response); // 응답 전체 확인
         setColleges(response.data);
@@ -53,55 +50,47 @@ function Inquiry() {
       });
   }, []);
 
+  const fetchDepartments = (collegeId) => {
+    axios.get(`https://43.202.223.188:8080/api/departments/${collegeId}`)
+      .then(response => {
+        setDepartments(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the departments!', error);
+      });
+  };
 
+  const fetchSubjects = (departmentId) => {
+    axios.get(`https://43.202.223.188:8080/api/subjects/${departmentId}`)
+      .then(response => {
+        setLectures(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the subjects!', error);
+      });
+  };
 
-const fetchDepartments = (collegeId) => {
-  console.log(`Fetching departments for collegeId: ${collegeId}`);
-  axios.get(`${apiUrl}/api/departments/${collegeId}`)
-    .then(response => {
-      setDepartments(response.data);
-      console.log('Fetched Departments:', response.data);
-    })
-    .catch(error => {
-      console.error('There was an error fetching the departments!', error);
-    });
-};
-const fetchSubjects = (departmentId) => {
-  console.log(`Fetching subjects for departmentId: ${departmentId}`);
-  axios.get(`${apiUrl}/api/subjects/${departmentId}`)
-    .then(response => {
-      setLectures(response.data);
-      console.log('Fetched Subjects:', response.data);
-    })
-    .catch(error => {
-      console.error('There was an error fetching the subjects!', error);
-    });
-};
+  useEffect(() => {
+    if (selectedGridContainer) {
+      console.log('Fetching departments for selected college:', selectedGridContainer);
+      fetchDepartments(selectedGridContainer);
+    }
+  }, [selectedGridContainer]);
 
-
-useEffect(() => {
-  if (selectedGridContainer) {
-    console.log('Fetching departments for selected college:', selectedGridContainer);
-    fetchDepartments(selectedGridContainer);
-  }
-}, [selectedGridContainer]);
-
-useEffect(() => {
-  if (selectedDepartmentContainer) {
-    console.log('Fetching subjects for selected department:', selectedDepartmentContainer);
-    fetchSubjects(selectedDepartmentContainer);
-  }
-}, [selectedDepartmentContainer]);
-
-
+  useEffect(() => {
+    if (selectedDepartmentContainer) {
+      console.log('Fetching subjects for selected department:', selectedDepartmentContainer);
+      fetchSubjects(selectedDepartmentContainer);
+    }
+  }, [selectedDepartmentContainer]);
 
   const handleNavClick = (path) => {
     navigate(path);
   };
 
-  /*로그아웃 API*/
-  /*일단은 로그아웃 누르면 원래 화면 path:'' 인 곳에 이동함*/
- const handleLogout = async () => {
+  /* 로그아웃 API */
+  /* 일단은 로그아웃 누르면 원래 화면 path:'' 인 곳에 이동함 */
+  const handleLogout = async () => {
     const token = localStorage.getItem('token');
     
     if (!token) {
@@ -111,7 +100,7 @@ useEffect(() => {
     }
 
     try {
-      const response = await axios.post('http://43.202.223.188:8080/api/logout', { token });
+      const response = await axios.post('https://43.202.223.188:8080/api/logout', { token });
       
       if (response.status === 200) {
         console.log(response.data.message); // "Logout successful"
@@ -126,36 +115,36 @@ useEffect(() => {
   };
 
   const handleGridContainerClick = (collegeId) => {
-  console.log('College clicked:', collegeId); // 추가된 로그
-  if (selectedGridContainer === collegeId) {
-    setSelectedGridContainer('');
-    setSelectedDepartmentContainer('');
-    setDepartments([]);
-    setLectures([]);
-    setFilteredLectures([]);
-  } else {
-    if (selectedGridContainer) {
-      setPopupMessage(
-        <div>
-          해당 항목은 복수 선택이 불가능합니다!
-          <br />
-          <span style={{ fontWeight: 'normal' }}>
-            (단과대 및 학과/학부 복수 선택 불가능)
-          </span>
-        </div>
-      );
-      togglePopup('error');
-    } else {
-      setSelectedGridContainer(collegeId);
+    console.log('College clicked:', collegeId); // 추가된 로그
+    if (selectedGridContainer === collegeId) {
+      setSelectedGridContainer('');
       setSelectedDepartmentContainer('');
       setDepartments([]);
       setLectures([]);
-      console.log('Selected College:', collegeId); 
       setFilteredLectures([]);
-      fetchDepartments(collegeId);
+    } else {
+      if (selectedGridContainer) {
+        setPopupMessage(
+          <div>
+            해당 항목은 복수 선택이 불가능합니다!
+            <br />
+            <span style={{ fontWeight: 'normal' }}>
+              (단과대 및 학과/학부 복수 선택 불가능)
+            </span>
+          </div>
+        );
+        togglePopup('error');
+      } else {
+        setSelectedGridContainer(collegeId);
+        setSelectedDepartmentContainer('');
+        setDepartments([]);
+        setLectures([]);
+        console.log('Selected College:', collegeId); 
+        setFilteredLectures([]);
+        fetchDepartments(collegeId);
+      }
     }
-  }
-};
+  };
 
   const handleDepartmentContainerClick = (departmentId) => {
     if (selectedDepartmentContainer === departmentId) {
@@ -252,7 +241,7 @@ useEffect(() => {
   };
 
   const handleSearch = () => {
-    axios.get('http://43.202.223.188:8080/subjects/search', {
+    axios.get('https://43.202.223.188:8080/subjects/search', {
       params: { subjectName: searchTerm }
     })
     .then(response => {

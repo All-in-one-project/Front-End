@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import styles from './Reserve.module.css'; 
-import { useNavigate } from 'react-router-dom'; // React Router 사용
+import { useNavigate } from 'react-router-dom';
+import styles from './Reserve.module.css';
+import ReserveWating from './ReserveWating'; // 대기 화면 컴포넌트
+import ReserveDelete from './ReserveDelete'; // 삭제 확인 화면 컴포넌트
+import ReserveClassInputAgain from './ReserveClassInputAgain'; // 과목 코드 입력 오류 확인 화면 컴포넌트
 
-function Reserve() {  
+function Reserve() {
   const [lectures, setLectures] = useState([]);
   const lecturelist = [
     { id: 1, name: "20세기 한국사", hours: "(월4,5)", lecture: "21032-001" },
@@ -18,15 +21,22 @@ function Reserve() {
   const [selectedGridContainer, setSelectedGridContainer] = useState('');
   const [selectedDepartmentContainer, setSelectedDepartmentContainer] = useState('');
   const [selectedYearContainer, setSelectedYearContainer] = useState([]);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // 사이드바 상태 추가
-  const [sidebarLectures, setSidebarLectures] = useState([]); // 사이드바에 추가될 강의 상태
-  const [isPopupVisible, setIsPopupVisible] = useState(false); // 팝업창 상태 추가
-  const [popupType, setPopupType] = useState(''); // 팝업창 타입 상태 추가
-  const [lecturePlan, setLecturePlan] = useState(''); // 강의 계획서 상태 추가
-  const [popupMessage, setPopupMessage] = useState(''); // 팝업창 메시지 추가
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [sidebarLectures, setSidebarLectures] = useState([]);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [popupType, setPopupType] = useState('');
+  const [lecturePlan, setLecturePlan] = useState('');
+  const [popupMessage, setPopupMessage] = useState('');
+  const [appliedLectures, setAppliedLectures] = useState([]);
+  const [schedule, setSchedule] = useState(Array(5).fill(null).map(() => Array(9).fill(null)));
+  const [sidebarTitle, setSidebarTitle] = useState('예비수강신청');
+  const [isWaiting, setIsWaiting] = useState(false); // 대기 상태를 관리하는 state
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // 삭제 확인 화면 제어
+  const [lectureToRemove, setLectureToRemove] = useState(null); // 삭제할 강의 정보
+  const [showInputError, setShowInputError] = useState(false); // 과목 코드 오류 화면 제어
 
-  /*맨 위에 공지사항, 과목조회, 수강신청, 마이페이지 버튼 눌를시 페이지 이동시켜주는 React훅*/
-  const navigate = useNavigate(); // React Router의 useNavigate 사용
+  const navigate = useNavigate();
+
   const handleNavClick = (path) => {
     navigate(path);
   };
@@ -42,38 +52,136 @@ function Reserve() {
   const handleSubjectCodeChange = (e) => setSubjectCode(e.target.value);
   const handleDivisionCodeChange = (e) => setDivisionCode(e.target.value);
 
-  const handleAddToCart = () => {
-    console.log('장바구니에 담겼습니다.');
+  const handleAddToCart = (lecture) => {
+    const isAlreadyInCart = sidebarLectures.some(item => item.id === lecture.id);
+
+    if (!isAlreadyInCart) {
+      setSidebarLectures([...sidebarLectures, lecture]);
+    } else {
+      alert('이미 장바구니에 담긴 과목입니다.');
+    }
+  };
+
+  const handleRemoveLectureFromSidebar = (id) => {
+    const lecture = sidebarLectures.find((lecture) => lecture.id === id);
+
+    if (selectedSubNav === '예비수강신청') {
+      // 예비수강신청일 때는 바로 삭제 처리
+      setSidebarLectures(sidebarLectures.filter((lecture) => lecture.id !== id));
+      removeLectureFromSchedule(lecture);
+    } else {
+      // 일반수강신청일 때는 삭제 확인 화면 표시
+      setLectureToRemove(lecture);
+      setShowDeleteConfirm(true);
+    }
+  };
+
+  const handleConfirmDelete = () => {
+    setSidebarLectures(sidebarLectures.filter((lecture) => lecture.id !== lectureToRemove.id));
+    removeLectureFromSchedule(lectureToRemove);
+    setShowDeleteConfirm(false); // 삭제 확인 화면 숨김
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteConfirm(false); // 삭제 확인 화면 숨김
+  };
+
+  const removeLectureFromSchedule = (lecture) => {
+    const timeMapping = {
+      '월': 0,
+      '화': 1,
+      '수': 2,
+      '목': 3,
+      '금': 4,
+    };
+
+    const days = lecture.time.match(/(월|화|수|목|금)/g);
+    const times = lecture.time.match(/\d/g).map(Number);
+
+    const newSchedule = [...schedule];
+
+    days.forEach(day => {
+      times.forEach(time => {
+        newSchedule[timeMapping[day]][time - 1] = null;
+      });
+    });
+
+    setSchedule(newSchedule);
+    setAppliedLectures(appliedLectures.filter((appliedLecture) => appliedLecture.id !== lecture.id));
+  };
+
+  const handleApplyLecture = (lecture) => {
+    const isAlreadyApplied = appliedLectures.some(appliedLecture => appliedLecture.id === lecture.id);
+
+    if (isAlreadyApplied) {
+      alert('이미 신청된 과목입니다.');
+      return;
+    }
+
+    if (appliedLectures.length < 7) {
+      // 신청 후 대기 화면으로 전환
+      setIsWaiting(true);
+      setTimeout(() => {
+        setIsWaiting(false); // 대기 화면에서 돌아온 후
+
+        // 신청 처리
+        setAppliedLectures([...appliedLectures, lecture]);
+        updateSchedule(lecture);
+      }, 5000); // 5초 후에 다시 돌아옴
+    } else {
+      alert('최대 21학점까지만 신청할 수 있습니다.');
+    }
+  };
+
+  const updateSchedule = (lecture) => {
+    const timeMapping = {
+      '월': 0,
+      '화': 1,
+      '수': 2,
+      '목': 3,
+      '금': 4,
+    };
+
+    const days = lecture.time.match(/(월|화|수|목|금)/g);
+    const times = lecture.time.match(/\d/g).map(Number);
+
+    const newSchedule = [...schedule];
+
+    days.forEach(day => {
+      times.forEach(time => {
+        newSchedule[timeMapping[day]][time - 1] = '#637ABF';
+      });
+    });
+
+    setSchedule(newSchedule);
   };
 
   const handleLogout = () => {
-    console.log('로그아웃되었습니다.');
-    navigate('/'); 
+    navigate('/');
   };
 
   const handleSubNavClick = (event) => {
     setSelectedSubNav(event.target.innerText);
   };
 
-  /*단과대 섹션에서 단과대 선택을 뭘하냐에 따라 학부 나오게 하는*/
-
   const handleGridContainerClick = (container) => {
     if (selectedGridContainer === container) {
       setSelectedGridContainer('');
-      setSelectedDepartmentContainer(''); // 학부 선택도 취소
+      setSelectedDepartmentContainer('');
       setDepartmentList([]);
     } else if (selectedGridContainer === '') {
       setSelectedGridContainer(container);
       setDepartmentList(departmentMapping[container]);
     } else {
-        setPopupMessage(
-      <div>
-        해당 항목은 복수 선택이 불가능합니다!
-        <br/>
-        <span style={{ fontWeight: 'normal' }}>
-          (단과대 및 학과/학부 복수 선택 불가)
-        </span>
-      </div>);
+      setPopupMessage(
+        <div>
+          해당 항목은 복수 선택이 불가능합니다!
+          <br />
+          <span style={{ fontWeight: 'normal' }}>
+            (단과대 및 학과/학부 복수 선택 불가)
+          </span>
+        </div>
+      );
       togglePopup('error');
     }
   };
@@ -85,13 +193,14 @@ function Reserve() {
       setSelectedDepartmentContainer(container);
     } else {
       setPopupMessage(
-      <div>
-        해당 항목은 복수 선택이 불가능합니다!
-        <br/>
-        <span style={{ fontWeight: 'normal' }}>
-          (단과대 및 학과/학부 복수 선택 불가)
-        </span>
-      </div>);
+        <div>
+          해당 항목은 복수 선택이 불가능합니다!
+          <br />
+          <span style={{ fontWeight: 'normal' }}>
+            (단과대 및 학과/학부 복수 선택 불가)
+          </span>
+        </div>
+      );
       togglePopup('error');
     }
   };
@@ -108,12 +217,19 @@ function Reserve() {
   };
 
   const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen); // 사이드바 토글 함수
+    setIsSidebarOpen(!isSidebarOpen);
+
+    // selectedSubNav에 따라 sidebarTitle을 변경합니다.
+    if (selectedSubNav === '예비수강신청') {
+      setSidebarTitle('예비수강신청');
+    } else if (selectedSubNav === '일반수강신청') {
+      setSidebarTitle('일반수강신청');
+    }
   };
 
   const togglePopup = (type) => {
-    setPopupType(type); // 팝업창 타입 설정
-    setIsPopupVisible(!isPopupVisible); 
+    setPopupType(type);
+    setIsPopupVisible(!isPopupVisible);
   };
 
   const renderCloseButton = () => {
@@ -123,27 +239,13 @@ function Reserve() {
       </button>
     );
   };
-   const renderErrorCloseButton = () => {
+
+  const renderErrorCloseButton = () => {
     return (
       <button className={styles.colseBtnmultiple} onClick={() => togglePopup('')}>
         확인 및 다시 선택하기
       </button>
     );
-  };
-
-  const handleAddLectureToSidebar = (lecture) => {
-    console.log('장바구니에 담겼습니다.');
-    setSidebarLectures([...sidebarLectures, lecture]);
-  };
-
-  const handleApplyLecture = (lecture) => {
-    console.log('수강신청이 완료되었습니다.');
-    setSidebarLectures([...sidebarLectures, lecture]);
-  };
-
-  const handleRemoveLectureFromSidebar = (id) => {
-    console.log('장바구니에서 삭제되었습니다.');
-    setSidebarLectures(sidebarLectures.filter((lecture) => lecture.id !== id));
   };
 
   const fetchLectures = (collegeId, departmentId, gradeId) => {
@@ -207,59 +309,15 @@ function Reserve() {
     ];
     setLectures(exampleLectures);
   };
+
   useEffect(() => {
     if (selectedGridContainer && selectedDepartmentContainer && selectedYearContainer.length > 0) {
       const collegeId = Object.keys(departmentMapping).indexOf(selectedGridContainer) + 1;
       const departmentId = departmentMapping[selectedGridContainer].indexOf(selectedDepartmentContainer) + 1;
-      const gradeId = parseInt(selectedYearContainer[0][0], 10); // '1학년', '2학년' 등에서 숫자만 추출
+      const gradeId = parseInt(selectedYearContainer[0][0], 10);
       fetchLectures(collegeId, departmentId, gradeId);
     }
   }, [selectedGridContainer, selectedDepartmentContainer, selectedYearContainer]);
-
-
-  const fetchLecturePlan = (lectureId) => {
-    const lecturePlans = {
-      '21032-001': 'This is the lecture plan for 컴퓨터 네트워크.',
-      '21032-002': 'This is the lecture plan for 자바.',
-      '21032-003': 'This is the lecture plan for 웹 프로그래밍.',
-      '21032-004': 'This is the lecture plan for 소프트웨어 공학.',
-      // 다른 강의 계획서 내용 추가 가능
-    };
-
-    setLecturePlan(lecturePlans[lectureId] || '해당 강의의 계획서를 찾을 수 없습니다.');
-    togglePopup('lecturePlan');
-  };
-
-  const MainLectureItem = ({ lecture }) => (
-    <div className={styles.lectureBox}>
-      <div className={styles.topRow}>
-        <div>{lecture.id}</div>
-        <div className={styles.category}>{lecture.category}</div> 
-      </div>
-      <div className={styles.name}>{lecture.name}</div> 
-      <div className={styles.time}>교수 {lecture.professor} | {lecture.time}</div> {/* 교수와 시간을 표시 */}
-      <div className={styles.buttons}>
-        <button className={styles.basket} onClick={() => handleAddLectureToSidebar(lecture)}>장바구니</button>
-        <button className={styles.plan} onClick={() => fetchLecturePlan(lecture.id)}>강의 계획서</button> {/* 강의 계획서 버튼 */}
-      </div>
-    </div>
-  );
-
-  const LectureItem = ({ lecture }) => (
-    <div className={styles.lectureItem}>
-      <span className={styles.lectureName}>{lecture.name} {lecture.hours}</span>
-      <button className={styles.infoBtn} onClick={() => fetchLecturePlan(lecture.id)}>정보</button>
-      <button className={styles.applyBtn} onClick={() => handleAddLectureToSidebar(lecture)}>추가</button>
-    </div>
-  );
-
-  const PopupLectureItem = ({ lecture }) => (
-    <div className={styles.lectureItem}>
-      <span className={styles.lectureName}>{lecture.name}</span>
-      <button className={styles.infoBtn} onClick={() => fetchLecturePlan(lecture.id)}>정보</button>
-      <button className={styles.applyBtn} onClick={() => handleAddLectureToSidebar(lecture)}>추가</button>
-    </div>
-  );
 
   const departmentMapping = {
     'ICT융합과학대학': ['컴퓨터공학부', '데이터과학부', '정보통신학부'],
@@ -274,9 +332,65 @@ function Reserve() {
     '교양대학': ['교양학부']
   };
 
-  const [departmentList, setDepartmentList] = useState(departmentMapping['ICT융합과학대학']); // 초기값 설정
+  const [departmentList, setDepartmentList] = useState(departmentMapping['ICT융합과학대학']);
 
-  // 더보기 클릭 시 임의의 강의 리스트 추가
+  const fetchLecturePlan = (lectureId) => {
+    const lecturePlans = {
+      '21032-001': 'This is the lecture plan for 컴퓨터 네트워크.',
+      '21032-002': 'This is the lecture plan for 자바.',
+      '21032-003': 'This is the lecture plan for 웹 프로그래밍.',
+      '21032-004': 'This is the lecture plan for 소프트웨어 공학.',
+    };
+
+    setLecturePlan(lecturePlans[lectureId] || '해당 강의의 계획서를 찾을 수 없습니다.');
+    togglePopup('lecturePlan');
+  };
+
+  const handleSubjectCodeInput = () => {
+    const foundLecture = lectureList.find((lecture) => lecture.lecture === subjectCode);
+
+    if (foundLecture) {
+      handleAddToCart(foundLecture);
+    } else {
+      setShowInputError(true); // 과목 코드 오류 화면 표시
+    }
+  };
+
+  const handleConfirmInputError = () => {
+    setShowInputError(false); // 오류 화면 숨김
+  };
+
+  const MainLectureItem = ({ lecture }) => (
+    <div className={styles.lectureBox}>
+      <div className={styles.topRow}>
+        <div>{lecture.id}</div>
+        <div className={styles.category}>{lecture.category}</div>
+      </div>
+      <div className={styles.name}>{lecture.name}</div>
+      <div className={styles.time}>교수 {lecture.professor} | {lecture.time}</div>
+      <div className={styles.buttons}>
+        <button className={styles.basket} onClick={() => handleAddToCart(lecture)}>장바구니</button>
+        <button className={styles.plan} onClick={() => fetchLecturePlan(lecture.id)}>강의 계획서</button>
+      </div>
+    </div>
+  );
+
+  const LectureItem = ({ lecture }) => (
+    <div className={styles.lectureItem}>
+      <span className={styles.lectureName}>{lecture.name} {lecture.hours}</span>
+      <button className={styles.infoBtn} onClick={() => fetchLecturePlan(lecture.id)}>정보</button>
+      <button className={styles.applyBtn} onClick={() => handleAddToCart(lecture)}>추가</button>
+    </div>
+  );
+
+  const PopupLectureItem = ({ lecture }) => (
+    <div className={styles.lectureItem}>
+      <span className={styles.lectureName}>{lecture.name}</span>
+      <button className={styles.infoBtn} onClick={() => fetchLecturePlan(lecture.id)}>정보</button>
+      <button className={styles.applyBtn} onClick={() => handleAddToCart(lecture)}>추가</button>
+    </div>
+  );
+
   const additionalLectures = [
     { id: 5, name: "철학 개론 (금1,2)" },
     { id: 6, name: "미적분학 (월1,2)" },
@@ -285,6 +399,31 @@ function Reserve() {
     { id: 9, name: "생물학 (목4,5)" },
     { id: 10, name: "통계학 (금3,4)" },
   ];
+
+  // 대기 중이면 ReserveWating 컴포넌트를 렌더링
+  if (isWaiting) {
+    return <ReserveWating />;
+  }
+
+  // 삭제 확인 화면을 보여줍니다.
+  if (showDeleteConfirm && lectureToRemove) {
+    return (
+      <ReserveDelete
+        lecture={lectureToRemove}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
+    );
+  }
+
+  // 과목 코드 오류 화면을 보여줍니다.
+  if (showInputError) {
+    return (
+      <ReserveClassInputAgain
+        onConfirm={handleConfirmInputError}
+      />
+    );
+  }
 
   return (
     <div className={styles.body}>
@@ -321,9 +460,8 @@ function Reserve() {
           <button onClick={handleLogout}>로그아웃</button>
         </div>
       </div>
-      
+
       <div className={styles.mainContent}>
-        {/* 상단 네비게이션 바 */}
         <div className={styles.navbar}>
           <button onClick={() => handleNavClick('/notice')}>공지사항</button>
           <button onClick={() => handleNavClick('/inquiry')}>과목조회</button>
@@ -331,7 +469,6 @@ function Reserve() {
           <button onClick={() => handleNavClick('/mypage')}>마이페이지</button>
         </div>
 
-        {/* 하위 네비게이션 바 */}
         <div className={styles.subNavbar}>
           <button
             className={`${styles.subNavbarBtn} ${selectedSubNav === '예비수강신청' ? styles.selected : ''}`}
@@ -347,75 +484,235 @@ function Reserve() {
           </button>
         </div>
 
-        {/* 단과대 선택 섹션 */}
-        <div className={styles.section}>
-          <div className={styles.sectionTitle}>단과대 선택</div>
-          <div className={styles.gridContainer}>
-            {['ICT융합과학대학', '건강과학대학', '음악대학', '법학대학', '자연과학대학', '공과대학', '인문사회대학', '미술대학', '체육대학', '교양대학'].map((name) => (
-              <div
-                key={name}
-                onClick={() => handleGridContainerClick(name)}
-                style={{
-                  backgroundColor: selectedGridContainer === name ? '#637ABF' : 'white',
-                  color: selectedGridContainer === name ? 'white' : 'rgb(104, 108, 109)',
-                }}
-              >
-                {name}
+        {selectedSubNav === '예비수강신청' && (
+          <>
+            <div className={styles.section}>
+              <div className={styles.sectionTitle}>단과대 선택</div>
+              <div className={styles.gridContainer}>
+                {['ICT융합과학대학', '건강과학대학', '음악대학', '법학대학', '자연과학대학', '공과대학', '인문사회대학', '미술대학', '체육대학', '교양대학'].map((name) => (
+                  <div
+                    key={name}
+                    onClick={() => handleGridContainerClick(name)}
+                    style={{
+                      backgroundColor: selectedGridContainer === name ? '#637ABF' : 'white',
+                      color: selectedGridContainer === name ? 'white' : 'rgb(104, 108, 109)',
+                    }}
+                  >
+                    {name}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        {/* 학부 및 학과 선택 섹션 */}
-        <div className={styles.section}>
-          <div className={styles.sectionTitle}>학부 및 학과 선택</div>
-          <div className={styles.departmentContainer}>
-            {departmentList.map((name) => (
-              <div
-                key={name}
-                onClick={() => handleDepartmentContainerClick(name)}
-                style={{
-                  backgroundColor: selectedDepartmentContainer === name ? '#637ABF' : 'white',
-                  color: selectedDepartmentContainer === name ? 'white' : 'rgb(104, 108, 109)',
-                }}
-              >
-                {name}
+            <div className={styles.section}>
+              <div className={styles.sectionTitle}>학부 및 학과 선택</div>
+              <div className={styles.departmentContainer}>
+                {departmentList.map((name) => (
+                  <div
+                    key={name}
+                    onClick={() => handleDepartmentContainerClick(name)}
+                    style={{
+                      backgroundColor: selectedDepartmentContainer === name ? '#637ABF' : 'white',
+                      color: selectedDepartmentContainer === name ? 'white' : 'rgb(104, 108, 109)',
+                    }}
+                  >
+                    {name}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        {/* 학년 선택 섹션 */}
-        <div className={styles.section}>
-          <div className={styles.sectionTitle}>학년 선택</div>
-          <div className={styles.yearContainer}>
-            {['1학년', '2학년', '3학년', '4학년'].map((year) => (
-              <div
-                key={year}
-                onClick={() => handleYearContainerClick(year)}
-                style={{
-                  backgroundColor: selectedYearContainer.includes(year) ? '#637ABF' : 'white',
-                  color: selectedYearContainer.includes(year) ? 'white' : 'rgb(104, 108, 109)',
-                }}
-              >
-                {year}
+            <div className={styles.section}>
+              <div className={styles.sectionTitle}>학년 선택</div>
+              <div className={styles.yearContainer}>
+                {['1학년', '2학년', '3학년', '4학년'].map((year) => (
+                  <div
+                    key={year}
+                    onClick={() => handleYearContainerClick(year)}
+                    style={{
+                      backgroundColor: selectedYearContainer.includes(year) ? '#637ABF' : 'white',
+                      color: selectedYearContainer.includes(year) ? 'white' : 'rgb(104, 108, 109)',
+                    }}
+                  >
+                    {year}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
-        <div><div style={{ width: '700px', height: '0.5px', backgroundColor: 'gray', marginTop:'4px'}} /></div> 
+            </div>
+            <div><div style={{ width: '700px', height: '0.5px', backgroundColor: 'gray', marginTop: '4px' }} /></div>
 
-            {/*강의 8개 리스트*/}
-        <div className={styles.section}>
-          <div className={styles.lectureContainer}>
-            {lectures.map((lecture, index) => (
-              <MainLectureItem key={index} lecture={lecture} />
-            ))}
-          </div>
-        </div>
+            <div className={styles.section}>
+              <div className={styles.lectureContainer}>
+                {lectures.map((lecture, index) => (
+                  <MainLectureItem key={index} lecture={lecture} />
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+
+        {selectedSubNav === '일반수강신청' && (
+          <>
+            <div className={styles.generalApply}>
+              <div className={styles.cartList}>
+                <h3>장바구니 신청 내역</h3>
+                <table style={{ backgroundColor: 'white', borderCollapse: 'collapse', width: '100%' }}>
+                  <thead >
+                    <tr >
+                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', width: '40px', height: '30px', backgroundColor: 'white' }}>No</th>
+                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px', backgroundColor: 'white' }}>과목명</th>
+                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px', backgroundColor: 'white' }}>분류</th>
+                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px', backgroundColor: 'white' }}>교수명</th>
+                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px', backgroundColor: 'white' }}>강의 정보</th>
+                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px', backgroundColor: 'white' }}>신청 여부</th>
+                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px', backgroundColor: 'white' }}>과목 코드</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {sidebarLectures.map((lecture, index) => (
+                      <tr key={index} style={{ backgroundColor: 'white' }}>
+                        <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{index + 1}</td>
+                        <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'left', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' }}>{lecture.name}</td>
+                        <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{lecture.category.replace(/[\[\]]/g, '')}</td>
+                        <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{lecture.professor}</td>
+                        <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{lecture.time}</td>
+                        <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>
+                          <button
+                            onClick={() => handleApplyLecture(lecture)}
+                            style={{
+                              backgroundColor: appliedLectures.includes(lecture) ? '#637ABF' : 'rgb(212, 216, 243)',
+                              color: appliedLectures.includes(lecture) ? 'white' : 'black',
+                              border: 'none',
+                              fontWeight: '700',
+                              padding: '2px 5px',
+                              borderRadius: '8px',
+                              cursor: 'pointer',
+                              width: '60px',
+                              textAlign: 'center',
+                              height: '26px'
+                            }}
+                          >
+                            {appliedLectures.includes(lecture) ? '완료' : '신청'}
+                          </button>
+                        </td>
+                        <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{lecture.id}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <hr style={{ marginTop: '30px' }} />
+              <div className={styles.searchAndInputContainer}> {/* 새로운 가로 배치 div */}
+                <div className={styles.sectionContainer} style={{ borderRight: '1px solid grey', paddingRight: '30px' }}>
+                  <div className={styles.section}>
+                    <div className={styles.sectionTitle}>과목 검색 및 신청</div>
+                    <div className={styles.searchContainer}>
+                      <input type="text" placeholder="과목명 검색" style={{ width: '210px', marginRight: '50px', height: '30px', paddingLeft: '14px' }} />
+                      <FaSearch className={styles.searchIcon} />
+                    </div>
+                  </div>
+                  <div className={styles.lectureList}>
+                    {lectureList.map((lecture) => (
+                      <LectureItem key={lecture.id} lecture={lecture} />
+                    ))}
+                    <button type="button" className={styles.more} onClick={() => togglePopup('moreLectures')} style={{ width: '226px' }}>더보기</button>
+                  </div>
+                </div>
+
+                <div className={styles.sectionContainer}>
+                  <div className={styles.sectionSubject}>
+                    <div className={styles.sectionTitle}>과목 코드 직접 입력</div>
+                    <input
+                      type="text"
+                      placeholder="과목 코드 입력"
+                      className={styles.subjectCode}
+                      value={subjectCode}
+                      onChange={handleSubjectCodeChange}
+                      style={{ marginBottom: '10px', marginLeft: '5px' }}
+                    />
+                    <button type="button" className={styles.cartBtn} onClick={handleSubjectCodeInput}>
+                      수강신청
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
-      {/* 슬라이드로 생기는 오른쪽 사이드바 */}
+      <div className={styles.rightBar2}>
+        {selectedSubNav === '예비수강신청' && (
+          <>
+            <div className={styles.section}>
+              <div className={styles.sectionTitle}>과목명으로 조회 후 신청</div>
+              <div className={styles.searchContainer}>
+                <input type="text" placeholder="강의명 검색" />
+                <FaSearch className={styles.searchIcon} />
+              </div>
+            </div>
+
+            <div className={styles.lectureList}>
+              {lectureList.map((lecture) => (
+                <LectureItem key={lecture.id} lecture={lecture} />
+              ))}
+              <button type="button" className={styles.more} onClick={() => togglePopup('moreLectures')}>더보기</button>
+            </div>
+
+            <div className={styles.sectionSubject}>
+              <div className={styles.sectionTitle}>과목 코드 직접 입력</div>
+              <input
+                type="text"
+                placeholder="과목 코드 입력"
+                className={styles.subjectCode}
+                value={subjectCode}
+                onChange={handleSubjectCodeChange}
+              />
+
+              <button type="button" className={styles.cartBtn} onClick={handleSubjectCodeInput}>
+                장바구니 담기
+              </button>
+            </div>
+          </>
+        )}
+
+        {selectedSubNav === '일반수강신청' && (
+          <>
+            <div className={styles.scheduleContainer}>
+              <h3 className={styles.scheduleTitle}>나의 시간표</h3>
+              <table className={styles.scheduleTable}>
+                <thead>
+                  <tr>
+                    <th style={{ backgroundColor: 'white' }}>월</th>
+                    <th style={{ backgroundColor: 'white' }}>화</th>
+                    <th style={{ backgroundColor: 'white' }}>수</th>
+                    <th style={{ backgroundColor: 'white' }}>목</th>
+                    <th style={{ backgroundColor: 'white' }}>금</th>
+                    <th style={{ backgroundColor: 'white' }}>토</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[...Array(9)].map((_, timeSlot) => (
+                    <tr key={timeSlot} style={{ backgroundColor: 'white' }}>
+                      {schedule.map((day, dayIndex) => (
+                        <td key={dayIndex} style={{ backgroundColor: day[timeSlot] ? '#637ABF' : 'transparent', height: '50px', width: '50px' }}></td>
+                      ))}
+                      <td style={{ backgroundColor: 'transparent', height: '50px', width: '50px' }}></td> {/* 토요일 시간 슬롯 추가 */}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              <div className={styles.creditsInfoSchedule}>
+                현재 수강 학점 (/최대 수강 가능 학점):<br /><br />  {appliedLectures.length * 3} / 21
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
       {!isSidebarOpen && (
         <button className={styles.circleButton} onClick={toggleSidebar}>
           +
@@ -423,72 +720,30 @@ function Reserve() {
       )}
       <div className={`${styles.rightBar} ${isSidebarOpen ? styles.open : ''}`}>
         <button className={styles.closeSidebarButton} onClick={toggleSidebar}>
-            ㅡ
+          ㅡ
         </button>
         <div className={styles.sidebarContent}>
-            <div className={styles.sidebarSection}>
-            <div className={styles.basketTitle}>예비수강신청 내역</div>
+          <div className={styles.sidebarSection}>
+            <div className={styles.basketTitle}>{sidebarTitle}</div>
             {sidebarLectures.map((lecture, index) => (
-                <div key={index} className={styles.lectureBox}>
-                <div className={styles.name}>{lecture.name}</div> {/* 이름 위치 수정 */}
+              <div key={index} className={styles.lectureBox}>
+                <div className={styles.name}>{lecture.name}</div>
                 <div className={styles.topRow}>
-                    <div>{lecture.id} {lecture.category}</div>
+                  <div>{lecture.id} {lecture.category}</div>
                 </div>
                 <div className={styles.buttons}>
-                    <button className={styles.remove} onClick={() => handleRemoveLectureFromSidebar(lecture.id)}>X</button>
+                  <button className={styles.remove} onClick={() => handleRemoveLectureFromSidebar(lecture.id)}>X</button>
                 </div>
-                </div>
+              </div>
             ))}
-            </div>
-        </div>
-    </div>
-
-
-      {/*진짜 오른쪽 사이드바*/}
-      <div className={styles.rightBar2}>
-        {/* 강의명으로 조회 및 검색 섹션 */}
-        <div className={styles.section} style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
-          <div className={styles.sectionTitle}>강의명으로 조회 후 신청</div>
-          <div className={styles.searchContainer}>
-            <input type="text" placeholder="강의명 검색" />
-            <FaSearch className={styles.searchIcon} />
           </div>
-        </div>
-
-        {/* 강의 리스트 섹션 */}
-        <div className={styles.lectureList} style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
-          {lectureList.map((lecture) => (
-            <LectureItem key={lecture.id} lecture={lecture} />
-          ))}
-          <button type="button" className={styles.more} onClick={() => togglePopup('moreLectures')}>더보기</button>
-        </div>
-
-        {/* 과목 코드 직접 입력 섹션 */}
-        <div className={styles.sectionSubject} style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
-          <div className={styles.sectionTitle}>과목 코드 직접 입력</div>
-          <input
-            type="text"
-            placeholder="과목 코드 입력"
-            className={styles.subjectCode}
-            value={subjectCode}
-            onChange={handleSubjectCodeChange}
-          />
-          <input
-            type="text"
-            placeholder="분반 코드 입력"
-            value={divisionCode}
-            onChange={handleDivisionCodeChange}
-          />
-          <button type="button" className={styles.cartBtn} onClick={handleAddToCart}>
-            장바구니 담기
-          </button>
         </div>
       </div>
 
       {isPopupVisible && (
         <div className={styles.popup}>
           <div className={`${styles.popupInner} ${styles[popupType]}`}>
-            {renderCloseButton()} {/* 조건부 렌더링된 닫기 버튼 */}
+            {renderCloseButton()}
             {popupType === 'totalInfo' && (
               <div>
                 <h3 className={styles.popupTitle}>전체 학점 정보 (부전공)</h3>
@@ -515,7 +770,7 @@ function Reserve() {
                   <input className={styles.lectureSearch} type="text" placeholder="강의명 검색" />
                   <FaSearch className={styles.popupSearchIcon} />
                 </div>
-               <div className={`${styles['lectureList']} ${styles['popupLectureList']}`}>
+                <div className={`${styles.lectureList} ${styles.popupLectureList}`}>
                   {[...lectureList, ...additionalLectures].map((lecture) => (
                     <PopupLectureItem key={lecture.id} lecture={lecture} />
                   ))}

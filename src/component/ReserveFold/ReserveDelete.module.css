@@ -1,0 +1,61 @@
+.reserveDeleteTotalBox {
+    margin: auto;
+    margin-top: 30%;
+    border-radius: 50px;
+    background-color: rgb(231, 231, 231);
+    width: 500px;
+    height: 260px;
+    position: relative;
+}
+
+.reserveDeleteTitle {
+    font-weight: 900;
+    color: rgb(100, 100, 100);
+    font-size: 24px;
+    padding-top: 30px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.reserveDeleteClassName{
+    font-weight: 900;
+    font-size: 30px;
+    text-align: center;
+    margin: 0;
+}
+
+.reserveDeleteAsk{
+    text-align: center;
+    font-weight: 600;
+    font-size: 20px;
+    color: rgb(100, 100, 100);
+}
+
+.reserveDeleteButtonContainer {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.reserveDeleteButtonDelete,
+.reserveDeleteButtonBack {
+    background-color: #a8a8a8;
+    color: black;
+    font-weight: 600;
+    font-size: 18px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 200px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.reserveDeleteButtonBack {
+    background-color: white;
+   
+    border: 1px solid #a8a8a8;
+}
+

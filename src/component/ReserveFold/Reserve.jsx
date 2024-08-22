@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import styles from './Reserve.module.css'; 
 import { useNavigate } from 'react-router-dom';
+import styles from './Reserve.module.css';
+import ReserveWating from './ReserveWating'; // 대기 화면 컴포넌트
+import ReserveDelete from './ReserveDelete'; // 삭제 확인 화면 컴포넌트
 
-// ReserveWating 컴포넌트를 import
-import ReserveWating from './ReserveWating';
-
-function Reserve() {  
+function Reserve() {
   const [lectures, setLectures] = useState([]);
   const lecturelist = [
     { id: 1, name: "20세기 한국사", hours: "(월4,5)", lecture: "21032-001" },
@@ -21,18 +20,20 @@ function Reserve() {
   const [selectedGridContainer, setSelectedGridContainer] = useState('');
   const [selectedDepartmentContainer, setSelectedDepartmentContainer] = useState('');
   const [selectedYearContainer, setSelectedYearContainer] = useState([]);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); 
-  const [sidebarLectures, setSidebarLectures] = useState([]); 
-  const [isPopupVisible, setIsPopupVisible] = useState(false); 
-  const [popupType, setPopupType] = useState(''); 
-  const [lecturePlan, setLecturePlan] = useState(''); 
-  const [popupMessage, setPopupMessage] = useState(''); 
-  const [appliedLectures, setAppliedLectures] = useState([]); 
-  const [schedule, setSchedule] = useState(Array(5).fill(null).map(() => Array(9).fill(null))); 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [sidebarLectures, setSidebarLectures] = useState([]);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [popupType, setPopupType] = useState('');
+  const [lecturePlan, setLecturePlan] = useState('');
+  const [popupMessage, setPopupMessage] = useState('');
+  const [appliedLectures, setAppliedLectures] = useState([]);
+  const [schedule, setSchedule] = useState(Array(5).fill(null).map(() => Array(9).fill(null)));
   const [sidebarTitle, setSidebarTitle] = useState('예비수강신청');
   const [isWaiting, setIsWaiting] = useState(false); // 대기 상태를 관리하는 state
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // 삭제 확인 화면 제어
+  const [lectureToRemove, setLectureToRemove] = useState(null); // 삭제할 강의 정보
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleNavClick = (path) => {
     navigate(path);
@@ -60,12 +61,27 @@ function Reserve() {
   };
 
   const handleRemoveLectureFromSidebar = (id) => {
-    const lectureToRemove = sidebarLectures.find((lecture) => lecture.id === id);
-    setSidebarLectures(sidebarLectures.filter((lecture) => lecture.id !== id));
+    const lecture = sidebarLectures.find((lecture) => lecture.id === id);
 
-    if (lectureToRemove) {
-      removeLectureFromSchedule(lectureToRemove);
+    if (selectedSubNav === '예비수강신청') {
+      // 예비수강신청일 때는 바로 삭제 처리
+      setSidebarLectures(sidebarLectures.filter((lecture) => lecture.id !== id));
+      removeLectureFromSchedule(lecture);
+    } else {
+      // 일반수강신청일 때는 삭제 확인 화면 표시
+      setLectureToRemove(lecture);
+      setShowDeleteConfirm(true);
     }
+  };
+
+  const handleConfirmDelete = () => {
+    setSidebarLectures(sidebarLectures.filter((lecture) => lecture.id !== lectureToRemove.id));
+    removeLectureFromSchedule(lectureToRemove);
+    setShowDeleteConfirm(false); // 삭제 확인 화면 숨김
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteConfirm(false); // 삭제 확인 화면 숨김
   };
 
   const removeLectureFromSchedule = (lecture) => {
@@ -96,25 +112,24 @@ function Reserve() {
     const isAlreadyApplied = appliedLectures.some(appliedLecture => appliedLecture.id === lecture.id);
 
     if (isAlreadyApplied) {
-        alert('이미 신청된 과목입니다.');
-        return;
+      alert('이미 신청된 과목입니다.');
+      return;
     }
 
     if (appliedLectures.length < 7) {
-        // 신청 후 대기 화면으로 전환
-        setIsWaiting(true);
-        setTimeout(() => {
-            setIsWaiting(false); // 대기 화면에서 돌아온 후
+      // 신청 후 대기 화면으로 전환
+      setIsWaiting(true);
+      setTimeout(() => {
+        setIsWaiting(false); // 대기 화면에서 돌아온 후
 
-            // 신청 처리
-            setAppliedLectures([...appliedLectures, lecture]);
-            updateSchedule(lecture);
-        }, 5000); // 5초 후에 다시 돌아옴
+        // 신청 처리
+        setAppliedLectures([...appliedLectures, lecture]);
+        updateSchedule(lecture);
+      }, 5000); // 5초 후에 다시 돌아옴
     } else {
-        alert('최대 21학점까지만 신청할 수 있습니다.');
+      alert('최대 21학점까지만 신청할 수 있습니다.');
     }
   };
-
 
   const updateSchedule = (lecture) => {
     const timeMapping = {
@@ -140,7 +155,7 @@ function Reserve() {
   };
 
   const handleLogout = () => {
-    navigate('/'); 
+    navigate('/');
   };
 
   const handleSubNavClick = (event) => {
@@ -150,7 +165,7 @@ function Reserve() {
   const handleGridContainerClick = (container) => {
     if (selectedGridContainer === container) {
       setSelectedGridContainer('');
-      setSelectedDepartmentContainer(''); 
+      setSelectedDepartmentContainer('');
       setDepartmentList([]);
     } else if (selectedGridContainer === '') {
       setSelectedGridContainer(container);
@@ -159,7 +174,7 @@ function Reserve() {
       setPopupMessage(
         <div>
           해당 항목은 복수 선택이 불가능합니다!
-          <br/>
+          <br />
           <span style={{ fontWeight: 'normal' }}>
             (단과대 및 학과/학부 복수 선택 불가)
           </span>
@@ -178,7 +193,7 @@ function Reserve() {
       setPopupMessage(
         <div>
           해당 항목은 복수 선택이 불가능합니다!
-          <br/>
+          <br />
           <span style={{ fontWeight: 'normal' }}>
             (단과대 및 학과/학부 복수 선택 불가)
           </span>
@@ -200,7 +215,7 @@ function Reserve() {
   };
 
   const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen); 
+    setIsSidebarOpen(!isSidebarOpen);
 
     // selectedSubNav에 따라 sidebarTitle을 변경합니다.
     if (selectedSubNav === '예비수강신청') {
@@ -211,8 +226,8 @@ function Reserve() {
   };
 
   const togglePopup = (type) => {
-    setPopupType(type); 
-    setIsPopupVisible(!isPopupVisible); 
+    setPopupType(type);
+    setIsPopupVisible(!isPopupVisible);
   };
 
   const renderCloseButton = () => {
@@ -297,7 +312,7 @@ function Reserve() {
     if (selectedGridContainer && selectedDepartmentContainer && selectedYearContainer.length > 0) {
       const collegeId = Object.keys(departmentMapping).indexOf(selectedGridContainer) + 1;
       const departmentId = departmentMapping[selectedGridContainer].indexOf(selectedDepartmentContainer) + 1;
-      const gradeId = parseInt(selectedYearContainer[0][0], 10); 
+      const gradeId = parseInt(selectedYearContainer[0][0], 10);
       fetchLectures(collegeId, departmentId, gradeId);
     }
   }, [selectedGridContainer, selectedDepartmentContainer, selectedYearContainer]);
@@ -315,7 +330,7 @@ function Reserve() {
     '교양대학': ['교양학부']
   };
 
-  const [departmentList, setDepartmentList] = useState(departmentMapping['ICT융합과학대학']); 
+  const [departmentList, setDepartmentList] = useState(departmentMapping['ICT융합과학대학']);
 
   const fetchLecturePlan = (lectureId) => {
     const lecturePlans = {
@@ -333,13 +348,13 @@ function Reserve() {
     <div className={styles.lectureBox}>
       <div className={styles.topRow}>
         <div>{lecture.id}</div>
-        <div className={styles.category}>{lecture.category}</div> 
+        <div className={styles.category}>{lecture.category}</div>
       </div>
-      <div className={styles.name}>{lecture.name}</div> 
-      <div className={styles.time}>교수 {lecture.professor} | {lecture.time}</div> 
+      <div className={styles.name}>{lecture.name}</div>
+      <div className={styles.time}>교수 {lecture.professor} | {lecture.time}</div>
       <div className={styles.buttons}>
         <button className={styles.basket} onClick={() => handleAddToCart(lecture)}>장바구니</button>
-        <button className={styles.plan} onClick={() => fetchLecturePlan(lecture.id)}>강의 계획서</button> 
+        <button className={styles.plan} onClick={() => fetchLecturePlan(lecture.id)}>강의 계획서</button>
       </div>
     </div>
   );
@@ -372,6 +387,17 @@ function Reserve() {
   // 대기 중이면 ReserveWating 컴포넌트를 렌더링
   if (isWaiting) {
     return <ReserveWating />;
+  }
+
+  // 삭제 확인 화면을 보여줍니다.
+  if (showDeleteConfirm && lectureToRemove) {
+    return (
+      <ReserveDelete
+        lecture={lectureToRemove}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
+    );
   }
 
   return (
@@ -409,7 +435,7 @@ function Reserve() {
           <button onClick={handleLogout}>로그아웃</button>
         </div>
       </div>
-      
+
       <div className={styles.mainContent}>
         <div className={styles.navbar}>
           <button onClick={() => handleNavClick('/notice')}>공지사항</button>
@@ -488,7 +514,7 @@ function Reserve() {
                 ))}
               </div>
             </div>
-            <div><div style={{ width: '700px', height: '0.5px', backgroundColor: 'gray', marginTop:'4px'}} /></div> 
+            <div><div style={{ width: '700px', height: '0.5px', backgroundColor: 'gray', marginTop: '4px' }} /></div>
 
             <div className={styles.section}>
               <div className={styles.lectureContainer}>
@@ -508,13 +534,13 @@ function Reserve() {
                 <table style={{ backgroundColor: 'white', borderCollapse: 'collapse', width: '100%' }}>
                   <thead >
                     <tr >
-                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', width: '40px', height: '30px' ,backgroundColor:'white'}}>No</th>
-                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' ,backgroundColor:'white' }}>과목명</th>
-                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' ,backgroundColor:'white'}}>분류</th>
-                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' ,backgroundColor:'white' }}>교수명</th>
-                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' ,backgroundColor:'white' }}>강의 정보</th>
-                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' ,backgroundColor:'white' }}>신청 여부</th>
-                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' ,backgroundColor:'white' }}>과목 코드</th>
+                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', width: '40px', height: '30px', backgroundColor: 'white' }}>No</th>
+                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px', backgroundColor: 'white' }}>과목명</th>
+                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px', backgroundColor: 'white' }}>분류</th>
+                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px', backgroundColor: 'white' }}>교수명</th>
+                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px', backgroundColor: 'white' }}>강의 정보</th>
+                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px', backgroundColor: 'white' }}>신청 여부</th>
+                      <th style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', fontWeight: 'bold', height: '30px', backgroundColor: 'white' }}>과목 코드</th>
                     </tr>
                   </thead>
 
@@ -527,19 +553,19 @@ function Reserve() {
                         <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{lecture.professor}</td>
                         <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{lecture.time}</td>
                         <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>
-                          <button 
+                          <button
                             onClick={() => handleApplyLecture(lecture)}
-                            style={{ 
-                              backgroundColor: appliedLectures.includes(lecture) ? '#637ABF' : 'rgb(212, 216, 243)', 
+                            style={{
+                              backgroundColor: appliedLectures.includes(lecture) ? '#637ABF' : 'rgb(212, 216, 243)',
                               color: appliedLectures.includes(lecture) ? 'white' : 'black',
                               border: 'none',
                               fontWeight: '700',
-                              padding: '2px 5px',  
+                              padding: '2px 5px',
                               borderRadius: '8px',
                               cursor: 'pointer',
                               width: '60px',
                               textAlign: 'center',
-                              height: '26px'  
+                              height: '26px'
                             }}
                           >
                             {appliedLectures.includes(lecture) ? '완료' : '신청'}
@@ -552,48 +578,41 @@ function Reserve() {
                 </table>
               </div>
 
-<hr style={{marginTop:'30px'}}/>
-<div className={styles.searchAndInputContainer}> {/* 새로운 가로 배치 div */}
-  <div className={styles.sectionContainer} style={{borderRight:'1px solid grey',paddingRight:'30px'}}>
-    <div className={styles.section}>
-      <div className={styles.sectionTitle}>과목 검색 및 신청</div>
-      <div className={styles.searchContainer}>
-        <input type="text" placeholder="과목명 검색" style={{width:'210px',marginRight:'50px',height:'30px',paddingLeft:'14px'}}/>
-        <FaSearch className={styles.searchIcon} />
-      </div>
-    </div>
-    <div className={styles.lectureList}>
-              {lectureList.map((lecture) => (
-                <LectureItem key={lecture.id} lecture={lecture} />
-              ))}
-              <button type="button" className={styles.more} onClick={() => togglePopup('moreLectures') } style={{width:'226px'}}>더보기</button>
-            </div>
-  </div>
+              <hr style={{ marginTop: '30px' }} />
+              <div className={styles.searchAndInputContainer}> {/* 새로운 가로 배치 div */}
+                <div className={styles.sectionContainer} style={{ borderRight: '1px solid grey', paddingRight: '30px' }}>
+                  <div className={styles.section}>
+                    <div className={styles.sectionTitle}>과목 검색 및 신청</div>
+                    <div className={styles.searchContainer}>
+                      <input type="text" placeholder="과목명 검색" style={{ width: '210px', marginRight: '50px', height: '30px', paddingLeft: '14px' }} />
+                      <FaSearch className={styles.searchIcon} />
+                    </div>
+                  </div>
+                  <div className={styles.lectureList}>
+                    {lectureList.map((lecture) => (
+                      <LectureItem key={lecture.id} lecture={lecture} />
+                    ))}
+                    <button type="button" className={styles.more} onClick={() => togglePopup('moreLectures')} style={{ width: '226px' }}>더보기</button>
+                  </div>
+                </div>
 
-  <div className={styles.sectionContainer}>
-    <div className={styles.sectionSubject}>
-      <div className={styles.sectionTitle}>과목 코드 직접 입력</div>
-      <input
-        type="text"
-        placeholder="과목 코드 입력"
-        className={styles.subjectCode}
-        value={subjectCode}
-        onChange={handleSubjectCodeChange}
-        style={{marginBottom:'10px',marginLeft:'5px'}}
-      />
-      {/* <input
-        type="text"
-        placeholder="분반 코드 입력"
-        value={divisionCode}
-        onChange={handleDivisionCodeChange}
-        style={{marginLeft:'5px'}}
-      /> */}
-      <button type="button" className={styles.cartBtn} onClick={handleAddToCart}>
-        수강신청
-      </button>
-    </div>
-  </div>
-</div>
+                <div className={styles.sectionContainer}>
+                  <div className={styles.sectionSubject}>
+                    <div className={styles.sectionTitle}>과목 코드 직접 입력</div>
+                    <input
+                      type="text"
+                      placeholder="과목 코드 입력"
+                      className={styles.subjectCode}
+                      value={subjectCode}
+                      onChange={handleSubjectCodeChange}
+                      style={{ marginBottom: '10px', marginLeft: '5px' }}
+                    />
+                    <button type="button" className={styles.cartBtn} onClick={handleAddToCart}>
+                      수강신청
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </>
         )}
@@ -626,7 +645,7 @@ function Reserve() {
                 value={subjectCode}
                 onChange={handleSubjectCodeChange}
               />
-              
+
               <button type="button" className={styles.cartBtn} onClick={handleAddToCart}>
                 장바구니 담기
               </button>
@@ -639,30 +658,30 @@ function Reserve() {
             <div className={styles.scheduleContainer}>
               <h3 className={styles.scheduleTitle}>나의 시간표</h3>
               <table className={styles.scheduleTable}>
-  <thead>
-    <tr>
-      <th style={{ backgroundColor: 'white' }}>월</th>
-      <th style={{ backgroundColor: 'white' }}>화</th>
-      <th style={{ backgroundColor: 'white' }}>수</th>
-      <th style={{ backgroundColor: 'white' }}>목</th>
-      <th style={{ backgroundColor: 'white' }}>금</th>
-      <th style={{ backgroundColor: 'white' }}>토</th> 
-    </tr>
-  </thead>
-  <tbody>
-    {[...Array(9)].map((_, timeSlot) => (
-      <tr key={timeSlot} style={{ backgroundColor: 'white' }}>
-        {schedule.map((day, dayIndex) => (
-          <td key={dayIndex} style={{ backgroundColor: day[timeSlot] ? '#637ABF' : 'transparent', height: '50px', width: '50px' }}></td>
-        ))}
-        <td style={{ backgroundColor: 'transparent', height: '50px', width: '50px' }}></td> {/* 토요일 시간 슬롯 추가 */}
-      </tr>
-    ))}
-  </tbody>
-</table>
+                <thead>
+                  <tr>
+                    <th style={{ backgroundColor: 'white' }}>월</th>
+                    <th style={{ backgroundColor: 'white' }}>화</th>
+                    <th style={{ backgroundColor: 'white' }}>수</th>
+                    <th style={{ backgroundColor: 'white' }}>목</th>
+                    <th style={{ backgroundColor: 'white' }}>금</th>
+                    <th style={{ backgroundColor: 'white' }}>토</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[...Array(9)].map((_, timeSlot) => (
+                    <tr key={timeSlot} style={{ backgroundColor: 'white' }}>
+                      {schedule.map((day, dayIndex) => (
+                        <td key={dayIndex} style={{ backgroundColor: day[timeSlot] ? '#637ABF' : 'transparent', height: '50px', width: '50px' }}></td>
+                      ))}
+                      <td style={{ backgroundColor: 'transparent', height: '50px', width: '50px' }}></td> {/* 토요일 시간 슬롯 추가 */}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
 
               <div className={styles.creditsInfoSchedule}>
-                현재 수강 학점 (/최대 수강 가능 학점):<br/><br/>  {appliedLectures.length * 3} / 21
+                현재 수강 학점 (/최대 수강 가능 학점):<br /><br />  {appliedLectures.length * 3} / 21
               </div>
             </div>
           </>
@@ -676,25 +695,25 @@ function Reserve() {
       )}
       <div className={`${styles.rightBar} ${isSidebarOpen ? styles.open : ''}`}>
         <button className={styles.closeSidebarButton} onClick={toggleSidebar}>
-            ㅡ
+          ㅡ
         </button>
         <div className={styles.sidebarContent}>
-            <div className={styles.sidebarSection}>
+          <div className={styles.sidebarSection}>
             <div className={styles.basketTitle}>{sidebarTitle}</div>
             {sidebarLectures.map((lecture, index) => (
-                <div key={index} className={styles.lectureBox}>
-                <div className={styles.name}>{lecture.name}</div> 
+              <div key={index} className={styles.lectureBox}>
+                <div className={styles.name}>{lecture.name}</div>
                 <div className={styles.topRow}>
-                    <div>{lecture.id} {lecture.category}</div>
+                  <div>{lecture.id} {lecture.category}</div>
                 </div>
                 <div className={styles.buttons}>
-                    <button className={styles.remove} onClick={() => handleRemoveLectureFromSidebar(lecture.id)}>X</button>
+                  <button className={styles.remove} onClick={() => handleRemoveLectureFromSidebar(lecture.id)}>X</button>
                 </div>
-                </div>
+              </div>
             ))}
-            </div>
+          </div>
         </div>
-    </div>
+      </div>
 
       {isPopupVisible && (
         <div className={styles.popup}>

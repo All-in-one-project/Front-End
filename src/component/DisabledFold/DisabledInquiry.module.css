@@ -1,0 +1,408 @@
+/* 전체 레이아웃 */
+.body {
+    display: flex;
+    justify-content: flex-start;
+    /* 오른쪽으로 이동 */
+    align-items: flex-start;
+    /* 상단 정렬 */
+    height: 100vh;
+    text-align: center;
+    overflow-y: hidden;
+    /* 세로 스크롤을 허용 */
+    overflow-x: hidden;
+}
+
+
+
+/* 메인 콘텐츠 */
+.mainContent {
+    flex: 1;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    margin-left: 250px;
+    /* leftBar의 너비만큼 여백 추가 */
+
+    /* leftBar 너비를 제외한 전체 너비 */
+}
+
+/* 네비게이션 바 */
+.navbar,
+.subNavbar {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.navbar1 {
+    margin-left: 30px;
+}
+
+.navbar2 {
+    margin-left: 20px;
+}
+
+.navbar button {
+    padding: 10px;
+    border: 1px solid rgb(104, 103, 103);
+    cursor: pointer;
+    background-color: rgb(212, 216, 243);
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 15px;
+    color: rgb(104, 103, 103);
+    margin: 0 10px;
+    width: 150px;
+    margin-right: 75px;
+}
+
+.navbar button.application {
+    background: #637ABF;
+    color: white;
+}
+
+
+/* 하위 네비게이션 바 */
+.sub-navbar {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.sub-navbar .long-box {
+    background-color: rgb(212, 216, 243);
+    font-weight: bold;
+    color: rgb(111, 111, 111);
+    padding: 10px 20px;
+    border-radius: 10px;
+    text-align: left;
+    font-size: 25px;
+    /* 글자 크기 설정 */
+    width: 100%;
+    /* 가로로 긴 상자 */
+    height:100px;
+}
+
+.sub-navbar .long-box .bold {
+    font-weight: bold;
+    color: rgb(69, 69, 69);
+}
+
+/* 왼쪽 바 */
+.leftBar {
+    width: 230px;
+    /* 왼쪽 바 너비 조정 */
+    height: 100%;
+    padding: 25px;
+    background-color: #637ABF;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+    position: fixed;
+    /* 화면 왼쪽에 고정 */
+    top: 0;
+    left: 0;
+    /* 화면의 왼쪽에 위치 */
+    box-sizing: border-box;
+    /* 패딩 포함 크기 계산 */
+}
+
+.title {
+    width: 150px;
+    height: 80px;
+    border: 1px solid white;
+    border-radius: 20px;
+    margin-left: 10px;
+    padding-right: 10px;
+    text-align: right;
+}
+
+.title h3 {
+    color: white;
+    margin: 10px;
+    margin-top: 15px;
+    padding-left: 10px;
+    text-align: center;
+}
+
+/* 선택화면으로 돌아가기 박스 */
+.loginBox {
+    width: 140px;
+    height: 50px;
+    border: 1px solid white;
+    border-radius: 20px;
+    padding: 10px;
+    padding-top: 20px;
+    margin-top: 10px;
+    margin-left: 10px;
+    align-items: center;
+    font-size: 17px;
+    color: white;
+    font-weight: bold;
+}
+
+.loginBox.div {
+    top: 100px;
+}
+
+.loginBox h4 {
+    margin-top: 1px;
+}
+
+
+
+/* 접근성 정보 박스 */
+.accessibilityInfoBox {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid white;
+    border-radius: 20px;
+    cursor: pointer;
+    text-align: center;
+    width: 145px;
+    height: 500px;
+    margin-left: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.accessibilityInfoText {
+    font-size: 14px;
+    color: white;
+    text-align: center;
+}
+
+.infoTextLine1 {
+    margin-bottom: 2px;
+    margin-top: 15px;
+}
+
+.infoTextLine2 {
+    margin-top: 2px;
+}
+
+.Line {
+    margin-bottom: 50px;
+    margin-top: 50px;
+}
+
+.accessibilityInfoText h2 {
+    margin: 0;
+    margin-top: 20px;
+    margin-bottom: -30px;
+}
+
+/* 팝업 */
+.popupContent {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    /* 팝업 너비를 더 넓게 조정 */
+    text-align: center;
+    position: relative;
+}
+
+.popupOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+/* 스크롤바 스타일 */
+.popupInner.totalInfo::-webkit-scrollbar {
+    width: 8px;
+}
+
+.popupInner.totalInfo::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+}
+
+.popupInner.totalInfo::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+
+
+/* 대학, 학부, 학년 선택사항들 */
+.section {
+    margin: 10px 0;
+    z-index: 1000;
+    position: relative;
+
+
+}
+
+.section-title {
+    font-size: 15px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    position: relative;
+    right: 470px;
+        
+}
+
+.section-title1 {
+    font-size: 15px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    position: relative;
+    right: 465px;
+ 
+}
+.section-title2 {
+    font-size: 15px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    position: relative;
+
+    right: 445px;
+
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 10px;
+}
+
+.grid-container div {
+    border: 2px solid #637ABF;
+    padding: 7px;
+    text-align: center;
+    border-radius: 10px;
+    grid-column: span 2;
+    font-size: 13px;
+    font-weight: bold;
+    color: rgb(104, 108, 109);
+}
+
+.department-container,
+.year-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.department-container div,
+.year-container div {
+    border: 2px solid #637ABF;
+    padding: 5px;
+    text-align: center;
+    border-radius: 10px;
+    grid-column: span 1;
+    font-size: 15px;
+    width: 100px;
+    /* 상자 너비 */
+    height: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    color: rgb(104, 108, 109);
+}
+
+/* 메인 섹션에서 8개 강의 목록 상자들 */
+.lecture-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.lecture-box {
+    border: 2px solid #637ABF;
+    width: 163px;
+    height: 90px;
+    border-radius: 10px;
+    font-size: 13px;
+    color: rgb(104, 108, 109);
+    padding: 8px 2px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.lecture-box .category {
+    margin-left: auto;
+    /* category를 오른쪽으로 배치 */
+    color: rgb(104, 108, 109);
+
+}
+
+.lecture-box div {
+    margin-left: 10px;
+    font-size: 13px;
+}
+
+.lecture-box .name {
+    font-size: 15px;
+    font-weight: bold;
+    color: black;
+}
+
+.lecture-box .top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 10px;
+    margin-top: -3px;
+}
+
+.lecture-box .top-row div:first-child {
+    transform: translateX(-10px);
+    /* 첫 번째 항목을 왼쪽으로 이동 */
+}
+
+
+/*장바구니, 강의계획서 버튼들*/
+.lecture-box button {
+    width: 150px;
+    height: 22px;
+    padding: 0px 0px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    /* 버튼 사이 간격 추가 */
+    font-size: 11px;
+}
+
+.lecture-box .buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3px;
+}
+
+/*강의계획서 버튼*/
+.lecture-box button.plan {
+    background-color: rgb(212, 216, 243);
+    border: 1px solid black;
+    color: rgb(104, 108, 109);
+    font-weight: bold;
+    width: 70px;
+    margin-left: 70px;
+}
+
+.lecture-box button.basket {
+    background-color: #637ABF;
+    border: none;
+    color: white;
+    font-weight: bold;
+    width: 70px;
+}

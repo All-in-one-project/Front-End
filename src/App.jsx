@@ -12,6 +12,9 @@ import Mypage from './component/MypageFold/Mypage.jsx';
 import Course from './component/MypageFold/Course.jsx';
 import Initial from './component/InitialFold/Initial.jsx';
 import Disabled from './component/DisabledFold/Disabled.jsx';
+import DisabledInquiry2 from './component/DisabledFold/DisabledInquiry2.jsx';
+import DisabledFaq2 from './component/DisabledFold/DisabledFaq2.jsx';
+import DisabledNotice2 from './component/DisabledFold/DisabledNotice2.jsx';
 import ReserveWating from './component/ReserveFold/ReserveWating.jsx';
 import ReserveDelete from './component/ReserveFold/ReserveDelete.jsx';
 import ReserveClassInputAgain from './component/ReserveFold/ReserveClassInputAgain.jsx';
@@ -47,6 +50,9 @@ function App() {
         <Route path='/course' element={<Course />} />
         <Route path='/initial' element={<Initial />} />
         <Route path='/disabled' element={<Disabled />} />
+        <Route path='/disabled/faq2' element={<DisabledFaq2 />} />
+        <Route path='/disabled/inquiry2' element={<DisabledInquiry2 />} />
+        <Route path='/disabled/notice2' element={<DisabledNotice2 />} />
       </Routes>
     </BrowserRouter>
   );

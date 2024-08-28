@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useLocation } from 'react-router-dom';
 import axios from 'axios';
 import './Login_css.css';
 
@@ -8,7 +8,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [serverStatus, setServerStatus] = useState(null);
-
+  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,17 +30,25 @@ function Login() {
 
 
 
-  const handleLogin = async (event) => {
+const handleLogin = async (event) => {
     event.preventDefault();
     try {
       const response = await axios.post('http://43.202.223.188/login', {
-        student_number: id,
+        username: id,
         password: password,
       });
 
-      if (response.status === 200 && response.data.student_id) {
-        localStorage.setItem('token', response.data.token);
-        navigate('/'); 
+      if (response.status === 200 && response.data.accessToken) {
+        // 서버로부터 받은 정보를 로컬 스토리지에 저장
+        localStorage.setItem('accessToken', response.data.accessToken);
+        localStorage.setItem('refreshToken', response.data.refreshToken);
+
+        // JWT 토큰을 Axios 기본 헤더에 추가
+        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.accessToken}`;
+        
+        // 원하는 페이지로 리다이렉트
+        const redirectTo = location.state?.from?.pathname || '/notice';
+        navigate(redirectTo);
       } else {
         setError('다시 입력하세요');
       }

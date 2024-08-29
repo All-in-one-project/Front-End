@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const ReserveWating = () => {
     const totalAnimationTime = 3; // 총 애니메이션 시간 (초)
     const [remainingTime, setRemainingTime] = useState(totalAnimationTime);
+    const [queuePosition, setQueuePosition] = useState(1006); // 초기 대기 순번
     const navigate = useNavigate(); // 페이지 전환을 위한 네비게이트 훅
 
     useEffect(() => {
@@ -19,6 +20,11 @@ const ReserveWating = () => {
                 interval = setInterval(() => {
                     setRemainingTime(prevTime => {
                         if (prevTime > 0) {
+                            setQueuePosition(prevPosition => {
+                                // 1 ~ 현재 queuePosition 사이의 랜덤한 값으로 감소
+                                const randomDecrease = Math.floor(Math.random() * prevPosition) + 1;
+                                return prevPosition - randomDecrease;
+                            });
                             return prevTime - 1;
                         } else {
                             clearInterval(interval);
@@ -51,7 +57,7 @@ const ReserveWating = () => {
             <div className={styles.reserveWatingPercentBar}>
                 <div id="percentBarInner" className={styles.reserveWatingPercentBarInner}></div>
             </div>
-            <p className={styles.reserveWatingProcedure}>현재 몇 번째 입니다.</p>
+            <p className={styles.reserveWatingProcedure}>현재 {queuePosition}번째 입니다.</p>
             <p className={styles.reserveWatingNotice}>* 새로고침 시 초기화되어 더 늦어질 수 있습니다.</p>
         </div>
     );

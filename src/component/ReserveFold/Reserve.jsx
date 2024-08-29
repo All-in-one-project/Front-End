@@ -425,6 +425,12 @@ function Reserve() {
     );
   }
 
+
+  //시각장애인 배려용 화면 변경 버튼 
+  const handleNavClickdisabled = () => {
+    navigate('/disabled'); // Disabled.jsx로 이동
+  };
+
   return (
     <div className={styles.body}>
       <div className={styles.leftBar}>
@@ -433,22 +439,20 @@ function Reserve() {
             <div>수강신청</div></h3>
         </div>
         <div className={styles.userInfo}>
-          <div>이름 홍길동</div>
-          <div>학번 12345678</div>
+          <div>이름 김지훈</div>
+          <div>학번 20210001</div>
           <h4>학과 (부전공)</h4>
-          <div>컴퓨터공학과</div>
+          <div>데이터과학부</div>
           <div>(없음)</div>
         </div>
 
         <div><hr style={{ border: '1px solid white' }} /></div>
 
-        <div className={styles.creditsInfo}>
-          <h4>학점 정보 (부전공)</h4>
-          <div>총합 /130</div>
-          <div>전핵 /24</div>
-          <div>전선 /48</div>
-          <div>전교 /9</div>
-          <div>전취 /3</div>
+        <div className={styles.creditsInfoE}>
+          <button className={styles.sideBarComentBtn} onClick={handleNavClickdisabled}>
+          <p className={styles.sideBarComent1} >시각장애인 배려용<br />화면 변경</p>
+          <p className={styles.sideBarComent2}>이 네모칸을 클릭하면 <br /> 시각장애인 배려용<br /> 화면으로 넘어갑니다.</p>
+          </button>
         </div>
 
         <div className={styles.toggleBtn}>
@@ -748,18 +752,18 @@ function Reserve() {
               <div>
                 <h3 className={styles.popupTitle}>전체 학점 정보 (부전공)</h3>
                 <ul className={styles.infoList}>
-                  <li><span className={styles.label}>총합</span> <span className={styles.value}>0 / 130</span></li>
-                  <li><span className={styles.label}>전공 핵심</span> <span className={styles.value}>0 / 24</span></li>
-                  <li><span className={styles.label}>전공 선택</span> <span className={styles.value}>0 / 48</span></li>
-                  <li><span className={styles.label}>전공 교양</span> <span className={styles.value}>0 / 9</span></li>
-                  <li><span className={styles.label}>전공 취업</span> <span className={styles.value}>0 / 3</span></li>
-                  <li><span className={styles.label}>중요 핵심</span> <span className={styles.value}>0 / 4</span></li>
-                  <li><span className={styles.label}>기술 교양</span> <span className={styles.value}>0 / 18</span></li>
-                  <li><span className={styles.label}>선택 교양</span> <span className={styles.value}>0 / 18</span></li>
-                  <li><span className={styles.label}>일반 선택</span> <span className={styles.value}>0 / 45</span></li>
-                  <li><span className={styles.label}>전공 교양</span> <span className={styles.value}>0 / 9</span></li>
-                  <li><span className={styles.label}>전공 필수</span> <span className={styles.value}>0 / 27</span></li>
-                  <li><span className={styles.label}>전공 선택</span> <span className={styles.value}>0 / 6</span></li>
+                  <li><span className={styles.label}>총합</span> <span className={styles.value}>115 / 130</span></li>
+                  <li><span className={styles.label}>전공 핵심</span> <span className={styles.value}>21/ 24</span></li>
+                  <li><span className={styles.label}>전공 선택</span> <span className={styles.value}>36 / 48</span></li>
+                  <li><span className={styles.label}>전공 교양</span> <span className={styles.value}>9 / 9</span></li>
+                  <li><span className={styles.label}>전공 취업</span> <span className={styles.value}>3 / 3</span></li>
+                  <li><span className={styles.label}>중요 핵심</span> <span className={styles.value}>4 / 4</span></li>
+                  <li><span className={styles.label}>기술 교양</span> <span className={styles.value}>18 / 18</span></li>
+                  <li><span className={styles.label}>선택 교양</span> <span className={styles.value}>18/ 18</span></li>
+                  <li><span className={styles.label}>일반 선택</span> <span className={styles.value}>45 / 45</span></li>
+                  <li><span className={styles.label}>전공 교양</span> <span className={styles.value}>9 / 9</span></li>
+                  <li><span className={styles.label}>전공 필수</span> <span className={styles.value}>27 / 27</span></li>
+                  <li><span className={styles.label}>전공 선택</span> <span className={styles.value}>6 / 6</span></li>
                 </ul>
               </div>
             )}

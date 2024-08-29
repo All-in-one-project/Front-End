@@ -191,3 +191,29 @@
     background-color: #555;
     /* 스크롤바에 마우스를 올렸을 때 색상 */
 }
+
+/* 왼쪽 사이드바 코멘트 */
+.sideBarComent1{
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.sideBarComent2{
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.creditsInfoE{
+    border: 1px solid white;
+    border-radius: 15px;
+}
+
+.sideBarComentBtn{
+    border: none;
+    background: none;
+    color: white;
+    /* margin-left: 10px; */
+    cursor: pointer;
+}

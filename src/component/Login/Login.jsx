@@ -11,7 +11,7 @@ function Login() {
   const [serverStatus, setServerStatus] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
-   const { setUser } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
 
   //서버의 /health 엔드포인트에 GET 요청을 보냅니다. 서버가 작동 잘되는지 확인하는 용도(임시로 만든거임, 데이터 받고 그런거 아님)
   useEffect(() => {
@@ -41,6 +41,7 @@ const handleLogin = async (event) => {
         password: password,
       });
 
+      console.log(response.data)
       if (response.status === 200 && response.data.accessToken) {
         // 서버로부터 받은 accessToken과 refreshToken을 로컬 스토리지에 저장
         localStorage.setItem('accessToken', response.data.accessToken); 

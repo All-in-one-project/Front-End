@@ -41,7 +41,7 @@ function Inquiry() {
 
 
   useEffect(() => {
-    axios.get('https://43.202.223.188:8080/api/college')
+    axios.get('http://43.202.223.188:8080/api/college')
       .then(response => {
         console.log('Received response:', response); // 응답 전체 확인
         setColleges(response.data);
@@ -52,8 +52,24 @@ function Inquiry() {
       });
   }, []);
 
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         const response = await axios.get("http://43.202.223.188:8080/api/college" );
+
+//         console.log(response)
+//       } catch (error) {
+// console.log('에러입니다.')
+//       }
+//     };
+
+//     fetchData();
+//   }, []);
+
+
+
   const fetchDepartments = (collegeId) => {
-    axios.get(`https://43.202.223.188:8080/api/departments/${collegeId}`)
+    axios.get(`http://43.202.223.188:8080/api/departments/${collegeId}`)
       .then(response => {
         setDepartments(response.data);
       })
@@ -63,7 +79,7 @@ function Inquiry() {
   };
 
   const fetchSubjects = (departmentId) => {
-    axios.get(`https://43.202.223.188:8080/api/subjects/${departmentId}`)
+    axios.get(`http://43.202.223.188:8080/api/subjects/${departmentId}`)
       .then(response => {
         console.log("Fetched Subjects:", response.data); // 추가된 로그
         setLectures(response.data);
@@ -75,6 +91,7 @@ function Inquiry() {
 
 
 
+  console.log(lectures)
 
 
   useEffect(() => {
@@ -273,6 +290,7 @@ function Inquiry() {
     setSearchTerm(event.target.value);
   };
 
+  console.log(searchTerm)
   const handleSearch = () => {
     axios.get('https://43.202.223.188:8080/subjects/search', {
       params: { subjectName: searchTerm }
@@ -288,11 +306,19 @@ function Inquiry() {
 const MainLectureItem = ({ lecture }) => (
   <div className={styles['lecture-box']}>
     <div className={styles['top-row']}>
-      <div>{lecture.subjectName}</div>
-      <div className={styles['category']}>{lecture.subjectDivision}</div>
+      <span className={styles.subjectCode}>{lecture.subjectCode}</span>
+      <span className={styles.subjectDivision}>[{lecture.subjectDivision}]</span>
+      <div className={styles.subjectName}>{lecture.subjectName}</div>
+    
     </div>
-    <div className={styles['name']}>
-      {lecture.professorName} {lecture.lectureTime}
+    <div className={styles.professorNameTimeContainer}>
+    <span className={styles.professorName}>
+      {lecture.professorName} 
+    </span>
+    <span>|</span>
+    <span className={styles.lectureTime}>
+        {lecture.lectureTime}
+    </span>
     </div>
     <div className={styles['buttons']}>
       <button className={styles['plan']} onClick={() => fetchLecturePlan(lecture.subjectName)}>강의 계획서</button>
@@ -309,6 +335,10 @@ const MainLectureItem = ({ lecture }) => (
       <button className={styles['info-btn']} onClick={() => fetchLecturePlan(lecture.id)}>계획서</button>
     </div>
   );
+
+  const handleNavClickdisabled = () => {
+    navigate('/disabled'); // Disabled.jsx로 이동
+  };
 
   return (
     <div className={styles['body']}>
@@ -334,13 +364,11 @@ const MainLectureItem = ({ lecture }) => (
 
         <div><hr style={{ border: '1px solid white' }} /></div>
 
-        <div className={styles['credits-info']}>
-          <h4>학점 정보 (부전공)</h4>
-          <div>총합 /130</div>
-          <div>전핵 /24</div>
-          <div>전선 /48</div>
-          <div>전교 /9</div>
-          <div>전취 /3</div>
+        <div className={styles.creditsInfoE}>
+          <button className={styles.sideBarComentBtn} onClick={handleNavClickdisabled}>
+          <p className={styles.sideBarComent1} >시각장애인 배려용<br />화면 변경</p>
+          <p className={styles.sideBarComent2}>이 네모칸을 클릭하면 <br /> 시각장애인 배려용<br /> 화면으로 넘어갑니다.</p>
+          </button>
         </div>
 
         <div className={styles['toggle-btn']}>
@@ -404,31 +432,36 @@ const MainLectureItem = ({ lecture }) => (
         </div>
 
         <div className={styles['section']}>
-          <div className={styles['section-title']}>학년 선택</div>
-          <div className={styles['year-container']}>
-            {['1학년', '2학년', '3학년', '4학년'].map((year) => (
-              <div
-                key={year}
-                onClick={() => handleYearContainerClick(year)}
-                style={{
-                  backgroundColor: selectedYearContainer.includes(year) ? '#637ABF' : 'white',
-                  color: selectedYearContainer.includes(year) ? 'white' : 'rgb(104, 108, 109)',
-                }}
-              >
-                {year}
-              </div>
-            ))}
-          </div>
-        </div>
+  <div className={styles['section-title']}>학년 선택</div>
+  <div className={styles['year-container']}>
+    {['1학년', '2학년', '3학년', '4학년'].map((year) => (
+      <div
+        key={year}
+        onClick={() => handleYearContainerClick(year)}
+        style={{
+          backgroundColor: selectedYearContainer.includes(year) ? '#637ABF' : 'white',
+          color: selectedYearContainer.includes(year) ? 'white' : 'rgb(104, 108, 109)',
+        }}
+      >
+        {year}
+      </div>
+    ))}
+  </div>
+</div>
 
-        <div><div style={{ width: '700px', height: '0.5px', backgroundColor: 'gray', marginTop: '4px' }} /></div>
-        <div className={styles['section']}>
-          <div className={styles['lecture-container']}>
-            {filteredLectures.map((lecture, index) => (
-              <MainLectureItem key={index} lecture={lecture} />
-            ))}
-          </div>
-        </div>
+{/* 강의 목록은 학년이 선택되었을 때만 보여줍니다 */}
+{selectedYearContainer.length > 0 && (
+  <div className={styles['section']}>
+    <div className={styles['lecture-container']}>
+      {lectures
+        .filter(lecture => selectedYearContainer.includes(lecture.targetGrade))
+        .map((lecture, index) => (
+          <MainLectureItem key={index} lecture={lecture} />
+        ))}
+    </div>
+  </div>
+)}
+
       </div>
 
       <div className={styles['right-bar2']}>

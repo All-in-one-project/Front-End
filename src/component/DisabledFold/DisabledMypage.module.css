@@ -16,7 +16,8 @@
     padding: 10px;
     display: flex;
     flex-direction: column;
-    margin-left: 250px;
+    margin-left:250px;
+   
     /* leftBar의 너비만큼 여백 추가 */
 
     /* leftBar 너비를 제외한 전체 너비 */

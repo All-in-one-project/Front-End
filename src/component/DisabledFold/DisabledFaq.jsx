@@ -131,7 +131,7 @@ const DisabledFaq = () => {
   };
 
   const handleLoginClick = () => {
-    navigate('/login');
+    navigate('/disabled');
   };
 
   const handleMouseOver = (text) => {
@@ -175,20 +175,22 @@ const DisabledFaq = () => {
 
       <div className={styles.mainContent}>
         <div className={styles.navbar}>
+          <div className={styles.navbar1}>
+
           <button 
             className={styles.application} 
-            onClick={() => handleNavClick('disabled/notice')} 
+            onClick={() => handleNavClick('/disabled/notice')} 
             onMouseOver={() => handleMouseOver('공지사항')}
           >
             공지사항
           </button>
           <button 
-            onClick={() => handleNavClick('disabled/inquiry')} 
+            onClick={() => handleNavClick('/disabled/inquiry')} 
             onMouseOver={() => handleMouseOver('과목조회')}
           >
             과목조회
           </button>
-
+          </div>
           <div className={styles.navbar2}>
           <button 
             onClick={() => handleNavClick('/reserve')} 
@@ -202,6 +204,7 @@ const DisabledFaq = () => {
           >
             마이페이지
           </button>
+          
           </div>
         </div>
 

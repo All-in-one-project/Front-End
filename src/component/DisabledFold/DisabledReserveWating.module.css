@@ -1,0 +1,59 @@
+.reserveWatingTotalBox {
+    margin: auto;
+    margin-top: 30%;
+    border: 1px solid black;
+    border-radius: 10%;
+    background-color: rgb(231, 231, 231);
+    width: 600px;
+    height: 400px;
+    position: relative;
+}
+
+.reserveWatingTitle {
+    font-weight: 900;
+    font-size: 30px;
+    margin-left: 30px;
+    margin-top: 40px;
+    margin-bottom: 10px;
+}
+
+.reserveWatingTitleEstimatedTime {
+    font-weight: 700;
+    text-align: right;
+    margin-right: 30px;
+}
+
+.reserveWatingProcedure {
+    font-weight: 700;
+    font-size: 20px;
+    margin-left: 30px;
+}
+
+.reserveWatingNotice {
+    font-weight: 900;
+    margin-top: 140px;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* 퍼센트 바 스타일 */
+.reserveWatingPercentBar {
+    width: 90%;
+    height: 30px;
+    background-color: #d3d3d3;
+    margin: 20px auto;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* 내부의 파란색 바 */
+.reserveWatingPercentBarInner {
+    width: 0%;
+    height: 100%;
+    background-color: #637ABF;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: width 3s ease-in-out;
+}

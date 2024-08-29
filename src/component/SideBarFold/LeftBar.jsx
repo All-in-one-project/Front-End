@@ -89,7 +89,7 @@ const LeftBar = ({ onLogout }) => {
             <div>이름: {user.studentName}</div>
             <div>학번: {user.studentNumber}</div>
             <h4>학과 (부전공)</h4>
-            <div>{user.departmentId}</div> 
+            <div>{user.departmentName}</div> 
             <div>(없음)</div>
       </div>
 

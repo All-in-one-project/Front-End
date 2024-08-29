@@ -24,7 +24,7 @@ const Notice = () => {
   const itemsPerPage = 5;
   const totalPages = 5;/*페이지네이션*/
   const displayData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-  
+
     /* 로그아웃 API */
     /* 일단은 로그아웃 누르면 원래 화면 path:'' 인 곳에 이동함 */
   const handleLogout = async () => {

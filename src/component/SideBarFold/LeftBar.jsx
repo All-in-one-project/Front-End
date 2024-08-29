@@ -83,7 +83,7 @@ const LeftBar = ({ onLogout }) => {
             <div>이름: {user.studentName}</div>
             <div>학번: {user.studentNumber}</div>
             <h4>학과 (부전공)</h4>
-            <div>{user.departmentId}</div> 
+            <div>{user.departmentName}</div> 
             <div>(없음)</div>
       </div>
 
@@ -92,11 +92,11 @@ const LeftBar = ({ onLogout }) => {
 
       <div className={styles.creditsInfo}>
         <h4>학점 정보 (부전공)</h4>
-        <div>총합 /130</div>
-        <div>전핵 /24</div>
-        <div>전선 /48</div>
-        <div>전교 /9</div>
-        <div>전취 /3</div>
+        <div>총합 112/130</div>
+        <div>전핵 16/24</div>
+        <div>전선 40/48</div>
+        <div>전교 9/9</div>
+        <div>전취 3/3</div>
       </div>
 
       <div className={styles.toggleBtn}>

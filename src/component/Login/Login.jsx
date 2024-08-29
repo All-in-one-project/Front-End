@@ -1,7 +1,8 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useContext } from 'react';
 import { useNavigate,useLocation } from 'react-router-dom';
 import axios from 'axios';
 import './Login_css.css';
+import  { UserContext } from'../UserContext'
 
 function Login() {
   const [id, setId] = useState('');
@@ -10,6 +11,7 @@ function Login() {
   const [serverStatus, setServerStatus] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
+   const { setUser } = useContext(UserContext);
 
   //서버의 /health 엔드포인트에 GET 요청을 보냅니다. 서버가 작동 잘되는지 확인하는 용도(임시로 만든거임, 데이터 받고 그런거 아님)
   useEffect(() => {
@@ -46,6 +48,21 @@ const handleLogin = async (event) => {
 
         // JWT 토큰을 Axios 기본 헤더에 추가
         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.accessToken}`;
+
+         // 사용자 정보를 Context에 저장
+        const userInfo = {
+          studentNumber: response.data.studentNumber,
+          studentId: response.data.studentId,
+          departmentId: response.data.departmentId,
+          studentName: response.data.studentName,
+          grade: response.data.grade,
+          maxCredits: response.data.maxCredits,
+        };
+        console.log('User Info:', userInfo); 
+        localStorage.setItem('userInfo', JSON.stringify(userInfo));
+        
+
+        setUser(userInfo);
         
         // 로그인 성공 후 사용자가 가야 할 페이지로 리다이렉트
         const redirectTo = location.state?.from?.pathname || '/notice';

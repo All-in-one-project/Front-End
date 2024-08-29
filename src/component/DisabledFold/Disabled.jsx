@@ -111,7 +111,7 @@ const Disabled = () => {
         <div className={styles.navbar}>
           <div className={styles.row}>
             <button
-              onClick={() => handleNavClick('/disabled/notice2')}
+              onClick={() => handleNavClick('/disabled/notice')}
               onMouseEnter={() => handleMouseEnter("공지사항")}
             >
               공지사항

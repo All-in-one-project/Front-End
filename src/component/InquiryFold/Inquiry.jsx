@@ -38,7 +38,7 @@ function Inquiry() {
   ];
 
   const navigate = useNavigate();
-  const apiUrl = "http://43.202.223.188:8080"; // 하드코딩된 URL
+
 
   useEffect(() => {
     axios.get('https://43.202.223.188:8080/api/college')
@@ -317,13 +317,20 @@ const MainLectureItem = ({ lecture }) => (
           <h3>한국대학교
             <div>수강신청</div></h3>
         </div>
+      {user ? (
         <div className={styles['user-info']}>
-            <div>이름: {user.studentName}</div>
-            <div>학번: {user.studentNumber}</div>
-            <h4>학과 (부전공)</h4>
-            <div>{user.departmentId}</div> 
-            <div>(없음)</div>
+          <div>이름: {user.studentName}</div>
+          <div>학번: {user.studentNumber}</div>
+          <h4>학과 (부전공)</h4>
+          <div>{user.departmentId}</div> 
+          <div>(없음)</div>
         </div>
+      ) : (
+        <div className={styles['user-info']}>
+          <div>로그인이 필요합니다.</div>
+        </div>
+      )}
+
 
         <div><hr style={{ border: '1px solid white' }} /></div>
 

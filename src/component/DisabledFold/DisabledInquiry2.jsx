@@ -63,6 +63,11 @@ const DisabledInquiry2 = () => {
     { id: 10, subjectName: "통계학", hoursPerWeek: "(금3,4)" },
   ];
 
+    // 이전 위치로 이동하는 함수
+  const handleNavClick = (path) => {
+    navigate(path);
+  };
+
 
 const apiUrl = "http://43.202.223.188:8080"; // 하드코딩된 URL
 
@@ -121,10 +126,7 @@ useEffect(() => {
 
 
 
-  const handleNavClick = (path) => {
-    navigate(path);
-  };
-
+ 
   /*로그아웃 API*/
   /*일단은 로그아웃 누르면 원래 화면 path:'' 인 곳에 이동함*/
  const handleLogout = async () => {

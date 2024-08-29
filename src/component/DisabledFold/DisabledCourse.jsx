@@ -1,7 +1,6 @@
 import styles from './DisabledCourse.module.css';
-import React, { useState, useEffect } from 'react'; // useEffect 추가
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 
 const useSpeechSynthesis = () => {
   const speak = (text) => {
@@ -11,7 +10,6 @@ const useSpeechSynthesis = () => {
     utterance.rate = 1.5; // 발음 속도
     utterance.pitch = 1; // 음성 피치
     utterance.volume = 1; // 음성 볼륨
-
     window.speechSynthesis.speak(utterance);
   };
 
@@ -27,8 +25,6 @@ const Course = () => {
   const [courses, setCourses] = useState(null); // courses 상태를 null로 초기화
   const [selectedSubNav, setSelectedSubNav] = useState('수강 신청 내역');
   const navigate = useNavigate();
- const[overallGPA, setOverallGPA] = useState(null);
-  const [majorGPA, setMajorGPA] = useState(null);
   const { speak, stop } = useSpeechSynthesis();
 
   const handleMouseOver = (text) => {
@@ -43,7 +39,7 @@ const Course = () => {
       '시각장애인 배려용 화면에서는 모든 화면과 기능을 음성으로 제공하며, ' +
       '시각장애인 사용자에게도 편리한 화면을 제공합니다.'
     );
-  }, [speak]); // 의존성 배열에 speak 추가
+  }, []); // 의존성 배열을 빈 배열로 설정하여 페이지 로드시 한 번만 실행
 
   const handleNavClick = (path) => {
     navigate(path);
@@ -52,7 +48,7 @@ const Course = () => {
   const handleSubNavClick = (subNav) => {
     setSelectedSubNav(subNav);
     if (subNav === '학생 정보 확인') {
-      navigate('/disabled/notice');
+      navigate('/disabled/mypage');
     } else if (subNav === '수강 신청 내역') {
       navigate('/disabled/course');
     }
@@ -116,11 +112,17 @@ const Course = () => {
   const handleQuery = () => {
     const data = getCourseData(); // 선택된 학년도에 따른 데이터를 가져옴
     setCourses(data); // courses 상태를 업데이트하여 화면에 표시
+
+    // 조회 결과에 대한 음성 안내 제공
+    if (data && data.spring.major.length > 0 || data.spring.nonMajor.length > 0) {
+      const springCourses = `전공: ${data.spring.major.join(", ") || "없음"}, 전공 외: ${data.spring.nonMajor.join(", ") || "없음"}`;
+      speak(`${selectedYear} 봄학기 수강 내역. ${springCourses}`);
+    }
   };
 
   return (
     <div className={styles.body}>
-   <div className={styles.leftBar}>
+      <div className={styles.leftBar}>
         <div className={styles.title}>
           <h3>한국대학교
             <div>수강신청</div>

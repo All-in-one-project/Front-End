@@ -16,7 +16,11 @@ import DisabledInquiry2 from './component/DisabledFold/DisabledInquiry2.jsx';
 import DisabledFaq2 from './component/DisabledFold/DisabledFaq2.jsx';
 import DisabledNotice2 from './component/DisabledFold/DisabledNotice2.jsx';
 import DisabledMypage from './component/DisabledFold/DisabledMypage.jsx';
+import DisabledReserve from './component/DisabledFold/DisabledReserve.jsx';
 import DisabledCourse from './component/DisabledFold/DisabledCourse.jsx';
+import DisabledInquiry from './component/DisabledFold/DisabledInquiry.jsx';
+import DisabledNotice from './component/DisabledFold/DisabledNotice.jsx';
+import DisabledFaq from './component/DisabledFold/DisabledFaq.jsx';
 import ReserveWating from './component/ReserveFold/ReserveWating.jsx';
 import ReserveDelete from './component/ReserveFold/ReserveDelete.jsx';
 import ReserveClassInputAgain from './component/ReserveFold/ReserveClassInputAgain.jsx';
@@ -24,7 +28,7 @@ import { UserProvider } from './component/UserContext.jsx';
 
 
 function App() {
-  const apiUrl = 'http://43.202.223.188:8080';
+  const apiUrl = 'http://43.202.223.188';
 
   // 환경 변수 사용 구간
   if (apiUrl) {
@@ -58,8 +62,12 @@ function App() {
         <Route path='/disabled/faq2' element={<DisabledFaq2 />} />
         <Route path='/disabled/inquiry2' element={<DisabledInquiry2 />} />
         <Route path='/disabled/notice2' element={<DisabledNotice2 />} />
+        <Route path='/disabled/notice' element={<DisabledNotice />} />
+        <Route path='/disabled/Inquiry' element={<DisabledInquiry />} />
         <Route path='/disabled/Mypage' element={<DisabledMypage />} />
         <Route path='/disabled/course' element={<DisabledCourse />} />
+        <Route path='/disabled/reserve' element={<DisabledReserve />} />
+         <Route path='/disabled/faq' element={<DisabledFaq />} />
       </Routes>
     </BrowserRouter>
     </UserProvider>

@@ -15,7 +15,7 @@ function Login() {
   useEffect(() => {
   const checkServerStatus = async () => {
     try {
-      const response = await axios.get('http://43.202.223.188:8080/health'); // 서버 상태 확인용 엔드포인트(주소)
+      const response = await axios.get('http://43.202.223.188/health'); // 서버 상태 확인용 엔드포인트(주소)
       if (response.status === 200) {
         setServerStatus('서버 연결 정상');
       } else {
@@ -34,7 +34,7 @@ function Login() {
 const handleLogin = async (event) => {
     event.preventDefault();
     try { 
-      const response = await axios.post('http://43.202.223.188:8080/login', { //서버로 로그인 요청 (axios.post):
+      const response = await axios.post('http://43.202.223.188/login', { //서버로 로그인 요청 (axios.post):
         username: id,
         password: password,
       });

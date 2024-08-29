@@ -11,13 +11,13 @@ function Login() {
   const [serverStatus, setServerStatus] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
-   const { setUser } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
 
   //서버의 /health 엔드포인트에 GET 요청을 보냅니다. 서버가 작동 잘되는지 확인하는 용도(임시로 만든거임, 데이터 받고 그런거 아님)
   useEffect(() => {
   const checkServerStatus = async () => {
     try {
-      const response = await axios.get('http://43.202.223.188/health'); // 서버 상태 확인용 엔드포인트(주소)
+      const response = await axios.get('http://43.202.223.188:8080/health'); // 서버 상태 확인용 엔드포인트(주소)
       if (response.status === 200) {
         setServerStatus('서버 연결 정상');
       } else {
@@ -36,11 +36,12 @@ function Login() {
 const handleLogin = async (event) => {
     event.preventDefault();
     try { 
-      const response = await axios.post('http://43.202.223.188/login', { //서버로 로그인 요청 (axios.post):
+      const response = await axios.post('http://43.202.223.188:8080/login', { //서버로 로그인 요청 (axios.post):
         username: id,
         password: password,
       });
 
+      console.log(response.data)
       if (response.status === 200 && response.data.accessToken) {
         // 서버로부터 받은 accessToken과 refreshToken을 로컬 스토리지에 저장
         localStorage.setItem('accessToken', response.data.accessToken); 

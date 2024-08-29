@@ -72,6 +72,12 @@ const LeftBar = ({ onLogout }) => {
     </button>
   );
 
+
+    //시각장애인 배려용 화면 변경 버튼 
+    const handleNavClickdisabled = () => {
+      navigate('/disabled'); // Disabled.jsx로 이동
+    };
+  
   return (
     <div className={styles.leftBar}>
       <div className={styles.title}>
@@ -90,14 +96,12 @@ const LeftBar = ({ onLogout }) => {
       <hr style={{ border: '1px solid white', backgroundColor: 'white', width: '190px',marginLeft: '-5px'}} />
 
 
-      <div className={styles.creditsInfo}>
-        <h4>학점 정보 (부전공)</h4>
-        <div>총합 /130</div>
-        <div>전핵 /24</div>
-        <div>전선 /48</div>
-        <div>전교 /9</div>
-        <div>전취 /3</div>
-      </div>
+      <div className={styles.creditsInfoE}>
+          <button className={styles.sideBarComentBtn} onClick={handleNavClickdisabled}>
+          <p className={styles.sideBarComent1} >시각장애인 배려용<br />화면 변경</p>
+          <p className={styles.sideBarComent2}>이 네모칸을 클릭하면 <br /> 시각장애인 배려용<br /> 화면으로 넘어갑니다.</p>
+          </button>
+        </div>
 
       <div className={styles.toggleBtn}>
         <button onClick={() => togglePopup('totalInfo')}>+</button>전체 정보 보기

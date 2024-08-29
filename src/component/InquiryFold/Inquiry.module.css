@@ -223,38 +223,52 @@
     border-radius: 10px;
     font-size: 13px;
     color: rgb(104, 108, 109);
-    padding: 8px 2px;
+    padding: 4px 4px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
-
-.lecture-box .category {
-    margin-left: auto;
-    /* category를 오른쪽으로 배치 */
-    color: rgb(104, 108, 109);
-    
+.subjectCode{
+    margin-left: 4px;
 }
 
+.subjectDivision {
+    color: rgb(104, 108, 109);
+    margin-left: 48px
+}
+.subjectName{
+    color: black;
+    font-size: 14px;
+    font-weight: 700;
+    margin-left: 3px;
+}
+
+.professorNameTimeContainer{
+    width: 146px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+}
+/* 
 .lecture-box div {
     margin-left: 10px;
     font-size: 13px;
-}
+} */
 
-.lecture-box .name {
+/* .lecture-box .name {
     font-size: 15px;
     font-weight: bold;
     color: black;
-}
+} */
 
-.lecture-box .top-row {
+/* .lecture-box .top-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 0 10px;
     margin-top: -3px;
-}
+} */
 
 .lecture-box .top-row div:first-child {
     transform: translateX(-10px);
@@ -287,7 +301,7 @@
     color: rgb(104, 108, 109);
     font-weight: bold;
     width: 70px;
-    margin-left: 70px;
+    margin-left: 80px;
 }
 
 .lecture-box button.basket {
@@ -887,4 +901,29 @@
     /* 테두리 제거 */
     font-size: 15px;
     /* 글자 크기 */
+}
+/* 왼쪽 사이드바 코멘트 */
+.sideBarComent1{
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.sideBarComent2{
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.creditsInfoE{
+    border: 1px solid white;
+    border-radius: 15px;
+}
+
+.sideBarComentBtn{
+    border: none;
+    background: none;
+    color: white;
+    margin-left: 10px;
+    cursor: pointer;
 }

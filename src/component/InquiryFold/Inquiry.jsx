@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import axios from 'axios';
 import styles from './Inquiry.module.css';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../UserContext';
 
 function Inquiry() {
   const [colleges, setColleges] = useState([]);
@@ -18,6 +19,7 @@ function Inquiry() {
   const [lecturePlan, setLecturePlan] = useState('');
   const [popupMessage, setPopupMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const { user, setUser } = useContext(UserContext);
   const [searchResults, setSearchResults] = useState([]);
   const [lectureList, setLectureList] = useState([
     { id: 1, subjectName: "20세기 한국사", hoursPerWeek: "(월4,5)" },
@@ -63,12 +65,17 @@ function Inquiry() {
   const fetchSubjects = (departmentId) => {
     axios.get(`https://43.202.223.188:8080/api/subjects/${departmentId}`)
       .then(response => {
+        console.log("Fetched Subjects:", response.data); // 추가된 로그
         setLectures(response.data);
       })
       .catch(error => {
         console.error('There was an error fetching the subjects!', error);
       });
   };
+
+
+
+
 
   useEffect(() => {
     if (selectedGridContainer) {
@@ -88,24 +95,33 @@ function Inquiry() {
     navigate(path);
   };
 
-  /* 로그아웃 API */
-  /* 일단은 로그아웃 누르면 원래 화면 path:'' 인 곳에 이동함 */
+    /* 로그아웃 API */
+    /* 일단은 로그아웃 누르면 원래 화면 path:'' 인 곳에 이동함 */
   const handleLogout = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken'); // 'accessToken'으로 수정
     
     if (!token) {
       console.error('토큰이 존재하지 않습니다.');
-      navigate('/'); // 토큰이 없으면 바로 로그인 페이지로
+      navigate('/initial'); // 토큰이 없으면 바로 초기 화면으로 이동
       return;
     }
 
     try {
+      // 로그아웃 요청을 서버에 보냄
       const response = await axios.post('https://43.202.223.188:8080/api/logout', { token });
       
       if (response.status === 200) {
         console.log(response.data.message); // "Logout successful"
-        localStorage.removeItem('token'); // 로컬 스토리지에서 토큰 제거
-        navigate('/'); // 로그아웃 후 메인 페이지나 로그인 페이지로 이동
+
+        // 로컬 스토리지에서 사용자 정보와 토큰 제거
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('userInfo');
+
+        // UserContext의 user 상태 초기화
+        setUser(null);
+
+        navigate('/initial'); // 로그아웃 후 초기 화면으로 이동
       } else {
         console.error('로그아웃 중 오류가 발생했습니다.');
       }
@@ -113,6 +129,7 @@ function Inquiry() {
       console.error('서버와의 통신에 실패했습니다:', error);
     }
   };
+
 
   const handleGridContainerClick = (collegeId) => {
     console.log('College clicked:', collegeId); // 추가된 로그
@@ -175,15 +192,29 @@ function Inquiry() {
   };
 
   const handleYearContainerClick = (year) => {
-    if (selectedYearContainer.includes(year)) {
-      setSelectedYearContainer(selectedYearContainer.filter(item => item !== year));
-    } else if (selectedYearContainer.length < 4) {
-      setSelectedYearContainer([...selectedYearContainer, year]);
-    } else {
-      alert('학년은 4개까지 선택할 수 있습니다.');
-    }
-    filterLecturesByGrade([year]);
-  };
+  if (selectedYearContainer.includes(year)) {
+    setSelectedYearContainer(selectedYearContainer.filter(item => item !== year));
+  } else if (selectedYearContainer.length < 4) {
+    setSelectedYearContainer([...selectedYearContainer, year]);
+
+    // 선택된 과목들에 대해 각 학년에 따라 API 요청
+    lectures.forEach(lecture => {
+      const subjectId = lecture.id;  // 각 과목의 ID
+      const targetGrade = year;  // 선택된 학년 (예: "3학년")
+
+      axios.get(`https://43.202.223.188:8080/api/lectures/${subjectId}/${targetGrade}`)
+        .then(response => {
+          console.log(`Fetched Lectures for subjectId: ${subjectId}, targetGrade: ${targetGrade}:`, response.data); // 응답 확인
+          setFilteredLectures(prevLectures => [...prevLectures, ...response.data]);  // 가져온 강의 데이터를 상태에 추가
+        })
+        .catch(error => {
+          console.error('There was an error fetching the lectures by grade!', error);
+        });
+    });
+  } else {
+    alert('학년은 4개까지 선택할 수 있습니다.');
+  }
+};
 
   const togglePopup = (type) => {
     setPopupType(type);
@@ -226,15 +257,17 @@ function Inquiry() {
     setFilteredLectures(filtered);
   };
 
-  const fetchLecturePlan = (id) => {
-    const lecture = filteredLectures.find(lecture => lecture.id === id);
+  const fetchLecturePlan = (subjectName) => {
+    const lecture = lectures.find(lecture => lecture.subjectName === subjectName);
+    
     if (lecture) {
-      setLecturePlan(lecture.lectureDescription);
-      togglePopup('lecturePlan');
+      setLecturePlan(lecture.lectureDescription);  // 강의 계획서를 상태로 설정
+      togglePopup('lecturePlan');  // 팝업 열기
     } else {
       console.error('강의 계획서를 찾을 수 없습니다.');
     }
   };
+
 
   const handleSearchInputChange = (event) => {
     setSearchTerm(event.target.value);
@@ -252,27 +285,28 @@ function Inquiry() {
     });
   };
 
-  const MainLectureItem = ({ lecture }) => (
-    <div className={styles['lecture-box']}>
-      <div className={styles['top-row']}>
-        <div>{lecture.id}</div>
-        <div className={styles['category']}>{lecture.subjectDivision}</div>
-      </div>
-      <div className={styles['name']}>
-        {lecture.subjectName} {lecture.hoursPerWeek}
-      </div>
-      <div className={styles['buttons']}>
-        <button className={styles['plan']} onClick={() => fetchLecturePlan(lecture.id)}>강의 계획서</button>
-      </div>
+const MainLectureItem = ({ lecture }) => (
+  <div className={styles['lecture-box']}>
+    <div className={styles['top-row']}>
+      <div>{lecture.subjectName}</div>
+      <div className={styles['category']}>{lecture.subjectDivision}</div>
     </div>
-  );
+    <div className={styles['name']}>
+      {lecture.professorName} {lecture.lectureTime}
+    </div>
+    <div className={styles['buttons']}>
+      <button className={styles['plan']} onClick={() => fetchLecturePlan(lecture.subjectName)}>강의 계획서</button>
+    </div>
+  </div>
+);
+
 
   const LectureItem = ({ lecture }) => (
     <div className={styles['lecture-item']}>
       <span className={styles['lecture-name']}>
-        {lecture.subjectName} {lecture.hoursPerWeek}
+        {lecture.subjectName} {lecture.lectureTime}
       </span>
-      <button className={styles['info-btn']} onClick={() => fetchLecturePlan(lecture.id)}>정보</button>
+      <button className={styles['info-btn']} onClick={() => fetchLecturePlan(lecture.id)}>계획서</button>
     </div>
   );
 
@@ -284,11 +318,11 @@ function Inquiry() {
             <div>수강신청</div></h3>
         </div>
         <div className={styles['user-info']}>
-          <div>이름 홍길동</div>
-          <div>학번 12345678</div>
-          <h4>학과 (부전공)</h4>
-          <div>컴퓨터공학과</div>
-          <div>(없음)</div>
+            <div>이름: {user.studentName}</div>
+            <div>학번: {user.studentNumber}</div>
+            <h4>학과 (부전공)</h4>
+            <div>{user.departmentId}</div> 
+            <div>(없음)</div>
         </div>
 
         <div><hr style={{ border: '1px solid white' }} /></div>

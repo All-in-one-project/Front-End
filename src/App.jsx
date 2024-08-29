@@ -15,9 +15,13 @@ import Disabled from './component/DisabledFold/Disabled.jsx';
 import DisabledInquiry2 from './component/DisabledFold/DisabledInquiry2.jsx';
 import DisabledFaq2 from './component/DisabledFold/DisabledFaq2.jsx';
 import DisabledNotice2 from './component/DisabledFold/DisabledNotice2.jsx';
+import DisabledMypage from './component/DisabledFold/DisabledMypage.jsx';
+import DisabledCourse from './component/DisabledFold/DisabledCourse.jsx';
 import ReserveWating from './component/ReserveFold/ReserveWating.jsx';
 import ReserveDelete from './component/ReserveFold/ReserveDelete.jsx';
 import ReserveClassInputAgain from './component/ReserveFold/ReserveClassInputAgain.jsx';
+import { UserProvider } from './component/UserContext.jsx'; 
+
 
 function App() {
   const apiUrl = 'http://43.202.223.188:8080';
@@ -32,6 +36,7 @@ function App() {
   }
 
   return (
+     <UserProvider>
     <BrowserRouter>
       <Routes>
 
@@ -53,8 +58,11 @@ function App() {
         <Route path='/disabled/faq2' element={<DisabledFaq2 />} />
         <Route path='/disabled/inquiry2' element={<DisabledInquiry2 />} />
         <Route path='/disabled/notice2' element={<DisabledNotice2 />} />
+        <Route path='/disabled/Mypage' element={<DisabledMypage />} />
+        <Route path='/disabled/course' element={<DisabledCourse />} />
       </Routes>
     </BrowserRouter>
+    </UserProvider>
   );
 }
 

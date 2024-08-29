@@ -1,0 +1,283 @@
+ .container {
+     width: 60%;
+     margin: 0 auto;
+     font-family: Arial, sans-serif;
+     position: absolute;
+     top: 420px;
+     left: 60%;
+     transform: translate(-50%, -50%);
+
+ }
+
+ /* 중간 --------------------- */
+/* 메인 콘텐츠 */
+.mainContent {
+    flex: 1;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    margin-left: 250px;
+    /* leftBar의 너비만큼 여백 추가 */
+
+    /* leftBar 너비를 제외한 전체 너비 */
+}
+
+ .navbar,
+ .subNavbar {
+     display: flex;
+     justify-content: center;
+     padding: 10px;
+ }
+
+ .navbar button {
+     padding: 10px;
+     border: 1px solid rgb(104, 103, 103);
+     cursor: pointer;
+     background-color: rgb(212, 216, 243);
+     border-radius: 15px 15px;
+     font-weight: bold;
+     font-size: 15px;
+     color: rgb(104, 103, 103);
+     margin: 0 10px;
+     width: 150px;
+ }
+
+ .navbar button.application {
+     background: #637ABF;
+     color: white;
+ }
+
+ .subNavbar button {
+     padding: 0px 130px;
+     width: 500px;
+     height: 100px;
+     border: 1px solid rgb(104, 103, 103);
+     cursor: pointer;
+     background-color: rgb(212, 216, 243);
+     border-radius: 10px 10px;
+     font-weight: bold;
+     font-size: 30px;
+     color: rgb(104, 103, 103);
+     margin: 0px -10px;
+ }
+
+ .subNavbar button.selected {
+     background-color: #637ABF;
+     color: white;
+     transform: translateY(-1px);
+ }
+
+ .subNavbar button:last-child {
+     margin-right: 0;
+ }
+
+
+ /* 네비게이션 바 */
+ .navbar,
+ .subNavbar {
+     display: flex;
+     justify-content: center;
+     padding: 10px;
+ }
+
+ .navbar1 {
+     margin-left: 30px;
+ }
+
+ .navbar2 {
+     margin-left: 20px;
+ }
+
+ .navbar button {
+     padding: 10px;
+     border: 1px solid rgb(104, 103, 103);
+     cursor: pointer;
+     background-color: rgb(212, 216, 243);
+     border-radius: 15px;
+     font-weight: bold;
+     font-size: 15px;
+     color: rgb(104, 103, 103);
+     margin: 0 10px;
+     width: 150px;
+     margin-right: 75px;
+ }
+
+ .navbar button.application {
+     background: #637ABF;
+     color: white;
+ }
+
+
+ /* 하위 네비게이션 바 */
+ .sub-navbar {
+     display: flex;
+     justify-content: center;
+     padding: 10px;
+ }
+
+ .sub-navbar .long-box {
+     background-color: rgb(212, 216, 243);
+     font-weight: bold;
+     color: rgb(111, 111, 111);
+     padding: 10px 20px;
+     border-radius: 10px;
+     text-align: left;
+     font-size: 25px;
+     /* 글자 크기 설정 */
+     width: 100%;
+     /* 가로로 긴 상자 */
+     height: 100px;
+ }
+
+ .sub-navbar .long-box .bold {
+     font-weight: bold;
+     color: rgb(69, 69, 69);
+ }
+ /*-----------------*/
+
+ .section {
+     border: 1px solid #ddd;
+     border-radius: 8px;
+     margin-bottom: 20px;
+     padding: 10px;
+     background-color: #f9f9f9;
+ }
+
+ .header {
+     font-weight: bold;
+     margin-bottom: 10px;
+     color: black;
+ }
+
+ .content {
+     padding: 10px;
+     background-color: #e0e0e0;
+     border-radius: 8px;
+ }
+
+ .status,
+ .remaining,
+ .grade,
+ .link {
+     margin-bottom: 10px;
+ }
+
+ /*재학중 등등 두꺼운 글꼴*/
+ .boldText,
+ .score,
+ .status-highlight {
+     color: black;
+     font-weight: bold;
+ }
+
+ .link a {
+     text-decoration: underline;
+ }
+
+
+
+ /* 왼쪽 바 */
+ .leftBar {
+     width: 230px;
+     /* 왼쪽 바 너비 조정 */
+     height: 100%;
+     padding: 25px;
+     background-color: #637ABF;
+     display: flex;
+     flex-direction: column;
+     justify-content: space-between;
+     color: white;
+     position: fixed;
+     /* 화면 왼쪽에 고정 */
+     top: 0;
+     left: 0;
+     /* 화면의 왼쪽에 위치 */
+     box-sizing: border-box;
+     /* 패딩 포함 크기 계산 */
+ }
+
+ .title {
+     width: 150px;
+     height: 80px;
+     border: 1px solid white;
+     border-radius: 20px;
+     margin-left: 10px;
+     padding-right: 10px;
+     text-align: right;
+ }
+
+ .title h3 {
+     color: white;
+     margin: 10px;
+     margin-top: 15px;
+     padding-left: 10px;
+     text-align: center;
+ }
+
+ /* 선택화면으로 돌아가기 박스 */
+ .loginBox {
+     width: 140px;
+     height: 50px;
+     border: 1px solid white;
+     border-radius: 20px;
+     padding: 10px;
+     padding-top: 20px;
+     margin-top: 10px;
+     margin-left: 10px;
+     align-items: center;
+     font-size: 17px;
+     color: white;
+     font-weight: bold;
+ }
+
+ .loginBox.div {
+     top: 100px;
+ }
+
+ .loginBox h4 {
+     margin-top: 1px;
+ }
+
+
+
+ /* 접근성 정보 박스 */
+ .accessibilityInfoBox {
+     margin-top: 10px;
+     padding: 10px;
+     border: 1px solid white;
+     border-radius: 20px;
+     cursor: pointer;
+     text-align: center;
+     width: 145px;
+     height: 500px;
+     margin-left: 8px;
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+ }
+
+ .accessibilityInfoText {
+     font-size: 14px;
+     color: white;
+     text-align: center;
+ }
+
+ .infoTextLine1 {
+     margin-bottom: 2px;
+     margin-top: 15px;
+ }
+
+ .infoTextLine2 {
+     margin-top: 2px;
+ }
+
+ .Line {
+     margin-bottom: 50px;
+     margin-top: 50px;
+ }
+
+ .accessibilityInfoText h2 {
+     margin: 0;
+     margin-top: 20px;
+     margin-bottom: -30px;
+ }

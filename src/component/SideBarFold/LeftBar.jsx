@@ -1,11 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styles from './LeftBar.module.css';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../UserContext';
+import axios from 'axios';
+
 
 const LeftBar = ({ onLogout }) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [popupType, setPopupType] = useState('');
   const navigate = useNavigate();
+  const { user, setUser } = useContext(UserContext);
+
+
+    /* 로그아웃 API */
+    /* 일단은 로그아웃 누르면 원래 화면 path:'' 인 곳에 이동함 */
+  const handleLogout = async () => {
+    const token = localStorage.getItem('accessToken');
+    
+    if (!token) {
+      console.error('토큰이 존재하지 않습니다.');
+      navigate('/initial'); // 토큰이 없으면 바로 초기 화면으로 이동
+      return;
+    }
+
+    try {
+      // axios 요청에 토큰을 Authorization 헤더에 설정
+      const response = await axios.post(
+        'http://43.202.223.188:8080/api/logout',
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,  // 헤더에 토큰 설정
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log(response.data.message); // "Logout successful"
+
+        // 로컬 스토리지에서 사용자 정보와 토큰 제거
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('userInfo');
+
+        // UserContext의 user 상태 초기화
+        setUser(null);
+
+        navigate('/initial'); // 로그아웃 후 초기 화면으로 이동
+      } else {
+        console.error('로그아웃 중 오류가 발생했습니다.');
+      }
+    } catch (error) {
+      console.error('서버와의 통신에 실패했습니다:', error.response ? error.response.data : error.message);
+    }
+  };
+
+
 
   const togglePopup = (type) => {
     if (popupType === type && isPopupVisible) {
@@ -30,11 +80,11 @@ const LeftBar = ({ onLogout }) => {
         </h3>
       </div>
       <div className={styles.userInfo}>
-        <div>이름 홍길동</div>
-        <div>학번 12345678</div>
-        <h4>학과 (부전공)</h4>
-        <div>컴퓨터공학과</div>
-        <div>(없음)</div>
+            <div>이름: {user.studentName}</div>
+            <div>학번: {user.studentNumber}</div>
+            <h4>학과 (부전공)</h4>
+            <div>{user.departmentId}</div> 
+            <div>(없음)</div>
       </div>
 
       <hr style={{ border: '1px solid white', backgroundColor: 'white', width: '190px',marginLeft: '-5px'}} />
@@ -56,9 +106,10 @@ const LeftBar = ({ onLogout }) => {
       <hr style={{ border: '1px solid white', backgroundColor: 'white', width: '190px',marginLeft: '-5px'}} />
 
 
-      <div className={styles.logoutBtn}>
-        <button onClick={onLogout}>로그아웃</button>
-      </div>
+      <div className={styles['logoutBtn']}>
+            <button onClick={handleLogout}>로그아웃</button>
+        </div>
+        
 
       {isPopupVisible && (
         <div className={styles['popup']}>

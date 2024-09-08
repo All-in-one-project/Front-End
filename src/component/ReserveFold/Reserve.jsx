@@ -5,6 +5,7 @@ import styles from './Reserve.module.css';
 import ReserveWating from './ReserveWating'; // 대기 화면 컴포넌트
 import ReserveDelete from './ReserveDelete'; // 삭제 확인 화면 컴포넌트
 import ReserveClassInputAgain from './ReserveClassInputAgain'; // 과목 코드 입력 오류 확인 화면 컴포넌트
+import axios from 'axios';
 
 function Reserve() {
   const [lectures, setLectures] = useState([]);
@@ -34,6 +35,11 @@ function Reserve() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // 삭제 확인 화면 제어
   const [lectureToRemove, setLectureToRemove] = useState(null); // 삭제할 강의 정보
   const [showInputError, setShowInputError] = useState(false); // 과목 코드 오류 화면 제어
+  const [colleges, setColleges] = useState([]); // 대학 리스트
+  const [departments, setDepartments] = useState([]); // 학과 리스트
+  const [filteredLectures, setFilteredLectures] = useState([]);
+
+
 
   const navigate = useNavigate();
 
@@ -41,6 +47,40 @@ function Reserve() {
     navigate(path);
   };
 
+  useEffect(() => {
+    axios.get('http://43.202.223.188:8080/api/college')
+      .then(response => {
+        console.log('Received response:', response); // 응답 전체 확인
+        setColleges(response.data);
+        console.log('Fetched Colleges:', response.data); // 데이터가 설정되었는지 확인
+      })
+      .catch(error => {
+        console.error('There was an error fetching the colleges!', error); // 에러 메시지 확인
+      });
+  }, []);
+
+  const fetchDepartments = (collegeId) => {
+    axios.get(`http://43.202.223.188:8080/api/departments/${collegeId}`)
+      .then(response => {
+        setDepartments(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the departments!', error);
+      });
+  };
+
+  const fetchSubjects = (departmentId) => {
+    axios.get(`http://43.202.223.188:8080/api/subjects/${departmentId}`)
+      .then(response => {
+        console.log("Fetched Subjects:", response.data); // 추가된 로그
+        setLectures(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the subjects!', error);
+      });
+  };
+
+  
   useEffect(() => {
     if (selectedGridContainer && selectedDepartmentContainer && selectedYearContainer.length > 0) {
       console.log('Selected Grid:', selectedGridContainer);
@@ -164,55 +204,88 @@ function Reserve() {
     setSelectedSubNav(event.target.innerText);
   };
 
-  const handleGridContainerClick = (container) => {
-    if (selectedGridContainer === container) {
+  const handleGridContainerClick = (collegeId) => {
+    console.log('College clicked:', collegeId); // 추가된 로그
+    if (selectedGridContainer === collegeId) {
       setSelectedGridContainer('');
       setSelectedDepartmentContainer('');
-      setDepartmentList([]);
-    } else if (selectedGridContainer === '') {
-      setSelectedGridContainer(container);
-      setDepartmentList(departmentMapping[container]);
+      setDepartments([]);
+      setLectures([]);
+      setFilteredLectures([]);
     } else {
-      setPopupMessage(
-        <div>
-          해당 항목은 복수 선택이 불가능합니다!
-          <br />
-          <span style={{ fontWeight: 'normal' }}>
-            (단과대 및 학과/학부 복수 선택 불가)
-          </span>
-        </div>
-      );
-      togglePopup('error');
+      if (selectedGridContainer) {
+        setPopupMessage(
+          <div>
+            해당 항목은 복수 선택이 불가능합니다!
+            <br />
+            <span style={{ fontWeight: 'normal' }}>
+              (단과대 및 학과/학부 복수 선택 불가능)
+            </span>
+          </div>
+        );
+        togglePopup('error');
+      } else {
+        setSelectedGridContainer(collegeId);
+        setSelectedDepartmentContainer('');
+        setDepartments([]);
+        setLectures([]);
+        console.log('Selected College:', collegeId); 
+        setFilteredLectures([]);
+        fetchDepartments(collegeId);
+      }
     }
   };
 
-  const handleDepartmentContainerClick = (container) => {
-    if (selectedDepartmentContainer === container) {
+  const handleDepartmentContainerClick = (departmentId) => {
+    if (selectedDepartmentContainer === departmentId) {
       setSelectedDepartmentContainer('');
-    } else if (selectedDepartmentContainer === '') {
-      setSelectedDepartmentContainer(container);
+      setLectures([]);
+      setFilteredLectures([]);
     } else {
-      setPopupMessage(
-        <div>
-          해당 항목은 복수 선택이 불가능합니다!
-          <br />
-          <span style={{ fontWeight: 'normal' }}>
-            (단과대 및 학과/학부 복수 선택 불가)
-          </span>
-        </div>
-      );
-      togglePopup('error');
+      if (selectedDepartmentContainer) {
+        setPopupMessage(
+          <div>
+            해당 항목은 복수 선택이 불가능합니다!
+            <br />
+            <span style={{ fontWeight: 'normal' }}>
+              (단과대 및 학과/학부 복수 선택 불가능)
+            </span>
+          </div>
+        );
+        togglePopup('error');
+      } else {
+        setSelectedDepartmentContainer(departmentId);
+        setSelectedYearContainer([]);
+        setLectures([]);
+        setFilteredLectures([]);
+         console.log('Selected Department:', departmentId); 
+        fetchSubjects(departmentId);
+      }
     }
   };
 
-  const handleYearContainerClick = (container) => {
-    if (selectedYearContainer.includes(container)) {
-      setSelectedYearContainer(selectedYearContainer.filter(item => item !== container));
+  const handleYearContainerClick = (year) => {
+    if (selectedYearContainer.includes(year)) {
+      setSelectedYearContainer(selectedYearContainer.filter(item => item !== year));
     } else if (selectedYearContainer.length < 4) {
-      setSelectedYearContainer([...selectedYearContainer, container]);
+      setSelectedYearContainer([...selectedYearContainer, year]);
+  
+      // 선택된 과목들에 대해 각 학년에 따라 API 요청
+      lectures.forEach(lecture => {
+        const subjectId = lecture.id;  // 각 과목의 ID
+        const targetGrade = year;  // 선택된 학년 (예: "3학년")
+  
+        axios.get(`https://43.202.223.188:8080/api/lectures/${subjectId}/${targetGrade}`)
+          .then(response => {
+            console.log(`Fetched Lectures for subjectId: ${subjectId}, targetGrade: ${targetGrade}:`, response.data); // 응답 확인
+            setFilteredLectures(prevLectures => [...prevLectures, ...response.data]);  // 가져온 강의 데이터를 상태에 추가
+          })
+          .catch(error => {
+            console.error('There was an error fetching the lectures by grade!', error);
+          });
+      });
     } else {
-      setPopupMessage('학년은 4개까지 선택할 수 있습니다.');
-      togglePopup('error');
+      alert('학년은 4개까지 선택할 수 있습니다.');
     }
   };
 
@@ -363,14 +436,14 @@ function Reserve() {
   const MainLectureItem = ({ lecture }) => (
     <div className={styles.lectureBox}>
       <div className={styles.topRow}>
-        <div>{lecture.id}</div>
-        <div className={styles.category}>{lecture.category}</div>
+        <div>{lecture.subjectCode}</div>
+        <div className={styles.category}>{lecture.subjectDivision}</div>
       </div>
-      <div className={styles.name}>{lecture.name}</div>
-      <div className={styles.time}>교수 {lecture.professor} | {lecture.time}</div>
-      <div className={styles.buttons}>
-        <button className={styles.basket} onClick={() => handleAddToCart(lecture)}>장바구니</button>
-        <button className={styles.plan} onClick={() => fetchLecturePlan(lecture.id)}>강의 계획서</button>
+      <div className={styles.name} style={{fontSize:'13px'}}>{lecture.subjectName}</div>
+      <div className={styles.time}>{lecture.professorName} | {lecture.lectureTime}</div>
+      <div className={styles.buttons} >
+        <button className={styles.basket} onClick={() => handleAddToCart(lecture)} style={{marginRight:'4px'} }>장바구니</button>
+        <button className={styles.plan} onClick={() => fetchLecturePlan(lecture.id)} style={{marginRight:'10px'} }>강의 계획서</button>
       </div>
     </div>
   );
@@ -493,16 +566,16 @@ function Reserve() {
             <div className={styles.section}>
               <div className={styles.sectionTitle}>단과대 선택</div>
               <div className={styles.gridContainer}>
-                {['ICT융합과학대학', '건강과학대학', '음악대학', '법학대학', '자연과학대학', '공과대학', '인문사회대학', '미술대학', '체육대학', '교양대학'].map((name) => (
+                {colleges.map((college) => (
                   <div
-                    key={name}
-                    onClick={() => handleGridContainerClick(name)}
+                    key={college.id}
+                    onClick={() => handleGridContainerClick(college.id)}
                     style={{
-                      backgroundColor: selectedGridContainer === name ? '#637ABF' : 'white',
-                      color: selectedGridContainer === name ? 'white' : 'rgb(104, 108, 109)',
+                      backgroundColor: selectedGridContainer === college.id ? '#637ABF' : 'white',
+                      color: selectedGridContainer === college.id ? 'white' : 'rgb(104, 108, 109)',
                     }}
                   >
-                    {name}
+                    {college.collegeName}
                   </div>
                 ))}
               </div>
@@ -511,16 +584,16 @@ function Reserve() {
             <div className={styles.section}>
               <div className={styles.sectionTitle}>학부 및 학과 선택</div>
               <div className={styles.departmentContainer}>
-                {departmentList.map((name) => (
+                {departments.map((department) => (
                   <div
-                    key={name}
-                    onClick={() => handleDepartmentContainerClick(name)}
+                    key={department.id}
+                    onClick={() => handleDepartmentContainerClick(department.id)}
                     style={{
-                      backgroundColor: selectedDepartmentContainer === name ? '#637ABF' : 'white',
-                      color: selectedDepartmentContainer === name ? 'white' : 'rgb(104, 108, 109)',
+                      backgroundColor: selectedDepartmentContainer === department.id ? '#637ABF' : 'white',
+                      color: selectedDepartmentContainer === department.id ? 'white' : 'rgb(104, 108, 109)',
                     }}
                   >
-                    {name}
+                    {department.departmentName}
                   </div>
                 ))}
               </div>

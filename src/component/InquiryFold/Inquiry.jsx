@@ -52,21 +52,6 @@ function Inquiry() {
       });
   }, []);
 
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const response = await axios.get("http://43.202.223.188:8080/api/college" );
-
-//         console.log(response)
-//       } catch (error) {
-// console.log('에러입니다.')
-//       }
-//     };
-
-//     fetchData();
-//   }, []);
-
-
 
   const fetchDepartments = (collegeId) => {
     axios.get(`http://43.202.223.188:8080/api/departments/${collegeId}`)

@@ -38,6 +38,7 @@ function Reserve() {
   const [colleges, setColleges] = useState([]); // 대학 리스트
   const [departments, setDepartments] = useState([]); // 학과 리스트
   const [filteredLectures, setFilteredLectures] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(''); // 선택된 학년
 
 
 
@@ -266,28 +267,31 @@ function Reserve() {
 
   const handleYearContainerClick = (year) => {
     if (selectedYearContainer.includes(year)) {
+      // 학년 선택 해제 시 해당 학년의 강의 제거
       setSelectedYearContainer(selectedYearContainer.filter(item => item !== year));
+      
+      // 선택 해제된 학년에 해당하는 강의를 filteredLectures에서 제거
+      setFilteredLectures(prevLectures => prevLectures.filter(lecture => lecture.targetGrade !== year));
+      
     } else if (selectedYearContainer.length < 4) {
-      setSelectedYearContainer([...selectedYearContainer, year]);
-  
-      // 선택된 과목들에 대해 각 학년에 따라 API 요청
-      lectures.forEach(lecture => {
-        const subjectId = lecture.id;  // 각 과목의 ID
-        const targetGrade = year;  // 선택된 학년 (예: "3학년")
-  
-        axios.get(`https://43.202.223.188:8080/api/lectures/${subjectId}/${targetGrade}`)
-          .then(response => {
-            console.log(`Fetched Lectures for subjectId: ${subjectId}, targetGrade: ${targetGrade}:`, response.data); // 응답 확인
-            setFilteredLectures(prevLectures => [...prevLectures, ...response.data]);  // 가져온 강의 데이터를 상태에 추가
-          })
-          .catch(error => {
-            console.error('There was an error fetching the lectures by grade!', error);
-          });
-      });
+      // 학년 추가 시 선택된 학년과 강의를 상태에 추가
+      setSelectedYearContainer([year]);  // 새로운 학년을 선택할 때는 이전 선택을 초기화
+      
+      // 선택된 학년에 따라 lectures 배열을 필터링하여 해당 학년 데이터만 저장
+      const filteredLecturesByGrade = lectures.filter(lecture => lecture.targetGrade === year);
+      
+      // 이전 데이터를 유지하지 않고 새롭게 필터링된 데이터로 덮어쓰기
+      setFilteredLectures(filteredLecturesByGrade);  // 이전 강의를 유지하지 않고 새롭게 설정
+      
     } else {
       alert('학년은 4개까지 선택할 수 있습니다.');
     }
   };
+  
+  
+
+  const filteredLecturesYear = lectures.filter(lecture => lecture.grade === selectedYear);
+
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -385,12 +389,21 @@ function Reserve() {
 
   useEffect(() => {
     if (selectedGridContainer && selectedDepartmentContainer && selectedYearContainer.length > 0) {
+      const departmentsForSelectedCollege = departmentMapping[selectedGridContainer];
+      
+      if (!departmentsForSelectedCollege) {
+        console.error("Selected college does not exist in the mapping.");
+        return;
+      }
+  
       const collegeId = Object.keys(departmentMapping).indexOf(selectedGridContainer) + 1;
-      const departmentId = departmentMapping[selectedGridContainer].indexOf(selectedDepartmentContainer) + 1;
+      const departmentId = departmentsForSelectedCollege.indexOf(selectedDepartmentContainer) + 1;
       const gradeId = parseInt(selectedYearContainer[0][0], 10);
+  
       fetchLectures(collegeId, departmentId, gradeId);
     }
   }, [selectedGridContainer, selectedDepartmentContainer, selectedYearContainer]);
+  
 
   const departmentMapping = {
     'ICT융합과학대학': ['컴퓨터공학부', '데이터과학부', '정보통신학부'],
@@ -600,31 +613,32 @@ function Reserve() {
             </div>
 
             <div className={styles.section}>
-              <div className={styles.sectionTitle}>학년 선택</div>
-              <div className={styles.yearContainer}>
-                {['1학년', '2학년', '3학년', '4학년'].map((year) => (
-                  <div
-                    key={year}
-                    onClick={() => handleYearContainerClick(year)}
-                    style={{
-                      backgroundColor: selectedYearContainer.includes(year) ? '#637ABF' : 'white',
-                      color: selectedYearContainer.includes(year) ? 'white' : 'rgb(104, 108, 109)',
-                    }}
-                  >
-                    {year}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div><div style={{ width: '700px', height: '0.5px', backgroundColor: 'gray', marginTop: '4px' }} /></div>
+  <div className={styles.sectionTitle}>학년 선택</div>
+  <div className={styles.yearContainer}>
+    {['1학년', '2학년', '3학년', '4학년'].map((year) => (
+      <div
+        key={year}
+        onClick={() => handleYearContainerClick(year)}
+        style={{
+          backgroundColor: selectedYearContainer.includes(year) ? '#637ABF' : 'white',
+          color: selectedYearContainer.includes(year) ? 'white' : 'rgb(104, 108, 109)',
+        }}
+      >
+        {year}
+      </div>
+    ))}
+  </div>
+</div>
+<div><div style={{ width: '700px', height: '0.5px', backgroundColor: 'gray', marginTop: '4px' }} /></div>
 
-            <div className={styles.section}>
-              <div className={styles.lectureContainer}>
-                {lectures.map((lecture, index) => (
-                  <MainLectureItem key={index} lecture={lecture} />
-                ))}
-              </div>
-            </div>
+<div className={styles.section}>
+  <div className={styles.lectureContainer}>
+    {filteredLectures.map((lecture, index) => (
+      <MainLectureItem key={index} lecture={lecture} />
+    ))}
+  </div>
+</div>
+
           </>
         )}
 

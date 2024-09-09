@@ -10,9 +10,12 @@
      padding: 10px;
      display: flex;
      flex-direction: column;
-     margin-left: 180px;
+     margin-left: 230px;
  }
 
+
+
+ /* 네비게이션 바 */
  .navbar,
  .subNavbar {
      display: flex;
@@ -20,31 +23,31 @@
      padding: 10px;
  }
 
+ .navbar1 {
+     margin-left: 50px;
+ }
+
+ .navbar2 {
+     margin-left: 20px;
+ }
+
  .navbar button {
      padding: 10px;
      border: 1px solid rgb(104, 103, 103);
      cursor: pointer;
      background-color: rgb(212, 216, 243);
-     border-radius: 15px 15px;
+     border-radius: 15px;
      font-weight: bold;
      font-size: 15px;
      color: rgb(104, 103, 103);
      margin: 0 10px;
      width: 150px;
+     margin-right: 75px;
  }
 
  .navbar button.application {
      background: #637ABF;
      color: white;
- }
- .navbar1 {
-     margin-left: -10px;
-     margin-right:0px;
- }
-
- .navbar2 {
-     margin-left: 100px;
-    margin-right:10px;
  }
 
  .subNavbar button {
@@ -56,7 +59,7 @@
      background-color: rgb(212, 216, 243);
      border-radius: 10px 10px;
      font-weight: bold;
-     font-size: 30px;
+    font-size: 35px;
      color: rgb(104, 103, 103);
      margin: 0px -10px;
  }
@@ -77,24 +80,7 @@
      padding: 10px;
  }
 
- .sub-navbar .long-box {
-     background-color: rgb(212, 216, 243);
-     font-weight: bold;
-     color: rgb(111, 111, 111);
-     padding: 10px 20px;
-     border-radius: 10px;
-     text-align: left;
-     font-size: 25px;
-     /* 글자 크기 설정 */
-     width: 100%;
-     /* 가로로 긴 상자 */
-     height: 100px;
- }
-
- .sub-navbar .long-box .bold {
-     font-weight: bold;
-     color: rgb(69, 69, 69);
- }
+ 
 
 
 
@@ -103,7 +89,7 @@
  .container {
      position: absolute;
      top: 60%;
-     left: 50%;
+     left: 58%;
      transform: translate(-50%, -50%);
      width: 80%;
      max-width: 700px;
@@ -278,30 +264,32 @@
       text-align: center;
   }
 
-  /* 선택화면으로 돌아가기 박스 */
-  .loginBox {
-      width: 140px;
-      height: 50px;
-      border: 1px solid white;
-      border-radius: 20px;
-      padding: 10px;
-      padding-top: 20px;
-      margin-top: 10px;
-      margin-left: 10px;
-      align-items: center;
-      font-size: 17px;
-      color: white;
-      font-weight: bold;
-  }
+ /*선택화면으로 돌아가기*/
+ .loginBox {
+     width: 140px;
+     height: 50px;
+     border: 1px solid white;
+     border-radius: 20px;
+     padding: 10px;
+     padding-top: 20px;
+     margin-top: 10px;
+     margin-left: 10px;
+     align-items: center;
+     font-size: 17px;
+     color: white;
+     font-weight: bold;
+ }
 
-  .loginBox.div {
-      top: 100px;
-  }
+.loginBox div {
+    top: 100px;
+    margin-left: 15px;
 
-  .loginBox h4 {
-      margin-top: 1px;
-  }
+}
 
+.loginBox h4 {
+    margin-top: 1px;
+    margin-left: 35px;
+}
 
 
   /* 접근성 정보 박스 */

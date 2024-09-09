@@ -193,13 +193,13 @@ const DisabledFaq = () => {
           </div>
           <div className={styles.navbar2}>
           <button 
-            onClick={() => handleNavClick('/reserve')} 
+            onClick={() => handleNavClick('/disabled/reserve')} 
             onMouseOver={() => handleMouseOver('수강신청')}
           >
             수강신청
           </button>
           <button 
-            onClick={() => handleNavClick('/mypage')} 
+            onClick={() => handleNavClick('/disabled/mypage')} 
             onMouseOver={() => handleMouseOver('마이페이지')}
           >
             마이페이지

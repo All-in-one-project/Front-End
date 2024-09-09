@@ -86,7 +86,7 @@ const Initial = () => {
         <div className={styles.navbar}>
           <button className={styles.application} onClick={() => handleNavClick('/notice')}>공지사항</button>
           <button onClick={() => handleNavClick('/inquiry')}>과목조회</button>
-          <button onClick={() => handleNavClick('/')}>수강신청</button>
+          <button onClick={() => handleNavClick('/reserve')}>수강신청</button>
           <button onClick={() => handleNavClick('/mypage')}>마이페이지</button>
         </div>
 

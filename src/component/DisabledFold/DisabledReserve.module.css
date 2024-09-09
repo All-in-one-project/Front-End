@@ -47,7 +47,7 @@
     text-align: center;
 }
 
-/* 선택화면으로 돌아가기 박스 */
+/*선택화면으로 돌아가기*/
 .loginBox {
     width: 140px;
     height: 50px;
@@ -63,12 +63,15 @@
     font-weight: bold;
 }
 
-.loginBox.div {
+.loginBox div {
     top: 100px;
+    margin-left: 15px;
+
 }
 
 .loginBox h4 {
     margin-top: 1px;
+    margin-left:35px;
 }
 
 
@@ -142,6 +145,8 @@
     color: rgb(104, 103, 103);
     margin: 0 10px;
     width: 150px;
+    margin-left:20px;
+
 }
 
 .navbar button.application {
@@ -157,10 +162,11 @@
     background-color: rgb(212, 216, 243);
     border-radius: 10px 10px;
     font-weight: bold;
-    font-size: 30px;
+    font-size: 35px;
     color: rgb(104, 103, 103);
-    margin: 0px -10px;
+    margin: 0px -50px;
     width:500px;
+    margin-left:20px;
 }
 
 .subNavbar button.selected {

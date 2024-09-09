@@ -337,7 +337,7 @@ const MainLectureItem = ({ lecture }) => (
   );
 
   const handleNavClickdisabled = () => {
-    navigate('/disabled'); // Disabled.jsx로 이동
+    navigate('/disabled2'); // Disabled.jsx로 이동
   };
 
   return (

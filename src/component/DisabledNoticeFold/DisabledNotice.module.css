@@ -20,7 +20,7 @@
     padding: 10px;
     display: flex;
     flex-direction: column;
-    margin-left: 235px;
+    margin-left: 250px;
  
 }
 
@@ -56,7 +56,7 @@
     color: rgb(104, 103, 103);
     margin: 0 10px;
     width: 150px;
-    margin-right: 75px;
+    margin-right: 70px;
 }
 
 .navbar button.application {
@@ -76,7 +76,7 @@
     font-weight: bold;
     font-size: 35px;
     color: rgb(104, 103, 103);
-    margin-right: 20px;
+    margin-left: -20px;
 }
 
 .subNavbar button.selected {

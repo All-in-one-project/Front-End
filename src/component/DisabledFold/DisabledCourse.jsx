@@ -158,13 +158,13 @@ const Course = () => {
         <div className={styles.navbar}>
           <div className={styles.navbar1}>
             <button 
-              onClick={() => handleNavClick('/disabled/notice2')} 
+              onClick={() => handleNavClick('/disabled/notice')} 
               onMouseOver={() => handleMouseOver('공지사항')}
             >
               공지사항
             </button>
             <button 
-              onClick={() => handleNavClick('/disabled/inquiry2')} 
+              onClick={() => handleNavClick('/disabled/inquiry')} 
               onMouseOver={() => handleMouseOver('과목조회')}
             >
               과목조회

@@ -818,9 +818,9 @@ function Reserve() {
             <div className={styles.basketTitle}>{sidebarTitle}</div>
             {sidebarLectures.map((lecture, index) => (
               <div key={index} className={styles.lectureBox}>
-                <div className={styles.name}>{lecture.name}</div>
+                <div className={styles.name}>{lecture.subjectName}</div>
                 <div className={styles.topRow}>
-                  <div>{lecture.id} {lecture.category}</div>
+                  <div>{lecture.subjectCode} [{lecture.subjectDivision}]</div>
                 </div>
                 <div className={styles.buttons}>
                   <button className={styles.remove} onClick={() => handleRemoveLectureFromSidebar(lecture.id)}>X</button>

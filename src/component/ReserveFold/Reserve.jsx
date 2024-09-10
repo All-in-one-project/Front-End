@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext  } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import styles from './Reserve.module.css';
@@ -6,14 +6,15 @@ import ReserveWating from './ReserveWating'; // 대기 화면 컴포넌트
 import ReserveDelete from './ReserveDelete'; // 삭제 확인 화면 컴포넌트
 import ReserveClassInputAgain from './ReserveClassInputAgain'; // 과목 코드 입력 오류 확인 화면 컴포넌트
 import axios from 'axios';
+import { UserContext } from '../UserContext';
 
 function Reserve() {
   const [lectures, setLectures] = useState([]);
   const lecturelist = [
-    { id: 1, name: "20세기 한국사", hours: "(월4,5)", lecture: "21032-001" },
-    { id: 2, name: "경제학 입문", hours: "(화3,4)", lecture: "21032-002" },
-    { id: 3, name: "프로그래밍 기초", hours: "(수1,2)", lecture: "21032-003" },
-    { id: 4, name: "심리학 개론", hours: "(목2,3)", lecture: "21032-004" },
+    { id: 1, subjectName: "20세기 한국사", hours: "(월4,5)", lecture: "21032-001" },
+    { id: 2, subjectName: "경제학 입문", hours: "(화3,4)", lecture: "21032-002" },
+    { id: 3, subjectName: "프로그래밍 기초", hours: "(수1,2)", lecture: "21032-003" },
+    { id: 4, subjectName: "심리학 개론", hours: "(목2,3)", lecture: "21032-004" },
   ];
   const [lectureList, setLectureList] = useState(lecturelist);
   const [subjectCode, setSubjectCode] = useState('');
@@ -39,7 +40,10 @@ function Reserve() {
   const [departments, setDepartments] = useState([]); // 학과 리스트
   const [filteredLectures, setFilteredLectures] = useState([]);
   const [selectedYear, setSelectedYear] = useState(''); // 선택된 학년
-
+  const [inputSubjectName,setInputSubjectName] =useState('') //강의명 검색
+  const [subjectName, setSubjectName] =useState('')// 
+  const { user } = useContext(UserContext); // 이미 로그인한 사용자 정보가 있다면 가져오기
+  const [searchResults, setSearchResults] = useState([]); // 강의명으로 조회 결과 데이터
 
 
   const navigate = useNavigate();
@@ -59,6 +63,42 @@ function Reserve() {
         console.error('There was an error fetching the colleges!', error); // 에러 메시지 확인
       });
   }, []);
+
+
+  // 수강신청 예시
+  useEffect(() => {
+    const sendEnrollmentData = async () => {
+      try {
+        // 토큰을 로컬 스토리지에서 가져오거나 Context에서 가져올 수 있음
+        const accessToken = localStorage.getItem('accessToken');
+
+        // Axios 요청에 accessToken을 헤더로 추가하여 POST 요청
+        const response = await axios.post(
+          "http://43.202.223.188:8080/enrollment",
+          {
+            studentId: 1,
+            lectureId: 2,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`, // Authorization 헤더에 토큰 포함
+            },
+          }
+        );
+
+        console.log('성공:', response.data); // 서버 응답 처리
+      } catch (error) {
+        console.error('Error fetching data', error);
+      }
+    };
+
+    sendEnrollmentData(); // 비동기 함수 호출
+  }, []); // 빈 배열을 넣어 컴포넌트가 마운트될 때 한 번만 실행
+
+
+
+
+
 
   const fetchDepartments = (collegeId) => {
     axios.get(`http://43.202.223.188:8080/api/departments/${collegeId}`)
@@ -463,7 +503,7 @@ function Reserve() {
 
   const LectureItem = ({ lecture }) => (
     <div className={styles.lectureItem}>
-      <span className={styles.lectureName}>{lecture.name} {lecture.hours}</span>
+      <span className={styles.lectureName}>{lecture.subjectName}  {lecture.lectureTime}</span>
       <button className={styles.infoBtn} onClick={() => fetchLecturePlan(lecture.id)}>정보</button>
       <button className={styles.applyBtn} onClick={() => handleAddToCart(lecture)}>추가</button>
     </div>
@@ -471,7 +511,7 @@ function Reserve() {
 
   const PopupLectureItem = ({ lecture }) => (
     <div className={styles.lectureItem}>
-      <span className={styles.lectureName}>{lecture.name}</span>
+      <span className={styles.lectureName}>{lecture.subjectName}</span>
       <button className={styles.infoBtn} onClick={() => fetchLecturePlan(lecture.id)}>정보</button>
       <button className={styles.applyBtn} onClick={() => handleAddToCart(lecture)}>추가</button>
     </div>
@@ -516,6 +556,32 @@ function Reserve() {
   const handleNavClickdisabled = () => {
     navigate('/disabled'); // Disabled.jsx로 이동
   };
+
+// 과목명으로 조회 후 신청
+const handleFindSubjectName =(event)=>{
+  setInputSubjectName(event.target.value)
+  console.log(event.target.value)
+}
+console.log(inputSubjectName)
+
+const onClickSearchIcon = async () => {
+  const accessToken = localStorage.getItem('accessToken');
+    axios.get('http://43.202.223.188:8080/api/subjects/search', {
+      params: { lectureName: inputSubjectName },  
+      headers: {
+        Authorization: `Bearer ${accessToken}`, // Authorization 헤더에 토큰 포함
+      },
+    })
+    
+    .then(response => {
+      console.log(response.data)
+      setSearchResults(response.data);
+    })
+    .catch(error => {
+      console.error('There was an error fetching the search results!', error);
+    });
+};
+
 
   return (
     <div className={styles.body}>
@@ -738,18 +804,34 @@ function Reserve() {
         {selectedSubNav === '예비수강신청' && (
           <>
             <div className={styles.section}>
-              <div className={styles.sectionTitle}>과목명으로 조회 후 신청</div>
+              <div className={styles.sectionTitle}>강의명으로 조회 후 신청</div>
               <div className={styles.searchContainer}>
-                <input type="text" placeholder="강의명 검색" />
-                <FaSearch className={styles.searchIcon} />
+              <input
+      type="text"
+      placeholder="강의명 검색"
+      value={inputSubjectName}
+      onChange={handleFindSubjectName}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter') {
+          onClickSearchIcon();
+        }
+      }}
+    />
+                <FaSearch className={styles.searchIcon} onClick={onClickSearchIcon}/>
               </div>
             </div>
 
-            <div className={styles.lectureList}>
-              {lectureList.map((lecture) => (
-                <LectureItem key={lecture.id} lecture={lecture} />
-              ))}
-              <button type="button" className={styles.more} onClick={() => togglePopup('moreLectures')}>더보기</button>
+            <div className={styles['lectureList']} style={{ zIndex: isSidebarOpen ? '1' : '1000' }}>
+          {searchResults.length > 0 ? (
+            searchResults.map((lecture) => (
+              <LectureItem key={lecture.id} lecture={lecture} />
+            ))
+          ) : (
+            lecturelist.map((lecture) => (
+              <LectureItem key={lecture.id} lecture={lecture} />
+            ))
+          )}
+              <button type="button" className={styles.more} onClick={() => togglePopup('moreLectures')} style={{width:"278px"}}>더보기</button>
             </div>
 
             <div className={styles.sectionSubject}>
@@ -818,7 +900,7 @@ function Reserve() {
             <div className={styles.basketTitle}>{sidebarTitle}</div>
             {sidebarLectures.map((lecture, index) => (
               <div key={index} className={styles.lectureBox}>
-                <div className={styles.name}>{lecture.subjectName}</div>
+                <div className={styles.name} style={{fontWeight:"900", fontSize:"16px"}}>{lecture.subjectName}</div>
                 <div className={styles.topRow}>
                   <div>{lecture.subjectCode} [{lecture.subjectDivision}]</div>
                 </div>
@@ -855,19 +937,37 @@ function Reserve() {
               </div>
             )}
             {popupType === 'moreLectures' && (
-              <div>
-                <h3 className={styles.popupTitle}>강의명으로 조회 후 신청</h3>
-                <div className={styles.searchContainer}>
-                  <input className={styles.lectureSearch} type="text" placeholder="강의명 검색" />
-                  <FaSearch className={styles.popupSearchIcon} />
-                </div>
-                <div className={`${styles.lectureList} ${styles.popupLectureList}`}>
-                  {[...lectureList, ...additionalLectures].map((lecture) => (
-                    <PopupLectureItem key={lecture.id} lecture={lecture} />
-                  ))}
-                </div>
-              </div>
-            )}
+   <div>
+   <h3 className={styles.popupTitle}>강의명으로 조회 후 신청</h3>
+   <div className={styles.searchContainer}>
+     <input
+       className={styles.lectureSearch}
+       type="text"
+       placeholder="강의명 검색"
+       value={inputSubjectName}
+       onChange={handleFindSubjectName} // 입력 값 관리
+       onKeyDown={(event) => {
+         if (event.key === 'Enter') {
+           onClickSearchIcon(); // 엔터 키 입력 시 검색 실행
+         }
+       }}
+     />
+     <FaSearch className={styles.popupSearchIcon} onClick={onClickSearchIcon} />
+   </div>
+   <div className={`${styles.lectureList} ${styles.popupLectureList}`}>
+     {searchResults.length > 0 ? (
+       searchResults.map((lecture) => (
+         <PopupLectureItem key={lecture.id} lecture={lecture} />
+       ))
+     ) : (
+       lectureList.map((lecture) => (
+         <PopupLectureItem key={lecture.id} lecture={lecture} />
+       ))
+     )}
+   </div>
+ </div>
+)}
+
             {popupType === 'lecturePlan' && (
               <div>
                 <h3 className={styles.popupTitle}>강의 계획서</h3>

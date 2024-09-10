@@ -364,7 +364,7 @@
     border-radius: 10px;
     padding: 3px;
     margin: 1px 1px;
-    width: 220px;
+    width: 270px;
     height: 25px;
     margin-bottom: 8px;
     display: flex;
@@ -491,6 +491,7 @@
 
 /*강의명으로 조회 돋보기 아이콘 스타일 */
 .searchContainer {
+    width: 340px;
     display: flex;
     align-items: center;
     position: relative;
@@ -498,7 +499,7 @@
 
 .searchIcon {
     position: absolute;
-    right: 60px;
+    right: 80px;
     top: 50%;
     transform: translateY(-50%);
     color: gray;

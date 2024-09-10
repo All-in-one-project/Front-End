@@ -277,8 +277,12 @@ function Inquiry() {
 
   console.log(searchTerm)
   const handleSearch = () => {
-    axios.get('https://43.202.223.188:8080/subjects/search', {
-      params: { subjectName: searchTerm }
+    const accessToken = localStorage.getItem('accessToken');
+    axios.get('http://43.202.223.188:8080/api/subjects/search', {
+      params: { lectureName: searchTerm },  
+      headers: {
+        Authorization: `Bearer ${accessToken}`, // Authorization 헤더에 토큰 포함
+      },
     })
     .then(response => {
       setSearchResults(response.data);

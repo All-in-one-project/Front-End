@@ -41,7 +41,7 @@
     ]
   },
   
-  "proxy": "http://43.202.223.188",
+  "proxy": "http://43.202.223.188:8080",
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   }

@@ -428,7 +428,7 @@ function Reserve() {
 
   //시각장애인 배려용 화면 변경 버튼 
   const handleNavClickdisabled = () => {
-    navigate('/disabled'); // Disabled.jsx로 이동
+    navigate('/disabled2'); // Disabled.jsx로 이동
   };
 
   return (

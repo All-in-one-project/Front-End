@@ -149,3 +149,17 @@ tr:hover {
     top: 26px;
   
 }
+
+
+/* 밑에 공지사항들 */
+.linkButton {
+    background: none;
+    border: none;
+    color:blue;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: inherit;
+    /* 텍스트와 같은 크기로 설정 */
+    padding: 0;
+    /* 기본 패딩 제거 */
+}

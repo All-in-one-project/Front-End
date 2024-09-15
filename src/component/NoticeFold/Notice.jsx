@@ -1,6 +1,6 @@
 /*공지사항*/
 
-import React, { useState,useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Notice.module.css';
 import LeftBar from '../SideBarFold/LeftBar.jsx';
@@ -20,11 +20,32 @@ const Notice = () => {
   const [currentPage, setCurrentPage] = useState(1);
  const [selectedSubNav, setSelectedSubNav] = useState('전체 공지사항'); // 초기 상태 설정
   const navigate = useNavigate();
+   const [notices, setNotices] = useState([]); // 서버에서 받은 공지사항 데이터를 저장할 상태
+  const [loading, setLoading] = useState(true);
   const { user, setUser } = useContext(UserContext);
   const itemsPerPage = 5;
   const totalPages = 5;/*페이지네이션*/
-  const displayData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const displayData = notices.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
+
+
+   // 공지사항을 서버에서 받아오는 함수
+  useEffect(() => {
+    const fetchNotices = async () => {
+      try {
+        const response = await axios.get('https://43.202.223.188:8080/notice'); // 서버로부터 공지사항 데이터 받아오기
+        setNotices(response.data); // 받은 데이터 저장
+        setLoading(false); // 로딩 완료
+      } catch (error) {
+        console.error('공지사항을 불러오는 중 오류가 발생했습니다:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchNotices();
+  }, []);
+
+  
     /* 로그아웃 API */
     /* 일단은 로그아웃 누르면 원래 화면 path:'' 인 곳에 이동함 */
   const handleLogout = async () => {
@@ -73,9 +94,10 @@ const Notice = () => {
     }
   };
 
-  const handlePageClick = (pageNumber) => {
-  setCurrentPage(pageNumber);
+const handleNoticeClick = (id) => {
+  navigate(`/notice/${id}`); // id에 따라 상세 페이지로 이동
 };
+
 
 
   return (
@@ -115,15 +137,23 @@ const Notice = () => {
               <th>날짜</th>
             </tr>
           </thead>
-          <tbody>
-            {displayData.map((item) => (
-              <tr key={item.번호}>
-                <td>{item.번호}</td>
-                <td><a href={item.링크}>{item.제목}</a></td>
-                <td>{item.날짜}</td>
-              </tr>
-            ))}
-          </tbody>
+         <tbody>
+          {displayData.map((item) => (
+            <tr key={item.id}>
+              <td>{item.id}</td>
+              <td>
+                <button
+                  className={styles.linkButton}
+                  onClick={() => handleNoticeClick(item.id)} // 번호 대신 id 사용
+                >
+                  {item.title}
+                </button>
+              </td>
+               <td>{new Date(item.noticeTime).toLocaleDateString()} {/* 'noticeTime'을 날짜 형식으로 변환하여 사용 */}
+              </td>
+            </tr>
+          ))}
+        </tbody>
         </table>
 
               {/* 페이지네이션 */}

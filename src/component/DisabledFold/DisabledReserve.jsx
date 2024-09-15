@@ -549,9 +549,9 @@ const handleMouseOverLectureRow = (lectureName) => {
 
       <div className={styles.mainContent}>
         <div className={styles.navbar}>
-          <button onClick={() => handleNavClick('/disabled/notice2')}>공지사항</button>
-          <button onClick={() => handleNavClick('/disabled/inquiry2')}>과목조회</button>
-          <button className={styles.application}>수강신청</button>
+          <button onClick={() => handleNavClick('/disabled/notice')}>공지사항</button>
+          <button onClick={() => handleNavClick('/disabled/inquiry')}>과목조회</button>
+          <button onClick={() => handleNavClick('/disabled/reserve')} className={styles.application}>수강신청</button>
           <button onClick={() => handleNavClick('/disabled/mypage')}>마이페이지</button>
         </div>
 

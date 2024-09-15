@@ -6,6 +6,7 @@ import Reserve from './component/ReserveFold/Reserve.jsx';
 import Inquiry from './component/InquiryFold/Inquiry.jsx';
 import Schedule from './component/ScheduleFold/Schedule.jsx';
 import Notice from './component/NoticeFold/Notice.jsx';
+import NoticeDetail from './component/NoticeFold/NoticeDetail.jsx';
 import LeftBar from './component/SideBarFold/LeftBar.jsx';
 import FAQ from './component/NoticeFold/FAQ.jsx';
 import Mypage from './component/MypageFold/Mypage.jsx';
@@ -59,6 +60,7 @@ function App() {
           <Route path='/inquiry' element={<Inquiry />} />
           <Route path='/schedule' element={<Schedule />} />
           <Route path='/notice' element={<Notice />} />
+          <Route path="/notice/:id" element={<NoticeDetail />} />
           <Route path='/leftbar' element={<LeftBar />} />
           <Route path='/faq' element={<FAQ />} />
           <Route path='/mypage' element={<Mypage />} />

@@ -97,7 +97,65 @@ function Reserve() {
 
 
 
+  //예비수강신청 장바구니 담기
+  const sendBasketData = async (lecture) => {
+    try {
+      // 토큰을 로컬 스토리지에서 가져오거나 Context에서 가져올 수 있음
+      const accessToken = localStorage.getItem('accessToken');
+  
+      // Axios 요청에 accessToken을 헤더로 추가하여 POST 요청
+      const response = await axios.post(
+        "http://43.202.223.188:8080/basket",
+        {
+          studentId: 1, // 실제 studentId를 동적으로 할당
+          lectureId: lecture.id, // 선택된 강의의 id 전달
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`, // Authorization 헤더에 토큰 포함
+          },
+        }
+      );
+  
+      console.log('장바구니 담기 성공:', response.data); // 서버 응답 처리
+    } catch (error) {
+      console.error('장바구니 담기에 실패했습니다.', error);
+    }
+  };
+  
+  const handleAddToCart = (lecture) => {
+    const isAlreadyInCart = sidebarLectures.some(item => item.id === lecture.id);
+    console.log(lecture.id)
+  
+    if (!isAlreadyInCart) {
+      setSidebarLectures([...sidebarLectures, lecture]);
+      sendBasketData(lecture); // 장바구니 담을 때 서버로도 전송
+    } else {
+      alert('이미 장바구니에 담긴 과목입니다.');
+    }
+  };
+  
 
+  // 예비 수강신청 장바구니 조회
+  const checkBasketData = async ()=>{
+    try {
+      const accessToken = localStorage.getItem('accessToken');
+      
+      const response = await axios.get(
+        `http://43.202.223.188:8080/basket/1`, // studentId를 경로에 포함
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`, // Authorization 헤더에 토큰 포함
+          }
+        }
+      );
+    
+      console.log('장바구니 조회:', response.data.data); // 서버 응답 처리
+    } catch (error) {
+      console.error('장바구니 조회에 실패했습니다.', error);
+    }
+    
+  }
 
 
   const fetchDepartments = (collegeId) => {
@@ -133,15 +191,7 @@ function Reserve() {
   const handleSubjectCodeChange = (e) => setSubjectCode(e.target.value);
   const handleDivisionCodeChange = (e) => setDivisionCode(e.target.value);
 
-  const handleAddToCart = (lecture) => {
-    const isAlreadyInCart = sidebarLectures.some(item => item.id === lecture.id);
 
-    if (!isAlreadyInCart) {
-      setSidebarLectures([...sidebarLectures, lecture]);
-    } else {
-      alert('이미 장바구니에 담긴 과목입니다.');
-    }
-  };
 
   const handleRemoveLectureFromSidebar = (id) => {
     const lecture = sidebarLectures.find((lecture) => lecture.id === id);
@@ -334,8 +384,9 @@ function Reserve() {
 
 
   const toggleSidebar = () => {
+    checkBasketData()
     setIsSidebarOpen(!isSidebarOpen);
-
+    
     // selectedSubNav에 따라 sidebarTitle을 변경합니다.
     if (selectedSubNav === '예비수강신청') {
       setSidebarTitle('예비수강신청');

@@ -124,20 +124,23 @@ function Reserve() {
   };
   
   const handleAddToCart = (lecture) => {
-    const isAlreadyInCart = sidebarLectures.some(item => item.id === lecture.id);
-    console.log(lecture.id)
-  
+    // sidebarLectures가 배열인지 확인하고, 아니면 빈 배열로 처리
+    const lectures = Array.isArray(sidebarLectures) ? sidebarLectures : [];
+    
+    const isAlreadyInCart = lectures.some(item => item.id === lecture.id);
+    
     if (!isAlreadyInCart) {
-      setSidebarLectures([...sidebarLectures, lecture]);
+      setSidebarLectures([...lectures, lecture]);
       sendBasketData(lecture); // 장바구니 담을 때 서버로도 전송
     } else {
       alert('이미 장바구니에 담긴 과목입니다.');
     }
   };
   
+  
 
   // 예비 수강신청 장바구니 조회
-  const checkBasketData = async ()=>{
+  const checkBasketData = async () => {
     try {
       const accessToken = localStorage.getItem('accessToken');
       
@@ -150,12 +153,15 @@ function Reserve() {
         }
       );
     
-      console.log('장바구니 조회:', response.data.data); // 서버 응답 처리
+      console.log('장바구니 조회:', response.data.data);
+  
+      // 항상 서버로부터 최신 데이터를 받아옴
+      setSidebarLectures(response.data.data);
     } catch (error) {
       console.error('장바구니 조회에 실패했습니다.', error);
     }
-    
-  }
+  };
+  
 
 
   const fetchDepartments = (collegeId) => {
@@ -185,6 +191,7 @@ function Reserve() {
   const DeleteBasketData = async (lectureId) => {
     try {
       const accessToken = localStorage.getItem('accessToken');
+      console.log(lectureId)
       
       const response = await axios.delete(
         `http://43.202.223.188:8080/basket/1/${lectureId}`, // student_id와 lecture_id를 경로로 전달
@@ -195,7 +202,12 @@ function Reserve() {
         }
       );
   
-      console.log('장바구니에서 삭제를 성공했습니다');
+      if(response.data.status===200){
+        console.log('장바구니에서 삭제를 성공했습니다',response.data.status);
+      }else{
+        console.log('장바구니에서 삭제를 실패했습니다',response.data);
+      }
+      
     } catch (error) {
       console.error('장바구니에서 삭제에 실패했습니다.', error);
     }
@@ -221,7 +233,7 @@ function Reserve() {
 
     if (selectedSubNav === '예비수강신청') {
       // 장바구니에서 강의 삭제
-      DeleteBasketData(lecture.id);
+      DeleteBasketData(lecture.lectureId);
       // 예비수강신청일 때는 바로 삭제 처리
       setSidebarLectures(sidebarLectures.filter((lecture) => lecture.id !== id));
       removeLectureFromSchedule(lecture);
@@ -251,21 +263,31 @@ function Reserve() {
       '목': 3,
       '금': 4,
     };
-
-    const days = lecture.time.match(/(월|화|수|목|금)/g);
-    const times = lecture.time.match(/\d/g).map(Number);
-
+  
+    console.log(lecture);
+  
+    // 새로운 시간표 배열을 복사
     const newSchedule = [...schedule];
-
-    days.forEach(day => {
-      times.forEach(time => {
-        newSchedule[timeMapping[day]][time - 1] = null;
-      });
+  
+    // lectureTimes 배열을 순회하여 요일과 시간을 추출
+    lecture.lectureTimes.forEach(timeSlot => {
+      const day = timeSlot.dayOfWeek; // 요일 추출
+      const firstTime = parseInt(timeSlot.firstTime.split(':')[0], 10); // 시작 시간의 시(hour) 추출
+      const lastTime = parseInt(timeSlot.lastTime.split(':')[0], 10); // 끝나는 시간의 시(hour) 추출
+  
+      // 요일과 시간에 맞는 시간표 데이터를 업데이트 (예: 09:00부터 12:00까지)
+      for (let time = firstTime; time < lastTime; time++) {
+        newSchedule[timeMapping[day]][time - 9] = null; // 시간표에서 9시가 첫 번째(0번째) 슬롯이라고 가정
+      }
     });
-
+  
+    // 업데이트된 시간표를 상태에 반영
     setSchedule(newSchedule);
+  
+    // 강의를 appliedLectures에서 제거
     setAppliedLectures(appliedLectures.filter((appliedLecture) => appliedLecture.id !== lecture.id));
   };
+  
 
   const handleApplyLecture = (lecture) => {
     const isAlreadyApplied = appliedLectures.some(appliedLecture => appliedLecture.id === lecture.id);
@@ -411,6 +433,7 @@ function Reserve() {
 
   const toggleSidebar = () => {
     checkBasketData()
+    
     setIsSidebarOpen(!isSidebarOpen);
     
     // selectedSubNav에 따라 sidebarTitle을 변경합니다.
@@ -973,21 +996,26 @@ const onClickSearchIcon = async () => {
           ㅡ
         </button>
         <div className={styles.sidebarContent}>
-          <div className={styles.sidebarSection}>
-            <div className={styles.basketTitle}>{sidebarTitle}</div>
-            {sidebarLectures.map((lecture, index) => (
-              <div key={index} className={styles.lectureBox}>
-                <div className={styles.name} style={{fontWeight:"900", fontSize:"16px"}}>{lecture.subjectName}</div>
-                <div className={styles.topRow}>
-                  <div>{lecture.subjectCode} [{lecture.subjectDivision}]</div>
-                </div>
-                <div className={styles.buttons}>
-                  <button className={styles.remove} onClick={() => handleRemoveLectureFromSidebar(lecture.id)}>X</button>
-                </div>
-              </div>
-            ))}
+  <div className={styles.sidebarSection}>
+    <div className={styles.basketTitle}>{sidebarTitle}</div>
+    {sidebarLectures && sidebarLectures.length > 0 ? (
+      sidebarLectures.map((lecture, index) => (
+        <div key={index} className={styles.lectureBox}>
+          <div className={styles.name} style={{fontWeight: "900", fontSize: "16px"}}>{lecture.subjectName}</div>
+          <div className={styles.topRow}>
+            <div>{lecture.subjectCode} [{lecture.subjectDivision}]</div>
           </div>
-        </div>
+          <div className={styles.buttons}>
+            <button className={styles.remove} onClick={() => handleRemoveLectureFromSidebar(lecture.id)}>X</button>
+          </div>
+        </div  >
+      ))
+    ) : (
+      <div className={styles.nonSubject}>강의가 없습니다.</div> // 빈 장바구니일 때 표시할 메시지
+    )}
+  </div>
+</div>
+
       </div>
 
       {isPopupVisible && (

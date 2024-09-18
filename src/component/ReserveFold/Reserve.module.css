@@ -898,3 +898,13 @@
     margin-left: 10px;
     cursor: pointer;
 }
+.nonSubject{
+    border: 3px solid white;
+    border-radius: 10px;
+    width: 140px;
+    margin: 20px 0 0 50px;
+    padding: 10px;
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+}

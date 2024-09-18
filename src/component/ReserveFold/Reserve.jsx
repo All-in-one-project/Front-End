@@ -179,6 +179,29 @@ function Reserve() {
       });
   };
 
+
+
+  // 예비수강신청 장바구니 삭제 함수
+  const DeleteBasketData = async (lectureId) => {
+    try {
+      const accessToken = localStorage.getItem('accessToken');
+      
+      const response = await axios.delete(
+        `http://43.202.223.188:8080/basket/1/${lectureId}`, // student_id와 lecture_id를 경로로 전달
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          }
+        }
+      );
+  
+      console.log('장바구니에서 삭제를 성공했습니다');
+    } catch (error) {
+      console.error('장바구니에서 삭제에 실패했습니다.', error);
+    }
+  };
+  
+
   
   useEffect(() => {
     if (selectedGridContainer && selectedDepartmentContainer && selectedYearContainer.length > 0) {
@@ -197,9 +220,12 @@ function Reserve() {
     const lecture = sidebarLectures.find((lecture) => lecture.id === id);
 
     if (selectedSubNav === '예비수강신청') {
+      // 장바구니에서 강의 삭제
+      DeleteBasketData(lecture.id);
       // 예비수강신청일 때는 바로 삭제 처리
       setSidebarLectures(sidebarLectures.filter((lecture) => lecture.id !== id));
       removeLectureFromSchedule(lecture);
+
     } else {
       // 일반수강신청일 때는 삭제 확인 화면 표시
       setLectureToRemove(lecture);

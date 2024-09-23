@@ -29,7 +29,6 @@ function Reserve() {
   const [popupType, setPopupType] = useState('');
   const [lecturePlan, setLecturePlan] = useState('');
   const [popupMessage, setPopupMessage] = useState('');
-  const [appliedLectures, setAppliedLectures] = useState([]);
   const [schedule, setSchedule] = useState(Array(5).fill(null).map(() => Array(9).fill(null)));
   const [sidebarTitle, setSidebarTitle] = useState('예비수강신청');
   const [isWaiting, setIsWaiting] = useState(false); // 대기 상태를 관리하는 state
@@ -44,8 +43,17 @@ function Reserve() {
   const [subjectName, setSubjectName] =useState('')// 
   const { user } = useContext(UserContext); // 이미 로그인한 사용자 정보가 있다면 가져오기
   const [searchResults, setSearchResults] = useState([]); // 강의명으로 조회 결과 데이터
+  const [appliedLectures, setAppliedLectures] = useState(() => {
+    const savedLectures = JSON.parse(localStorage.getItem('appliedLectures')) || [];
+    return savedLectures;
+  });
 
-
+  useEffect(() => {
+    const savedLectures = JSON.parse(localStorage.getItem('appliedLectures'));
+    if (savedLectures) {
+      setAppliedLectures(savedLectures);
+    }
+  }, []);
   const navigate = useNavigate();
 
   const handleNavClick = (path) => {
@@ -65,37 +73,29 @@ function Reserve() {
   }, []);
 
 
-  // 수강신청 예시
-  useEffect(() => {
-    const sendEnrollmentData = async () => {
-      try {
-        // 토큰을 로컬 스토리지에서 가져오거나 Context에서 가져올 수 있음
-        const accessToken = localStorage.getItem('accessToken');
+  // 수강신청 
 
-        // Axios 요청에 accessToken을 헤더로 추가하여 POST 요청
-        const response = await axios.post(
-          "http://43.202.223.188:8080/enrollment",
-          {
-            studentId: 1,
-            lectureId: 2,
+  const sendEnrollmentData = async (lecture) => {
+    try {
+      const accessToken = localStorage.getItem('accessToken');
+      const response = await axios.post(
+        "http://43.202.223.188:8080/enrollment",
+        {
+          studentId: 1,
+          lectureId: lecture.lectureId, // 동적으로 전달된 강의의 id 사용
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`, // Authorization 헤더에 토큰 포함
-            },
-          }
-        );
-
-        console.log('성공:', response.data); // 서버 응답 처리
-      } catch (error) {
-        console.error('Error fetching data', error);
-      }
-    };
-
-    sendEnrollmentData(); // 비동기 함수 호출
-  }, []); // 빈 배열을 넣어 컴포넌트가 마운트될 때 한 번만 실행
-
-
+        }
+      );
+  
+      console.log('성공:', response.data);
+    } catch (error) {
+      console.error('Error fetching data', error);
+    }
+  };
 
   //예비수강신청 장바구니 담기
   const sendBasketData = async (lecture) => {
@@ -136,8 +136,6 @@ function Reserve() {
       alert('이미 장바구니에 담긴 과목입니다.');
     }
   };
-  
-  
 
   // 예비 수강신청 장바구니 조회
   const checkBasketData = async () => {
@@ -185,8 +183,6 @@ function Reserve() {
       });
   };
 
-
-
   // 예비수강신청 장바구니 삭제 함수
   const DeleteBasketData = async (lectureId) => {
     try {
@@ -212,9 +208,7 @@ function Reserve() {
       console.error('장바구니에서 삭제에 실패했습니다.', error);
     }
   };
-  
 
-  
   useEffect(() => {
     if (selectedGridContainer && selectedDepartmentContainer && selectedYearContainer.length > 0) {
       console.log('Selected Grid:', selectedGridContainer);
@@ -225,8 +219,6 @@ function Reserve() {
 
   const handleSubjectCodeChange = (e) => setSubjectCode(e.target.value);
   const handleDivisionCodeChange = (e) => setDivisionCode(e.target.value);
-
-
 
   const handleRemoveLectureFromSidebar = (id) => {
     const lecture = sidebarLectures.find((lecture) => lecture.id === id);
@@ -287,30 +279,33 @@ function Reserve() {
     // 강의를 appliedLectures에서 제거
     setAppliedLectures(appliedLectures.filter((appliedLecture) => appliedLecture.id !== lecture.id));
   };
-  
 
-  const handleApplyLecture = (lecture) => {
-    const isAlreadyApplied = appliedLectures.some(appliedLecture => appliedLecture.id === lecture.id);
+// 신청 버튼을 눌렀을 때 상태 업데이트
+const handleApplyLecture = async (lecture) => {
+  const isAlreadyApplied = appliedLectures.some(appliedLecture => appliedLecture.id === lecture.id);
 
-    if (isAlreadyApplied) {
-      alert('이미 신청된 과목입니다.');
-      return;
-    }
+  if (isAlreadyApplied) {
+    alert('이미 신청된 과목입니다.');
+    return;
+  }
 
-    if (appliedLectures.length < 7) {
-      // 신청 후 대기 화면으로 전환
-      setIsWaiting(true);
-      setTimeout(() => {
-        setIsWaiting(false); // 대기 화면에서 돌아온 후
+  try {
+    // 신청 API 호출
+    await sendEnrollmentData(lecture);
 
-        // 신청 처리
-        setAppliedLectures([...appliedLectures, lecture]);
-        updateSchedule(lecture);
-      }, 5000); // 5초 후에 다시 돌아옴
-    } else {
-      alert('최대 21학점까지만 신청할 수 있습니다.');
-    }
-  };
+    // 신청 완료 후 상태 업데이트
+    const updatedLectures = [...appliedLectures, lecture];
+    setAppliedLectures(updatedLectures);
+
+    // 로컬 스토리지에 상태 저장 (리렌더링 시에도 유지되도록)
+    localStorage.setItem('appliedLectures', JSON.stringify(updatedLectures));
+
+    // 성공 메시지 출력
+    console.log('신청 성공:', lecture);
+  } catch (error) {
+    console.error('신청 실패:', error);
+  }
+};
 
   const updateSchedule = (lecture) => {
     const timeMapping = {
@@ -425,14 +420,11 @@ function Reserve() {
       alert('학년은 4개까지 선택할 수 있습니다.');
     }
   };
-  
-  
 
   const filteredLecturesYear = lectures.filter(lecture => lecture.grade === selectedYear);
 
-
   const toggleSidebar = () => {
-    checkBasketData()
+    checkBasketData();
     
     setIsSidebarOpen(!isSidebarOpen);
     
@@ -543,7 +535,6 @@ function Reserve() {
       fetchLectures(collegeId, departmentId, gradeId);
     }
   }, [selectedGridContainer, selectedDepartmentContainer, selectedYearContainer]);
-  
 
   const departmentMapping = {
     'ICT융합과학대학': ['컴퓨터공학부', '데이터과학부', '정보통신학부'],
@@ -650,7 +641,6 @@ function Reserve() {
       />
     );
   }
-
 
   //시각장애인 배려용 화면 변경 버튼 
   const handleNavClickdisabled = () => {
@@ -827,36 +817,114 @@ const onClickSearchIcon = async () => {
                   </thead>
 
                   <tbody>
-                    {sidebarLectures.map((lecture, index) => (
-                      <tr key={index} style={{ backgroundColor: 'white' }}>
-                        <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{index + 1}</td>
-                        <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'left', verticalAlign: 'middle', fontWeight: 'bold', height: '30px' }}>{lecture.name}</td>
-                        <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{lecture.category.replace(/[\[\]]/g, '')}</td>
-                        <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{lecture.professor}</td>
-                        <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{lecture.time}</td>
-                        <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>
-                          <button
-                            onClick={() => handleApplyLecture(lecture)}
-                            style={{
-                              backgroundColor: appliedLectures.includes(lecture) ? '#637ABF' : 'rgb(212, 216, 243)',
-                              color: appliedLectures.includes(lecture) ? 'white' : 'black',
-                              border: 'none',
-                              fontWeight: '700',
-                              padding: '2px 5px',
-                              borderRadius: '8px',
-                              cursor: 'pointer',
-                              width: '60px',
-                              textAlign: 'center',
-                              height: '26px'
-                            }}
-                          >
-                            {appliedLectures.includes(lecture) ? '완료' : '신청'}
-                          </button>
-                        </td>
-                        <td style={{ border: '1px solid #ddd', padding: '4px', textAlign: 'center', verticalAlign: 'middle', height: '30px' }}>{lecture.id}</td>
-                      </tr>
-                    ))}
-                  </tbody>
+  {sidebarLectures.map((lecture, index) => (
+    <tr key={index} style={{ backgroundColor: 'white' }}>
+      <td
+        style={{
+          border: '1px solid #ddd',
+          padding: '4px',
+          textAlign: 'center',
+          verticalAlign: 'middle',
+          height: '30px',
+        }}
+      >
+        {index + 1}
+      </td>
+      <td
+        style={{
+          border: '1px solid #ddd',
+          padding: '4px',
+          textAlign: 'left',
+          verticalAlign: 'middle',
+          fontWeight: 'bold',
+          height: '30px',
+        }}
+      >
+        {lecture.subjectName}
+      </td>
+      <td
+        style={{
+          border: '1px solid #ddd',
+          padding: '4px',
+          textAlign: 'center',
+          verticalAlign: 'middle',
+          height: '30px',
+        }}
+      >
+        {lecture.subjectDivision ? lecture.subjectDivision.replace(/[\[\]]/g, '') : 'N/A'}
+      </td>
+      <td
+        style={{
+          border: '1px solid #ddd',
+          padding: '4px',
+          textAlign: 'center',
+          verticalAlign: 'middle',
+          height: '30px',
+        }}
+      >
+        {lecture.professorName}
+      </td>
+      <td
+        style={{
+          border: '1px solid #ddd',
+          padding: '4px',
+          textAlign: 'center',
+          verticalAlign: 'middle',
+          height: '30px',
+        }}
+      >
+        {lecture.lectureTimes && lecture.lectureTimes.length > 0
+          ? lecture.lectureTimes.map((time, idx) => (
+              <span key={idx}>
+                {time.dayOfWeek} {time.firstTime.slice(0, 5)} ㅡ {time.lastTime.slice(0, 5)}
+                <br />
+              </span>
+            ))
+          : '시간 정보 없음'}
+      </td>
+
+      <td
+        style={{
+          border: '1px solid #ddd',
+          padding: '4px',
+          textAlign: 'center',
+          verticalAlign: 'middle',
+          height: '30px',
+        }}
+      >
+        <button
+          onClick={() => handleApplyLecture(lecture)}
+          style={{
+            backgroundColor: appliedLectures.includes(lecture) ? '#637ABF' : 'rgb(212, 216, 243)',
+            color: appliedLectures.includes(lecture) ? 'white' : 'black',
+            border: 'none',
+            fontWeight: '700',
+            padding: '2px 5px',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            width: '60px',
+            textAlign: 'center',
+            height: '26px',
+          }}
+        >
+          {appliedLectures.includes(lecture) ? '완료' : '신청'}
+        </button>
+      </td>
+      <td
+        style={{
+          border: '1px solid #ddd',
+          padding: '4px',
+          textAlign: 'center',
+          verticalAlign: 'middle',
+          height: '30px',
+        }}
+      >
+        {lecture.lectureNumber}
+      </td>
+    </tr>
+  ))}
+</tbody>
+
                 </table>
               </div>
 
@@ -866,7 +934,7 @@ const onClickSearchIcon = async () => {
                   <div className={styles.section}>
                     <div className={styles.sectionTitle}>과목 검색 및 신청</div>
                     <div className={styles.searchContainer}>
-                      <input type="text" placeholder="과목명 검색" style={{ width: '210px', marginRight: '50px', height: '30px', paddingLeft: '14px' }} />
+                      <input type="text" placeholder="과목명 검색" style={{ width: '260px', marginRight: '50px', height: '30px', paddingLeft: '14px' }} />
                       <FaSearch className={styles.searchIcon} />
                     </div>
                   </div>
@@ -874,7 +942,7 @@ const onClickSearchIcon = async () => {
                     {lectureList.map((lecture) => (
                       <LectureItem key={lecture.id} lecture={lecture} />
                     ))}
-                    <button type="button" className={styles.more} onClick={() => togglePopup('moreLectures')} style={{ width: '226px' }}>더보기</button>
+                    <button type="button" className={styles.more} onClick={() => togglePopup('moreLectures')} style={{ width: '276px' }}>더보기</button>
                   </div>
                 </div>
 
@@ -934,7 +1002,7 @@ const onClickSearchIcon = async () => {
               <button type="button" className={styles.more} onClick={() => togglePopup('moreLectures')} style={{width:"278px"}}>더보기</button>
             </div>
 
-            <div className={styles.sectionSubject}>
+            {/* <div className={styles.sectionSubject}>
               <div className={styles.sectionTitle}>과목 코드 직접 입력</div>
               <input
                 type="text"
@@ -947,7 +1015,7 @@ const onClickSearchIcon = async () => {
               <button type="button" className={styles.cartBtn} onClick={handleSubjectCodeInput}>
                 장바구니 담기
               </button>
-            </div>
+            </div> */}
           </>
         )}
 

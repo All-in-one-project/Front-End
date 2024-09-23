@@ -487,6 +487,7 @@
     position: absolute;
     top: 32px;
     left: 20px;
+    cursor: pointer;
 }
 
 /*강의명으로 조회 돋보기 아이콘 스타일 */

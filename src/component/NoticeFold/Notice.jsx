@@ -1,5 +1,3 @@
-/*공지사항*/
-
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Notice.module.css';
@@ -8,49 +6,52 @@ import Schedule from '../ScheduleFold/Schedule.jsx';
 import { UserContext } from '../UserContext';
 import axios from 'axios';
 
-const data = [
-  { 번호: 1, 제목: '한국대학교 수강신청 웹 사이트 이용 수칙', 날짜: '2024.08.29', 링크: '#' },
-  { 번호: 2, 제목: '과목 조회 주의사항', 날짜: '2024.08.20', 링크: '#' },
-  { 번호: 3, 제목: '예비 / 일반 수강 신청 공지사항', 날짜: '2024.08.11', 링크: '#' },
-  { 번호: 4, 제목: '학년별 수강 신청 기간 및 정정 기간 공지사항', 날짜: '2024.08.11', 링크: '#' },
-  { 번호: 5, 제목: '2024년도 1학기 개설 과목 강의계획서 업데이트 안내', 날짜: '2024.08.08', 링크: '#' },
-];
-
 const Notice = () => {
   const [currentPage, setCurrentPage] = useState(1);
- const [selectedSubNav, setSelectedSubNav] = useState('전체 공지사항'); // 초기 상태 설정
+  const [selectedSubNav, setSelectedSubNav] = useState('전체 공지사항'); // 초기 상태 설정
+  const [notices, setNotices] = useState([]); // 서버에서 받은 공지사항 데이터를 저장할 상태
+  const [loading, setLoading] = useState(true); // 로딩 상태
   const navigate = useNavigate();
-   const [notices, setNotices] = useState([]); // 서버에서 받은 공지사항 데이터를 저장할 상태
-  const [loading, setLoading] = useState(true);
   const { user, setUser } = useContext(UserContext);
-  const itemsPerPage = 5;
-  const totalPages = 5;/*페이지네이션*/
-  const displayData = notices.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
+  const itemsPerPage = 5; // 한 페이지에 표시할 공지사항 수
 
-
-   // 공지사항을 서버에서 받아오는 함수
+  // 공지사항을 서버에서 받아오는 함수
   useEffect(() => {
+   // 예시: localStorage에서 토큰을 가져와서 Authorization 헤더에 포함
+    const token = localStorage.getItem('accessToken'); // 토큰을 저장한 위치에 따라 변경
+
     const fetchNotices = async () => {
       try {
-        const response = await axios.get('https://43.202.223.188:8080/notice'); // 서버로부터 공지사항 데이터 받아오기
-        setNotices(response.data); // 받은 데이터 저장
-        setLoading(false); // 로딩 완료
+        const response = await axios.get('http://43.202.223.188:8080/notice', {
+          headers: {
+            Authorization: `Bearer ${token}`, // 토큰 추가
+          },
+        });
+
+        if (response.status === 200) {
+          setNotices(response.data); // 받은 데이터 저장
+          setLoading(false); // 로딩 완료
+        } else {
+          console.error('Failed to fetch notices');
+          setLoading(false);
+        }
       } catch (error) {
         console.error('공지사항을 불러오는 중 오류가 발생했습니다:', error);
         setLoading(false);
       }
     };
+     fetchNotices();
 
-    fetchNotices();
   }, []);
 
-  
-    /* 로그아웃 API */
-    /* 일단은 로그아웃 누르면 원래 화면 path:'' 인 곳에 이동함 */
+  const totalPages = Math.ceil(notices.length / itemsPerPage); // 총 페이지 수 계산
+  const displayData = notices.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage); // 현재 페이지에 해당하는 데이터
+
+  /* 로그아웃 API */
   const handleLogout = async () => {
     const token = localStorage.getItem('accessToken'); // 'accessToken'으로 수정
-    
+
     if (!token) {
       console.error('토큰이 존재하지 않습니다.');
       navigate('/initial'); // 토큰이 없으면 바로 초기 화면으로 이동
@@ -58,21 +59,14 @@ const Notice = () => {
     }
 
     try {
-      // 로그아웃 요청을 서버에 보냄
       const response = await axios.post('https://43.202.223.188:8080/api/logout', { token });
-      
       if (response.status === 200) {
         console.log(response.data.message); // "Logout successful"
-
-        // 로컬 스토리지에서 사용자 정보와 토큰 제거
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('userInfo');
-
-        // UserContext의 user 상태 초기화
         setUser(null);
-
-        navigate('/initial'); // 로그아웃 후 초기 화면으로 이동
+        navigate('/initial');
       } else {
         console.error('로그아웃 중 오류가 발생했습니다.');
       }
@@ -94,11 +88,13 @@ const Notice = () => {
     }
   };
 
-const handleNoticeClick = (id) => {
-  navigate(`/notice/${id}`); // id에 따라 상세 페이지로 이동
-};
+  const handleNoticeClick = (id) => {
+    navigate(`/notice/${id}`); // id에 따라 상세 페이지로 이동
+  };
 
-
+  if (loading) {
+    return <div>로딩 중...</div>; // 로딩 중일 때 표시
+  }
 
   return (
     <div className={styles.body}>
@@ -137,41 +133,40 @@ const handleNoticeClick = (id) => {
               <th>날짜</th>
             </tr>
           </thead>
-         <tbody>
-          {displayData.map((item) => (
-            <tr key={item.id}>
-              <td>{item.id}</td>
-              <td>
-                <button
-                  className={styles.linkButton}
-                  onClick={() => handleNoticeClick(item.id)} // 번호 대신 id 사용
-                >
-                  {item.title}
-                </button>
-              </td>
-               <td>{new Date(item.noticeTime).toLocaleDateString()} {/* 'noticeTime'을 날짜 형식으로 변환하여 사용 */}
-              </td>
-            </tr>
-          ))}
-        </tbody>
+          <tbody>
+            {displayData.map((item) => (
+              <tr key={item.id}>
+                <td>{item.id}</td>
+                <td>
+                  <button
+                    className={styles.linkButton}
+                    onClick={() => handleNoticeClick(item.id)}
+                  >
+                    {item.title}
+                  </button>
+                </td>
+                <td>{new Date(item.noticeTime).toLocaleDateString()}</td>
+              </tr>
+            ))}
+          </tbody>
         </table>
 
-              {/* 페이지네이션 */}
-      <div className={styles.pagination}>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <React.Fragment key={index + 1}>
-            <button
-              onClick={() => setCurrentPage(index + 1)}
-              className={currentPage === index + 1 ? styles.active : ''}
-            >
-              {index + 1}
-            </button>
-            {index + 1 < totalPages && (
-              <span className={styles.separator}>|</span>
-            )}
-          </React.Fragment>
-        ))}
-      </div>
+        {/* 페이지네이션 */}
+        <div className={styles.pagination}>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <React.Fragment key={index + 1}>
+              <button
+                onClick={() => setCurrentPage(index + 1)}
+                className={currentPage === index + 1 ? styles.active : ''}
+              >
+                {index + 1}
+              </button>
+              {index + 1 < totalPages && (
+                <span className={styles.separator}>|</span>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
 
         <Schedule />
       </div>

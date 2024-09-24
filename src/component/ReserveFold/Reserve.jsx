@@ -1115,7 +1115,7 @@ const onClickSearchIcon = async () => {
       </td>
     </tr>
   )}
-</tbody>;
+</tbody>
 
 
                 </table>

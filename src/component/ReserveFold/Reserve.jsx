@@ -426,6 +426,11 @@ const handleApplyLecture = async (lecture) => {
 
     const appliedLecturesFromServer = response.data.data || [];
 
+    if (!Array.isArray(appliedLecturesFromServer)) {
+      console.error('Invalid data format for appliedLectures:', appliedLecturesFromServer);
+      return;
+    }
+
     if (appliedLecturesFromServer.some(appliedLecture => appliedLecture.lectureId === lecture.lectureId)) {
       alert('이미 신청된 과목입니다.');
       return;
@@ -434,7 +439,7 @@ const handleApplyLecture = async (lecture) => {
     await sendEnrollmentData(lecture); // 수강 신청
 
     // 신청이 완료된 후 수강 신청 내역을 갱신
-    const updatedLectures = [...appliedLectures, lecture];
+    const updatedLectures = Array.isArray(appliedLectures) ? [...appliedLectures, lecture] : [lecture];
     setAppliedLectures(updatedLectures);
 
     // 사이드바 상태를 갱신하여 신청 내역이 바로 반영되도록 업데이트
@@ -446,6 +451,7 @@ const handleApplyLecture = async (lecture) => {
     console.error('신청 실패:', error);
   }
 };
+
 
 
 

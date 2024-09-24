@@ -29,7 +29,6 @@ function Reserve() {
   const [popupType, setPopupType] = useState('');
   const [lecturePlan, setLecturePlan] = useState('');
   const [popupMessage, setPopupMessage] = useState('');
-  const [schedule, setSchedule] = useState(Array(5).fill(null).map(() => Array(9).fill(null)));
   const [sidebarTitle, setSidebarTitle] = useState('예비수강신청');
   const [isWaiting, setIsWaiting] = useState(false); // 대기 상태를 관리하는 state
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // 삭제 확인 화면 제어
@@ -44,11 +43,51 @@ function Reserve() {
   const { user } = useContext(UserContext); // 이미 로그인한 사용자 정보가 있다면 가져오기
   const [searchResults, setSearchResults] = useState([]); // 강의명으로 조회 결과 데이터
   const [basketLectures, setBasketLectures] = useState([]); // 장바구니 데이터 저장 상태
+  const [scheduleData, setScheduleData] = useState([]); // 서버에서 받은 시간표 데이터
+  const [schedule, setSchedule] = useState(Array(5).fill(null).map(() => Array(9).fill(null))); // 기존 시간표 상태
 
   const [appliedLectures, setAppliedLectures] = useState(() => {
     const savedLectures = JSON.parse(localStorage.getItem('appliedLectures')) || [];
     return savedLectures;
   });
+  useEffect(() => {
+    // 시간표 API 호출
+    const fetchScheduleData = async () => {
+      try {
+        const accessToken = localStorage.getItem('accessToken'); // 토큰을 로컬스토리지에서 가져옴
+        const response = await axios.get('http://43.202.223.188:8080/enrollment/schedule', {
+          params: {
+            studentId: 1,
+          },
+          headers: {
+            Authorization: `Bearer ${accessToken}`, // Authorization 헤더 추가
+          },
+        });
+
+        if (response.data.status === 201) {
+          setScheduleData(response.data.data); // 서버에서 받은 시간표 데이터 설정
+        } else {
+          console.error('Error fetching schedule:', response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching schedule data:', error);
+      }
+    };
+
+    fetchScheduleData();
+  }, []);
+
+  const timeSlots = [
+    '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'
+  ];
+
+  const isTimeInRange = (time, firstTime, lastTime) => {
+    const targetTime = new Date(`1970-01-01T${time}:00`).getTime(); // 비교할 시간
+    const startTime = new Date(`1970-01-01T${firstTime}`).getTime();
+    const endTime = new Date(`1970-01-01T${lastTime}`).getTime();
+
+    return targetTime >= startTime && targetTime < endTime; // 해당 시간이 강의 시간 범위 내에 있는지
+  };
 
   useEffect(() => {
     const savedLectures = JSON.parse(localStorage.getItem('appliedLectures'));
@@ -1118,34 +1157,46 @@ const onClickSearchIcon = async () => {
         {selectedSubNav === '일반수강신청' && (
           <>
             <div className={styles.scheduleContainer}>
-              <h3 className={styles.scheduleTitle}>나의 시간표</h3>
-              <table className={styles.scheduleTable}>
-                <thead>
-                  <tr>
-                    <th style={{ backgroundColor: 'white' }}>월</th>
-                    <th style={{ backgroundColor: 'white' }}>화</th>
-                    <th style={{ backgroundColor: 'white' }}>수</th>
-                    <th style={{ backgroundColor: 'white' }}>목</th>
-                    <th style={{ backgroundColor: 'white' }}>금</th>
-                    <th style={{ backgroundColor: 'white' }}>토</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[...Array(9)].map((_, timeSlot) => (
-                    <tr key={timeSlot} style={{ backgroundColor: 'white' }}>
-                      {schedule.map((day, dayIndex) => (
-                        <td key={dayIndex} style={{ backgroundColor: day[timeSlot] ? '#637ABF' : 'transparent', height: '50px', width: '50px' }}></td>
-                      ))}
-                      <td style={{ backgroundColor: 'transparent', height: '50px', width: '50px' }}></td> {/* 토요일 시간 슬롯 추가 */}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+      <h3 className={styles.scheduleTitle}>나의 시간표</h3>
+      <table className={styles.scheduleTable}>
+        <thead>
+          <tr>
+            <th style={{ backgroundColor: 'white' }}>시간</th>
+            <th style={{ backgroundColor: 'white' }}>월</th>
+            <th style={{ backgroundColor: 'white' }}>화</th>
+            <th style={{ backgroundColor: 'white' }}>수</th>
+            <th style={{ backgroundColor: 'white' }}>목</th>
+            <th style={{ backgroundColor: 'white' }}>금</th>
+          </tr>
+        </thead>
+        <tbody>
+          {timeSlots.map((time, timeSlotIndex) => (
+            <tr key={timeSlotIndex} style={{ backgroundColor: 'white' }}>
+              <td>{time}</td> {/* 시간 표시 */}
+              {['월', '화', '수', '목', '금'].map((day, dayIndex) => (
+                <td
+                  key={dayIndex}
+                  style={{
+                    backgroundColor: scheduleData.some(
+                      (lecture) => lecture.dayOfWeek === day &&
+                        isTimeInRange(time, lecture.firstTime, lecture.lastTime)
+                    )
+                      ? '#637ABF' // 시간 범위에 있을 때 배경색 변경
+                      : 'transparent',
+                    height: '50px',
+                    width: '100px'
+                  }}
+                />
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-              <div className={styles.creditsInfoSchedule}>
-                현재 수강 학점 (/최대 수강 가능 학점):<br /><br />  {appliedLectures.length * 3} / 21
-              </div>
-            </div>
+      <div className={styles.creditsInfoSchedule}>
+        현재 수강 학점 (/최대 수강 가능 학점):<br /><br />  {scheduleData.length * 3} / 21
+      </div>
+    </div>
           </>
         )}
       </div>

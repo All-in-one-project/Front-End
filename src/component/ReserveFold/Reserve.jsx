@@ -433,12 +433,12 @@ const handleApplyLecture = async (lecture) => {
 
     await sendEnrollmentData(lecture); // 수강 신청
 
+    // 신청이 완료된 후 수강 신청 내역을 갱신
     const updatedLectures = [...appliedLectures, lecture];
     setAppliedLectures(updatedLectures);
 
-    // 사이드바 상태는 유지한 채 상태 업데이트만 처리
-    const lectures = Array.isArray(sidebarLectures) ? sidebarLectures : [];
-    setSidebarLectures([...lectures, lecture]);
+    // 사이드바 상태를 갱신하여 신청 내역이 바로 반영되도록 업데이트
+    await checkEnrollmentData();  // 수강신청 데이터 불러오기
 
     localStorage.setItem('appliedLectures', JSON.stringify(updatedLectures));
     console.log('신청 성공:', lecture);
@@ -446,9 +446,6 @@ const handleApplyLecture = async (lecture) => {
     console.error('신청 실패:', error);
   }
 };
-
-
-
 
 
 
@@ -600,12 +597,20 @@ const checkEnrollmentData = async () => {
     
     console.log('수강신청 내역 조회:', response.data.data);
     
-    // 수강신청 내역을 sidebarLectures에 저장
+    // 수강신청 내역을 appliedLectures에 저장하여 상태를 동기화
+    setAppliedLectures(response.data.data);
+    
+    // 수강신청 내역을 sidebarLectures에도 저장
     setSidebarLectures(response.data.data);
   } catch (error) {
     console.error('수강신청 내역 조회에 실패했습니다.', error);
   }
 };
+
+useEffect(() => {
+  // 페이지 로드 시 수강신청 내역을 불러옴
+  checkEnrollmentData();
+}, []);
 
 
   const togglePopup = (type) => {
@@ -1057,32 +1062,39 @@ const onClickSearchIcon = async () => {
         </td>
 
         <td
-          style={{
-            border: '1px solid #ddd',
-            padding: '4px',
-            textAlign: 'center',
-            verticalAlign: 'middle',
-            height: '30px',
-          }}
-        >
-          <button
-            onClick={() => handleApplyLecture(lecture)}
-            style={{
-              backgroundColor: appliedLectures.includes(lecture) ? '#637ABF' : 'rgb(212, 216, 243)',
-              color: appliedLectures.includes(lecture) ? 'white' : 'black',
-              border: 'none',
-              fontWeight: '700',
-              padding: '2px 5px',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              width: '60px',
-              textAlign: 'center',
-              height: '26px',
-            }}
-          >
-            {appliedLectures.includes(lecture) ? '완료' : '신청'}
-          </button>
-        </td>
+  style={{
+    border: '1px solid #ddd',
+    padding: '4px',
+    textAlign: 'center',
+    verticalAlign: 'middle',
+    height: '30px',
+  }}
+>
+  <button
+    onClick={() => handleApplyLecture(lecture)}
+    style={{
+      backgroundColor: Array.isArray(appliedLectures) && appliedLectures.some(appliedLecture => appliedLecture.lectureId === lecture.lectureId) 
+        ? '#637ABF' 
+        : 'rgb(212, 216, 243)',
+      color: Array.isArray(appliedLectures) && appliedLectures.some(appliedLecture => appliedLecture.lectureId === lecture.lectureId) 
+        ? 'white' 
+        : 'black',
+      border: 'none',
+      fontWeight: '700',
+      padding: '2px 5px',
+      borderRadius: '8px',
+      cursor: 'pointer',
+      width: '60px',
+      textAlign: 'center',
+      height: '26px',
+    }}
+  >
+    {Array.isArray(appliedLectures) && appliedLectures.some(appliedLecture => appliedLecture.lectureId === lecture.lectureId) 
+      ? '완료' 
+      : '신청'}
+  </button>
+</td>
+
         <td
           style={{
             border: '1px solid #ddd',

@@ -1001,21 +1001,6 @@ const onClickSearchIcon = async () => {
           )}
               <button type="button" className={styles.more} onClick={() => togglePopup('moreLectures')} style={{width:"278px"}}>더보기</button>
             </div>
-
-            {/* <div className={styles.sectionSubject}>
-              <div className={styles.sectionTitle}>과목 코드 직접 입력</div>
-              <input
-                type="text"
-                placeholder="과목 코드 입력"
-                className={styles.subjectCode}
-                value={subjectCode}
-                onChange={handleSubjectCodeChange}
-              />
-
-              <button type="button" className={styles.cartBtn} onClick={handleSubjectCodeInput}>
-                장바구니 담기
-              </button>
-            </div> */}
           </>
         )}
 

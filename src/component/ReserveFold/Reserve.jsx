@@ -405,16 +405,38 @@ const fetchScheduleData = async () => {
   
 
 // 신청 버튼을 눌렀을 때 상태 업데이트
+// 신청 버튼을 눌렀을 때 상태 업데이트
+// 신청 버튼을 눌렀을 때 상태 업데이트
 const handleApplyLecture = async (lecture) => {
-  const isAlreadyApplied = appliedLectures.some(appliedLecture => appliedLecture.id === lecture.id);
-
-  console.log(isAlreadyApplied)
-  if (isAlreadyApplied) {
-    alert('이미 신청된 과목입니다.');
-    return;
-  }
-
   try {
+    const accessToken = localStorage.getItem('accessToken');
+    const response = await axios.get(
+      `http://43.202.223.188:8080/enrollment/1`, // 수강신청 내역 조회 API 호출 (studentId 경로에 포함)
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // Authorization 헤더에 토큰 추가
+        },
+      }
+    );
+
+    // 서버로부터 받은 데이터가 유효한지 확인
+    const appliedLecturesFromServer = response.data.data || [];
+
+    // 서버에서 받은 데이터를 배열로 확인 후 처리
+    if (!Array.isArray(appliedLecturesFromServer)) {
+      console.error('Invalid data received for applied lectures:', appliedLecturesFromServer);
+      alert('수강 신청 내역을 가져오는 데 실패했습니다.');
+      return;
+    }
+
+    const isAlreadyApplied = appliedLecturesFromServer.some(appliedLecture => appliedLecture.lectureId === lecture.lectureId);
+
+    console.log(isAlreadyApplied);
+    if (isAlreadyApplied) {
+      alert('이미 신청된 과목입니다.');
+      return;
+    }
+
     // 신청 API 호출
     await sendEnrollmentData(lecture);
 
@@ -431,6 +453,8 @@ const handleApplyLecture = async (lecture) => {
     console.error('신청 실패:', error);
   }
 };
+
+
 
   const updateSchedule = (lecture) => {
     const timeMapping = {

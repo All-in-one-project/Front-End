@@ -939,21 +939,41 @@ const onClickSearchIcon = async () => {
 
               <hr style={{ marginTop: '30px' }} />
               <div className={styles.searchAndInputContainer}> {/* 새로운 가로 배치 div */}
-                <div className={styles.sectionContainer} style={{ borderRight: '1px solid grey', paddingRight: '30px' }}>
-                  <div className={styles.section}>
-                    <div className={styles.sectionTitle}>과목 검색 및 신청</div>
-                    <div className={styles.searchContainer}>
-                      <input type="text" placeholder="과목명 검색" style={{ width: '260px', marginRight: '50px', height: '30px', paddingLeft: '14px' }} />
-                      <FaSearch className={styles.searchIcon} />
-                    </div>
-                  </div>
-                  <div className={styles.lectureList}>
-                    {lectureList.map((lecture) => (
-                      <LectureItem key={lecture.id} lecture={lecture} />
-                    ))}
-                    <button type="button" className={styles.more} onClick={() => togglePopup('moreLectures')} style={{ width: '276px' }}>더보기</button>
-                  </div>
-                </div>
+              <div className={styles.sectionContainer} style={{ borderRight: '1px solid grey', paddingRight: '30px' }}>
+  <div className={styles.section}>
+    <div className={styles.sectionTitle}>과목 검색 및 신청</div>
+    <div className={styles.searchContainer}>
+      <input 
+        type="text" 
+        placeholder="과목명 검색" 
+        style={{ width: '260px', marginRight: '50px', height: '30px', paddingLeft: '14px' }}
+        value={inputSubjectName} // 입력 값을 상태로 관리
+        onChange={handleFindSubjectName} // 입력 값 변경 시 상태 업데이트
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') {
+            onClickSearchIcon(); // 엔터 키 입력 시 검색 실행
+          }
+        }}
+      />
+      <FaSearch className={styles.searchIcon} onClick={onClickSearchIcon} /> {/* 클릭 시 검색 실행 */}
+    </div>
+  </div>
+  <div className={styles.lectureList}>
+    {searchResults.length > 0 ? (
+      searchResults.map((lecture) => (
+        <LectureItem key={lecture.id} lecture={lecture} /> // 검색 결과 렌더링
+      ))
+    ) : (
+      lectureList.map((lecture) => (
+        <LectureItem key={lecture.id} lecture={lecture} /> // 기본 목록 렌더링
+      ))
+    )}
+    <button type="button" className={styles.more} onClick={() => togglePopup('moreLectures')} style={{ width: '276px' }}>
+      더보기
+    </button>
+  </div>
+</div>
+
 
                 <div className={styles.sectionContainer}>
                   <div className={styles.sectionSubject}>

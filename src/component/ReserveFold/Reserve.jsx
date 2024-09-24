@@ -43,6 +43,8 @@ function Reserve() {
   const [subjectName, setSubjectName] =useState('')// 
   const { user } = useContext(UserContext); // 이미 로그인한 사용자 정보가 있다면 가져오기
   const [searchResults, setSearchResults] = useState([]); // 강의명으로 조회 결과 데이터
+  const [basketLectures, setBasketLectures] = useState([]); // 장바구니 데이터 저장 상태
+
   const [appliedLectures, setAppliedLectures] = useState(() => {
     const savedLectures = JSON.parse(localStorage.getItem('appliedLectures')) || [];
     return savedLectures;
@@ -141,24 +143,32 @@ function Reserve() {
   const checkBasketData = async () => {
     try {
       const accessToken = localStorage.getItem('accessToken');
-      
+  
       const response = await axios.get(
         `http://43.202.223.188:8080/basket/1`, // studentId를 경로에 포함
         {
           headers: {
             Authorization: `Bearer ${accessToken}`, // Authorization 헤더에 토큰 포함
-          }
+          },
         }
       );
-    
+  
       console.log('장바구니 조회:', response.data.data);
   
       // 항상 서버로부터 최신 데이터를 받아옴
-      setSidebarLectures(response.data.data);
+      setSidebarLectures(response.data.data)
+      setBasketLectures(response.data.data); // 데이터 저장
     } catch (error) {
       console.error('장바구니 조회에 실패했습니다.', error);
     }
   };
+  
+  // 상태 추가
+  
+  // 장바구니 조회를 한 번 호출
+  useEffect(() => {
+    checkBasketData();
+  }, []);
   
 
 
@@ -295,6 +305,12 @@ function Reserve() {
       '금': 4,
     };
   
+    // lectureTimes가 존재하는지 확인
+    if (!lecture.lectureTimes || lecture.lectureTimes.length === 0) {
+      console.error("Lecture times are missing or invalid.");
+      return; // lectureTimes가 없는 경우 함수 종료
+    }
+  
     console.log(lecture);
   
     // 새로운 시간표 배열을 복사
@@ -318,6 +334,7 @@ function Reserve() {
     // 강의를 appliedLectures에서 제거
     setAppliedLectures(appliedLectures.filter((appliedLecture) => appliedLecture.id !== lecture.id));
   };
+  
 
 // 신청 버튼을 눌렀을 때 상태 업데이트
 const handleApplyLecture = async (lecture) => {
@@ -464,19 +481,18 @@ const handleApplyLecture = async (lecture) => {
 
   const toggleSidebar = async () => {
     setIsSidebarOpen(!isSidebarOpen);
-    
-    // 예비수강신청일 때 장바구니 데이터를 불러옵니다.
+  
     if (selectedSubNav === '예비수강신청') {
+      // 예비수강신청일 때 장바구니 데이터를 불러오기
       setSidebarTitle('예비수강신청');
-      await checkBasketData(); // 장바구니 데이터 불러오기
-    }
-    
-    // 일반수강신청일 때 수강신청 데이터를 불러옵니다.
-    else if (selectedSubNav === '일반수강신청') {
+      await checkBasketData();  // 장바구니 데이터 불러오기
+    } else if (selectedSubNav === '일반수강신청') {
+      // 일반수강신청일 때 수강신청 데이터를 불러오기
       setSidebarTitle('일반수강신청');
-      await checkEnrollmentData(); // 수강신청 데이터 불러오기
+      await checkEnrollmentData();  // 수강신청 데이터 불러오기
     }
   };
+  
   
 // 수강신청 내역 조회 함수
 const checkEnrollmentData = async () => {
@@ -883,121 +899,121 @@ const onClickSearchIcon = async () => {
                   </thead>
 
                   <tbody>
-                  {Array.isArray(sidebarLectures) && sidebarLectures.length > 0 ? (
-                    sidebarLectures.map((lecture, index) => (
-                      <tr key={index} style={{ backgroundColor: 'white' }}>
-                        <td
-                          style={{
-                            border: '1px solid #ddd',
-                            padding: '4px',
-                            textAlign: 'center',
-                            verticalAlign: 'middle',
-                            height: '30px',
-                          }}
-                        >
-                          {index + 1}
-                        </td>
-                        <td
-                          style={{
-                            border: '1px solid #ddd',
-                            padding: '4px',
-                            textAlign: 'left',
-                            verticalAlign: 'middle',
-                            fontWeight: 'bold',
-                            height: '30px',
-                          }}
-                        >
-                          {lecture.subjectName}
-                        </td>
-                        <td
-                          style={{
-                            border: '1px solid #ddd',
-                            padding: '4px',
-                            textAlign: 'center',
-                            verticalAlign: 'middle',
-                            height: '30px',
-                          }}
-                        >
-                          {lecture.subjectDivision ? lecture.subjectDivision.replace(/[\[\]]/g, '') : 'N/A'}
-                        </td>
-                        <td
-                          style={{
-                            border: '1px solid #ddd',
-                            padding: '4px',
-                            textAlign: 'center',
-                            verticalAlign: 'middle',
-                            height: '30px',
-                          }}
-                        >
-                          {lecture.professorName}
-                        </td>
-                        <td
-                          style={{
-                            border: '1px solid #ddd',
-                            padding: '4px',
-                            textAlign: 'center',
-                            verticalAlign: 'middle',
-                            height: '30px',
-                          }}
-                        >
-                          {lecture.lectureTimes && lecture.lectureTimes.length > 0
-                            ? lecture.lectureTimes.map((time, idx) => (
-                                <span key={idx}>
-                                  {time.dayOfWeek} {time.firstTime.slice(0, 5)} ㅡ {time.lastTime.slice(0, 5)}
-                                  <br />
-                                </span>
-                              ))
-                            : '시간 정보 없음'}
-                        </td>
+  {Array.isArray(basketLectures) && basketLectures.length > 0 ? (
+    basketLectures.map((lecture, index) => (
+      <tr key={index} style={{ backgroundColor: 'white' }}>
+        <td
+          style={{
+            border: '1px solid #ddd',
+            padding: '4px',
+            textAlign: 'center',
+            verticalAlign: 'middle',
+            height: '30px',
+          }}
+        >
+          {index + 1}
+        </td>
+        <td
+          style={{
+            border: '1px solid #ddd',
+            padding: '4px',
+            textAlign: 'left',
+            verticalAlign: 'middle',
+            fontWeight: 'bold',
+            height: '30px',
+          }}
+        >
+          {lecture.subjectName}
+        </td>
+        <td
+          style={{
+            border: '1px solid #ddd',
+            padding: '4px',
+            textAlign: 'center',
+            verticalAlign: 'middle',
+            height: '30px',
+          }}
+        >
+          {lecture.subjectDivision ? lecture.subjectDivision.replace(/[\[\]]/g, '') : 'N/A'}
+        </td>
+        <td
+          style={{
+            border: '1px solid #ddd',
+            padding: '4px',
+            textAlign: 'center',
+            verticalAlign: 'middle',
+            height: '30px',
+          }}
+        >
+          {lecture.professorName}
+        </td>
+        <td
+          style={{
+            border: '1px solid #ddd',
+            padding: '4px',
+            textAlign: 'center',
+            verticalAlign: 'middle',
+            height: '30px',
+          }}
+        >
+          {lecture.lectureTimes && lecture.lectureTimes.length > 0
+            ? lecture.lectureTimes.map((time, idx) => (
+                <span key={idx}>
+                  {time.dayOfWeek} {time.firstTime.slice(0, 5)} ㅡ {time.lastTime.slice(0, 5)}
+                  <br />
+                </span>
+              ))
+            : '시간 정보 없음'}
+        </td>
 
-                        <td
-                          style={{
-                            border: '1px solid #ddd',
-                            padding: '4px',
-                            textAlign: 'center',
-                            verticalAlign: 'middle',
-                            height: '30px',
-                          }}
-                        >
-                          <button
-                            onClick={() => handleApplyLecture(lecture)}
-                            style={{
-                              backgroundColor: appliedLectures.includes(lecture) ? '#637ABF' : 'rgb(212, 216, 243)',
-                              color: appliedLectures.includes(lecture) ? 'white' : 'black',
-                              border: 'none',
-                              fontWeight: '700',
-                              padding: '2px 5px',
-                              borderRadius: '8px',
-                              cursor: 'pointer',
-                              width: '60px',
-                              textAlign: 'center',
-                              height: '26px',
-                            }}
-                          >
-                            {appliedLectures.includes(lecture) ? '완료' : '신청'}
-                          </button>
-                        </td>
-                        <td
-                          style={{
-                            border: '1px solid #ddd',
-                            padding: '4px',
-                            textAlign: 'center',
-                            verticalAlign: 'middle',
-                            height: '30px',
-                          }}
-                        >
-                          {lecture.lectureNumber}
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="7" style={{ textAlign: 'center', padding: '20px' }}>
-                        장바구니에 강의가 없습니다.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
+        <td
+          style={{
+            border: '1px solid #ddd',
+            padding: '4px',
+            textAlign: 'center',
+            verticalAlign: 'middle',
+            height: '30px',
+          }}
+        >
+          <button
+            onClick={() => handleApplyLecture(lecture)}
+            style={{
+              backgroundColor: appliedLectures.includes(lecture) ? '#637ABF' : 'rgb(212, 216, 243)',
+              color: appliedLectures.includes(lecture) ? 'white' : 'black',
+              border: 'none',
+              fontWeight: '700',
+              padding: '2px 5px',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              width: '60px',
+              textAlign: 'center',
+              height: '26px',
+            }}
+          >
+            {appliedLectures.includes(lecture) ? '완료' : '신청'}
+          </button>
+        </td>
+        <td
+          style={{
+            border: '1px solid #ddd',
+            padding: '4px',
+            textAlign: 'center',
+            verticalAlign: 'middle',
+            height: '30px',
+          }}
+        >
+          {lecture.lectureNumber}
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan="7" style={{ textAlign: 'center', padding: '20px' }}>
+        장바구니에 강의가 없습니다.
+      </td>
+    </tr>
+  )}
+</tbody>;
 
 
                 </table>

@@ -12,11 +12,10 @@ const LeftBar = ({ onLogout }) => {
   const { user, setUser } = useContext(UserContext);
 
 
-    /* 로그아웃 API */
-    /* 일단은 로그아웃 누르면 원래 화면 path:'' 인 곳에 이동함 */
+   /* 로그아웃 API */
   const handleLogout = async () => {
     const token = localStorage.getItem('accessToken');
-    
+
     if (!token) {
       console.error('토큰이 존재하지 않습니다.');
       navigate('/initial'); // 토큰이 없으면 바로 초기 화면으로 이동
@@ -26,8 +25,8 @@ const LeftBar = ({ onLogout }) => {
     try {
       // axios 요청에 토큰을 Authorization 헤더에 설정
       const response = await axios.post(
-        'http://43.202.223.188:8080/api/logout',
-        {},
+        'http://43.202.223.188:8080/logout',
+        {}, // 빈 body로 POST 요청
         {
           headers: {
             Authorization: `Bearer ${token}`,  // 헤더에 토큰 설정
@@ -46,11 +45,13 @@ const LeftBar = ({ onLogout }) => {
         // UserContext의 user 상태 초기화
         setUser(null);
 
-        navigate('/initial'); // 로그아웃 후 초기 화면으로 이동
+        // 로그아웃 후 초기 화면으로 이동
+        navigate('/initial');
       } else {
         console.error('로그아웃 중 오류가 발생했습니다.');
       }
     } catch (error) {
+      // 에러 처리 및 서버 응답 상태 확인
       console.error('서버와의 통신에 실패했습니다:', error.response ? error.response.data : error.message);
     }
   };

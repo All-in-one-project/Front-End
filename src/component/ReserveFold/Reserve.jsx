@@ -131,12 +131,16 @@ function Reserve() {
           },
         }
       );
-  
-      console.log('성공:', response.data);
+    
+      console.log('수강 신청 성공:', response.data);
+      
+      // 수강 신청 후 시간표 데이터를 다시 가져옴
+      await fetchScheduleData();  // 시간표 업데이트
     } catch (error) {
-      console.error('Error fetching data', error);
+      console.error('수강 신청 실패:', error);
     }
   };
+  
 
   //예비수강신청 장바구니 담기
   const sendBasketData = async (lecture) => {
@@ -296,23 +300,48 @@ function Reserve() {
 
   
 //수강신청 취소
-  const cancelEnrollment = async (lectureId) => {
-    try {
-      const accessToken = localStorage.getItem('accessToken');
-      const response = await axios.delete(
-        `http://43.202.223.188:8080/enrollment/1/${lectureId}`, // studentId와 lectureId를 포함한 경로
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          }
+const cancelEnrollment = async (lectureId) => {
+  try {
+    const accessToken = localStorage.getItem('accessToken');
+    const response = await axios.delete(
+      `http://43.202.223.188:8080/enrollment/1/${lectureId}`, // studentId와 lectureId를 포함한 경로
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
         }
-      );
-      console.log('수강 취소 성공:', response.data);
-    } catch (error) {
-      console.error('수강 취소 실패:', error);
-    }
-  };
+      }
+    );
+    console.log('수강 취소 성공:', response.data);
+    
+    // 수강 취소 후 시간표 데이터를 다시 가져옴
+    await fetchScheduleData();  // 시간표 업데이트
+  } catch (error) {
+    console.error('수강 취소 실패:', error);
+  }
+};
+
   
+const fetchScheduleData = async () => {
+  try {
+    const accessToken = localStorage.getItem('accessToken');
+    const response = await axios.get('http://43.202.223.188:8080/enrollment/schedule', {
+      params: {
+        studentId: 1,
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (response.data.status === 201) {
+      setScheduleData(response.data.data); // 서버에서 받은 시간표 데이터 설정
+    } else {
+      console.error('Error fetching schedule:', response.data);
+    }
+  } catch (error) {
+    console.error('Error fetching schedule data:', error);
+  }
+};
 
 
   const handleConfirmDelete = async () => {
@@ -379,6 +408,7 @@ function Reserve() {
 const handleApplyLecture = async (lecture) => {
   const isAlreadyApplied = appliedLectures.some(appliedLecture => appliedLecture.id === lecture.id);
 
+  console.log(isAlreadyApplied)
   if (isAlreadyApplied) {
     alert('이미 신청된 과목입니다.');
     return;

@@ -344,20 +344,26 @@ const fetchScheduleData = async () => {
 };
 
 
-  const handleConfirmDelete = async () => {
-    try {
-      // 수강 취소 API 호출
-      await cancelEnrollment(lectureToRemove.lectureId);  // 수강 신청 내역에서 삭제
-      
-      // 상태에서 강의 삭제
-      setSidebarLectures(sidebarLectures.filter((lecture) => lecture.id !== lectureToRemove.id));
-      
-      removeLectureFromSchedule(lectureToRemove);  // 시간표에서 삭제
-      setShowDeleteConfirm(false);  // 삭제 확인 화면 숨김
-    } catch (error) {
-      console.error('삭제 처리 중 오류 발생:', error);
-    }
-  };
+const handleConfirmDelete = async () => {
+  try {
+    // 수강 취소 API 호출
+    await cancelEnrollment(lectureToRemove.lectureId);
+
+    // 신청 취소 후 상태 업데이트
+    setAppliedLectures(appliedLectures.filter((lecture) => lecture.lectureId !== lectureToRemove.lectureId));
+
+    const lectures = Array.isArray(sidebarLectures) ? sidebarLectures : [];
+    setSidebarLectures(lectures.filter((lecture) => lecture.id !== lectureToRemove.id));
+
+    // 사이드바를 열지 않도록 변경
+    removeLectureFromSchedule(lectureToRemove);
+    setShowDeleteConfirm(false); // 삭제 확인 화면 숨김
+  } catch (error) {
+    console.error('삭제 처리 중 오류 발생:', error);
+  }
+};
+
+
   
 
   const handleCancelDelete = () => {
@@ -410,48 +416,40 @@ const handleApplyLecture = async (lecture) => {
   try {
     const accessToken = localStorage.getItem('accessToken');
     const response = await axios.get(
-      `http://43.202.223.188:8080/enrollment/1`, // 수강신청 내역 조회 API 호출 (studentId 경로에 포함)
+      `http://43.202.223.188:8080/enrollment/1`,
       {
         headers: {
-          Authorization: `Bearer ${accessToken}`, // Authorization 헤더에 토큰 추가
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
 
-    // 서버로부터 받은 데이터가 유효한지 확인
     const appliedLecturesFromServer = response.data.data || [];
 
-    // 서버에서 받은 데이터를 배열로 확인 후 처리
-    if (!Array.isArray(appliedLecturesFromServer)) {
-      console.error('Invalid data received for applied lectures:', appliedLecturesFromServer);
-      alert('수강 신청 내역을 가져오는 데 실패했습니다.');
-      return;
-    }
-
-    const isAlreadyApplied = appliedLecturesFromServer.some(appliedLecture => appliedLecture.lectureId === lecture.lectureId);
-
-    console.log(isAlreadyApplied);
-    if (isAlreadyApplied) {
+    if (appliedLecturesFromServer.some(appliedLecture => appliedLecture.lectureId === lecture.lectureId)) {
       alert('이미 신청된 과목입니다.');
       return;
     }
 
-    // 신청 API 호출
-    await sendEnrollmentData(lecture);
+    await sendEnrollmentData(lecture); // 수강 신청
 
-    // 신청 완료 후 상태 업데이트
     const updatedLectures = [...appliedLectures, lecture];
     setAppliedLectures(updatedLectures);
 
-    // 로컬 스토리지에 상태 저장 (리렌더링 시에도 유지되도록)
-    localStorage.setItem('appliedLectures', JSON.stringify(updatedLectures));
+    // 사이드바 상태는 유지한 채 상태 업데이트만 처리
+    const lectures = Array.isArray(sidebarLectures) ? sidebarLectures : [];
+    setSidebarLectures([...lectures, lecture]);
 
-    // 성공 메시지 출력
+    localStorage.setItem('appliedLectures', JSON.stringify(updatedLectures));
     console.log('신청 성공:', lecture);
   } catch (error) {
     console.error('신청 실패:', error);
   }
 };
+
+
+
+
 
 
 
@@ -1283,8 +1281,7 @@ const onClickSearchIcon = async () => {
     )}
   </div>
 </div>
-
-      </div>
+</div>
 
       {isPopupVisible && (
         <div className={styles.popup}>

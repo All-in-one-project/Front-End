@@ -381,16 +381,16 @@ const handleConfirmDelete = async () => {
       '금': 4,
     };
   
-    // lectureTimes가 존재하는지 확인
-    if (!lecture.lectureTimes || lecture.lectureTimes.length === 0) {
+    // lecture 객체나 lectureTimes가 없는 경우 처리
+    if (!lecture || !lecture.lectureTimes || lecture.lectureTimes.length === 0) {
       console.error("Lecture times are missing or invalid.");
       return; // lectureTimes가 없는 경우 함수 종료
     }
   
     console.log(lecture);
   
-    // 새로운 시간표 배열을 복사
-    const newSchedule = [...schedule];
+    // schedule이 유효한지 확인하고 복사
+    const newSchedule = schedule ? [...schedule] : [];
   
     // lectureTimes 배열을 순회하여 요일과 시간을 추출
     lecture.lectureTimes.forEach(timeSlot => {
@@ -400,17 +400,22 @@ const handleConfirmDelete = async () => {
   
       // 요일과 시간에 맞는 시간표 데이터를 업데이트 (예: 09:00부터 12:00까지)
       for (let time = firstTime; time < lastTime; time++) {
-        newSchedule[timeMapping[day]][time - 9] = null; // 시간표에서 9시가 첫 번째(0번째) 슬롯이라고 가정
+        if (newSchedule[timeMapping[day]]) {
+          newSchedule[timeMapping[day]][time - 9] = null; // 시간표에서 9시가 첫 번째(0번째) 슬롯이라고 가정
+        }
       }
     });
   
     // 업데이트된 시간표를 상태에 반영
     setSchedule(newSchedule);
   
-    // 강의를 appliedLectures에서 제거
-    setAppliedLectures(appliedLectures.filter((appliedLecture) => appliedLecture.id !== lecture.id));
+    // 강의를 appliedLectures에서 제거 (appliedLectures가 배열인지 확인)
+    if (Array.isArray(appliedLectures)) {
+      setAppliedLectures(appliedLectures.filter((appliedLecture) => appliedLecture.id !== lecture.id));
+    }
   };
   
+
 
 
 // 신청 버튼을 눌렀을 때 상태 업데이트

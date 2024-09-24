@@ -817,113 +817,122 @@ const onClickSearchIcon = async () => {
                   </thead>
 
                   <tbody>
-  {sidebarLectures.map((lecture, index) => (
-    <tr key={index} style={{ backgroundColor: 'white' }}>
-      <td
-        style={{
-          border: '1px solid #ddd',
-          padding: '4px',
-          textAlign: 'center',
-          verticalAlign: 'middle',
-          height: '30px',
-        }}
-      >
-        {index + 1}
-      </td>
-      <td
-        style={{
-          border: '1px solid #ddd',
-          padding: '4px',
-          textAlign: 'left',
-          verticalAlign: 'middle',
-          fontWeight: 'bold',
-          height: '30px',
-        }}
-      >
-        {lecture.subjectName}
-      </td>
-      <td
-        style={{
-          border: '1px solid #ddd',
-          padding: '4px',
-          textAlign: 'center',
-          verticalAlign: 'middle',
-          height: '30px',
-        }}
-      >
-        {lecture.subjectDivision ? lecture.subjectDivision.replace(/[\[\]]/g, '') : 'N/A'}
-      </td>
-      <td
-        style={{
-          border: '1px solid #ddd',
-          padding: '4px',
-          textAlign: 'center',
-          verticalAlign: 'middle',
-          height: '30px',
-        }}
-      >
-        {lecture.professorName}
-      </td>
-      <td
-        style={{
-          border: '1px solid #ddd',
-          padding: '4px',
-          textAlign: 'center',
-          verticalAlign: 'middle',
-          height: '30px',
-        }}
-      >
-        {lecture.lectureTimes && lecture.lectureTimes.length > 0
-          ? lecture.lectureTimes.map((time, idx) => (
-              <span key={idx}>
-                {time.dayOfWeek} {time.firstTime.slice(0, 5)} ㅡ {time.lastTime.slice(0, 5)}
-                <br />
-              </span>
-            ))
-          : '시간 정보 없음'}
-      </td>
+                  {Array.isArray(sidebarLectures) && sidebarLectures.length > 0 ? (
+                    sidebarLectures.map((lecture, index) => (
+                      <tr key={index} style={{ backgroundColor: 'white' }}>
+                        <td
+                          style={{
+                            border: '1px solid #ddd',
+                            padding: '4px',
+                            textAlign: 'center',
+                            verticalAlign: 'middle',
+                            height: '30px',
+                          }}
+                        >
+                          {index + 1}
+                        </td>
+                        <td
+                          style={{
+                            border: '1px solid #ddd',
+                            padding: '4px',
+                            textAlign: 'left',
+                            verticalAlign: 'middle',
+                            fontWeight: 'bold',
+                            height: '30px',
+                          }}
+                        >
+                          {lecture.subjectName}
+                        </td>
+                        <td
+                          style={{
+                            border: '1px solid #ddd',
+                            padding: '4px',
+                            textAlign: 'center',
+                            verticalAlign: 'middle',
+                            height: '30px',
+                          }}
+                        >
+                          {lecture.subjectDivision ? lecture.subjectDivision.replace(/[\[\]]/g, '') : 'N/A'}
+                        </td>
+                        <td
+                          style={{
+                            border: '1px solid #ddd',
+                            padding: '4px',
+                            textAlign: 'center',
+                            verticalAlign: 'middle',
+                            height: '30px',
+                          }}
+                        >
+                          {lecture.professorName}
+                        </td>
+                        <td
+                          style={{
+                            border: '1px solid #ddd',
+                            padding: '4px',
+                            textAlign: 'center',
+                            verticalAlign: 'middle',
+                            height: '30px',
+                          }}
+                        >
+                          {lecture.lectureTimes && lecture.lectureTimes.length > 0
+                            ? lecture.lectureTimes.map((time, idx) => (
+                                <span key={idx}>
+                                  {time.dayOfWeek} {time.firstTime.slice(0, 5)} ㅡ {time.lastTime.slice(0, 5)}
+                                  <br />
+                                </span>
+                              ))
+                            : '시간 정보 없음'}
+                        </td>
 
-      <td
-        style={{
-          border: '1px solid #ddd',
-          padding: '4px',
-          textAlign: 'center',
-          verticalAlign: 'middle',
-          height: '30px',
-        }}
-      >
-        <button
-          onClick={() => handleApplyLecture(lecture)}
-          style={{
-            backgroundColor: appliedLectures.includes(lecture) ? '#637ABF' : 'rgb(212, 216, 243)',
-            color: appliedLectures.includes(lecture) ? 'white' : 'black',
-            border: 'none',
-            fontWeight: '700',
-            padding: '2px 5px',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            width: '60px',
-            textAlign: 'center',
-            height: '26px',
-          }}
-        >
-          {appliedLectures.includes(lecture) ? '완료' : '신청'}
-        </button>
-      </td>
-      <td
-        style={{
-          border: '1px solid #ddd',
-          padding: '4px',
-          textAlign: 'center',
-          verticalAlign: 'middle',
-          height: '30px',
-        }}
-      >
-        {lecture.lectureNumber}
-      </td>
-    </tr>
-  ))}
-</tbody>
+                        <td
+                          style={{
+                            border: '1px solid #ddd',
+                            padding: '4px',
+                            textAlign: 'center',
+                            verticalAlign: 'middle',
+                            height: '30px',
+                          }}
+                        >
+                          <button
+                            onClick={() => handleApplyLecture(lecture)}
+                            style={{
+                              backgroundColor: appliedLectures.includes(lecture) ? '#637ABF' : 'rgb(212, 216, 243)',
+                              color: appliedLectures.includes(lecture) ? 'white' : 'black',
+                              border: 'none',
+                              fontWeight: '700',
+                              padding: '2px 5px',
+                              borderRadius: '8px',
+                              cursor: 'pointer',
+                              width: '60px',
+                              textAlign: 'center',
+                              height: '26px',
+                            }}
+                          >
+                            {appliedLectures.includes(lecture) ? '완료' : '신청'}
+                          </button>
+                        </td>
+                        <td
+                          style={{
+                            border: '1px solid #ddd',
+                            padding: '4px',
+                            textAlign: 'center',
+                            verticalAlign: 'middle',
+                            height: '30px',
+                          }}
+                        >
+                          {lecture.lectureNumber}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="7" style={{ textAlign: 'center', padding: '20px' }}>
+                        장바구니에 강의가 없습니다.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+
 
                 </table>
               </div>

@@ -236,16 +236,39 @@ function Reserve() {
       setShowDeleteConfirm(true);
     }
   };
-
-  const handleConfirmDelete = () => {
-    // 예비 수강신청과 동일하게 삭제 처리
-    DeleteBasketData(lectureToRemove.lectureId);  // 서버에서 삭제
+//수강신청 취소
+  const cancelEnrollment = async (lectureId) => {
+    try {
+      const accessToken = localStorage.getItem('accessToken');
+      const response = await axios.delete(
+        `http://43.202.223.188:8080/enrollment/1/${lectureId}`, // studentId와 lectureId를 포함한 경로
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          }
+        }
+      );
+      console.log('수강 취소 성공:', response.data);
+    } catch (error) {
+      console.error('수강 취소 실패:', error);
+    }
+  };
   
-    // 상태에서 강의 삭제
-    setSidebarLectures(sidebarLectures.filter((lecture) => lecture.id !== lectureToRemove.id));
-    
-    removeLectureFromSchedule(lectureToRemove);  // 시간표에서 삭제
-    setShowDeleteConfirm(false);  // 삭제 확인 화면 숨김
+
+
+  const handleConfirmDelete = async () => {
+    try {
+      // 수강 취소 API 호출
+      await cancelEnrollment(lectureToRemove.lectureId);  // 수강 신청 내역에서 삭제
+      
+      // 상태에서 강의 삭제
+      setSidebarLectures(sidebarLectures.filter((lecture) => lecture.id !== lectureToRemove.id));
+      
+      removeLectureFromSchedule(lectureToRemove);  // 시간표에서 삭제
+      setShowDeleteConfirm(false);  // 삭제 확인 화면 숨김
+    } catch (error) {
+      console.error('삭제 처리 중 오류 발생:', error);
+    }
   };
   
 

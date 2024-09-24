@@ -462,18 +462,45 @@ const handleApplyLecture = async (lecture) => {
 
   const filteredLecturesYear = lectures.filter(lecture => lecture.grade === selectedYear);
 
-  const toggleSidebar = () => {
-    checkBasketData();
-    
+  const toggleSidebar = async () => {
     setIsSidebarOpen(!isSidebarOpen);
     
-    // selectedSubNav에 따라 sidebarTitle을 변경합니다.
+    // 예비수강신청일 때 장바구니 데이터를 불러옵니다.
     if (selectedSubNav === '예비수강신청') {
       setSidebarTitle('예비수강신청');
-    } else if (selectedSubNav === '일반수강신청') {
+      await checkBasketData(); // 장바구니 데이터 불러오기
+    }
+    
+    // 일반수강신청일 때 수강신청 데이터를 불러옵니다.
+    else if (selectedSubNav === '일반수강신청') {
       setSidebarTitle('일반수강신청');
+      await checkEnrollmentData(); // 수강신청 데이터 불러오기
     }
   };
+  
+// 수강신청 내역 조회 함수
+const checkEnrollmentData = async () => {
+  try {
+    const accessToken = localStorage.getItem('accessToken');
+    
+    const response = await axios.get(
+      `http://43.202.223.188:8080/enrollment/1`, // studentId 경로에 포함
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // 토큰 추가
+        },
+      }
+    );
+    
+    console.log('수강신청 내역 조회:', response.data.data);
+    
+    // 수강신청 내역을 sidebarLectures에 저장
+    setSidebarLectures(response.data.data);
+  } catch (error) {
+    console.error('수강신청 내역 조회에 실패했습니다.', error);
+  }
+};
+
 
   const togglePopup = (type) => {
     setPopupType(type);

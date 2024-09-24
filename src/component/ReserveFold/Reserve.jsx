@@ -404,8 +404,7 @@ const fetchScheduleData = async () => {
   };
   
 
-// 신청 버튼을 눌렀을 때 상태 업데이트
-// 신청 버튼을 눌렀을 때 상태 업데이트
+
 // 신청 버튼을 눌렀을 때 상태 업데이트
 const handleApplyLecture = async (lecture) => {
   try {

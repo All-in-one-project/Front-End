@@ -236,6 +236,16 @@ function Reserve() {
       setShowDeleteConfirm(true);
     }
   };
+
+
+  useEffect(() => {
+    // "일반수강신청"을 선택했을 때 장바구니 데이터를 로드
+    if (selectedSubNav === '일반수강신청') {
+      checkBasketData();  // 장바구니 데이터를 로드하는 함수 호출
+    }
+  }, [selectedSubNav]);
+
+  
 //수강신청 취소
   const cancelEnrollment = async (lectureId) => {
     try {

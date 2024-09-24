@@ -238,10 +238,16 @@ function Reserve() {
   };
 
   const handleConfirmDelete = () => {
+    // 예비 수강신청과 동일하게 삭제 처리
+    DeleteBasketData(lectureToRemove.lectureId);  // 서버에서 삭제
+  
+    // 상태에서 강의 삭제
     setSidebarLectures(sidebarLectures.filter((lecture) => lecture.id !== lectureToRemove.id));
-    removeLectureFromSchedule(lectureToRemove);
-    setShowDeleteConfirm(false); // 삭제 확인 화면 숨김
+    
+    removeLectureFromSchedule(lectureToRemove);  // 시간표에서 삭제
+    setShowDeleteConfirm(false);  // 삭제 확인 화면 숨김
   };
+  
 
   const handleCancelDelete = () => {
     setShowDeleteConfirm(false); // 삭제 확인 화면 숨김

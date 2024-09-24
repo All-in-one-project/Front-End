@@ -168,19 +168,21 @@ function Reserve() {
     }
   };
   
-  const handleAddToCart = (lecture) => {
+  const handleAddToCart = async (lecture) => {
     // sidebarLectures가 배열인지 확인하고, 아니면 빈 배열로 처리
     const lectures = Array.isArray(sidebarLectures) ? sidebarLectures : [];
-    
+  
     const isAlreadyInCart = lectures.some(item => item.id === lecture.id);
-    
+  
     if (!isAlreadyInCart) {
       setSidebarLectures([...lectures, lecture]);
-      sendBasketData(lecture); // 장바구니 담을 때 서버로도 전송
+      await sendBasketData(lecture); // 장바구니에 담고 서버로 전송
+      await checkBasketData(); // 장바구니 데이터를 다시 불러와 상태 업데이트
     } else {
       alert('이미 장바구니에 담긴 과목입니다.');
     }
   };
+  
 
   // 예비 수강신청 장바구니 조회
   const checkBasketData = async () => {

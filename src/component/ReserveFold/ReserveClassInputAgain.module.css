@@ -15,6 +15,7 @@
     padding-top: 30px;
     text-align: center;
     margin-top: 20px;
+    margin-bottom: 16px;
 }
 
 .reserveDeleteClassName{
@@ -24,10 +25,11 @@
     margin: 0;
 }
 
+
 .reserveClassInputAgainNotice{
     text-align: center;
     font-weight: 600;
-    font-size: 26px;
+    font-size: 20px;
     color: rgb(61, 60, 60);
     margin: 0;
 }
@@ -36,7 +38,7 @@
     display: flex;
     justify-content: center;
  
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .reserveClassInputAgainButtonDelete {

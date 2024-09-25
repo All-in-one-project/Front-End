@@ -326,7 +326,7 @@ const MainLectureItem = ({ lecture }) => (
   );
 
   const handleNavClickdisabled = () => {
-    navigate('/disabled'); // Disabled.jsx로 이동
+    navigate('/disabled2'); // Disabled.jsx로 이동
   };
 
   return (
@@ -374,7 +374,7 @@ const MainLectureItem = ({ lecture }) => (
         <div className={styles['navbar']}>
           <button onClick={() => handleNavClick('/notice')}>공지사항</button>
           <button className={styles['application']}>과목조회</button>
-          <button onClick={() => handleNavClick('/')}>수강신청</button>
+          <button onClick={() => handleNavClick('/reserve')}>수강신청</button>
           <button onClick={() => handleNavClick('/mypage')}>마이페이지</button>
         </div>
         <div className={styles['sub-navbar']}>

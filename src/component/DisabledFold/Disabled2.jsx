@@ -37,7 +37,7 @@ const Disabled = () => {
 
     const handlePageLoad = () => {
       const msg = new SpeechSynthesisUtterance(
-        "해당 칸을 클릭 시 로그인 화면이 생성되며 수강 신청, 마이페이지를 이용할 수 있게 됩니다. 로그인하지 않은 경우 공지사항과 과목조회만 이용 가능한 점 양해 바랍니다. 시각장애인 배려용 화면에서는 모든 화면과 기능을 음성으로 제공합니다."
+        "로그아웃과 동시에 비장애인 화면으로 화면이 초기화됩니다. 로그인하지 않은 경우 공지사항과 과목조회만 이용 가능한 점 양해 바랍니다. 시각장애인 배려용 화면에서는 모든 화면과 기능을 음성으로 제공하며 시각장애인 사용자에게도 편리한 화면을 제공합니다."
       );
       window.speechSynthesis.speak(msg);
     };
@@ -94,14 +94,14 @@ const Disabled = () => {
 
         <div className={styles.accessibilityInfoBox} onClick={handleClick}>
           <div className={styles.accessibilityInfoText}>
-            <h2>로그인하기</h2>
+            <h2>로그아웃하기</h2>
             <div className={styles.Line}>
-              <p className={styles.infoTextLine1}>해당 칸을 클릭 시 로그인 화면이 생성되며</p>
-              <p className={styles.infoTextLine2}>수강 신청 / 마이페이지를 이용할 수 있게 됩니다</p>
-              <p className={styles.infoTextLine1}>로그인하지 않은 경우</p>
-              <p className={styles.infoTextLine2}>공지사항과 과목조회만 이용 가능한 점 양해 바랍니다.</p>
+              <p className={styles.infoTextLine1}>로그아웃과 동시에 비장애인 화면으로 화면이 초기화됩니다 </p>
+              <p className={styles.infoTextLine1}>로그인하지 않은 경우 공지사항과 </p>
+              <p className={styles.infoTextLine2}>과목조회만 이용 가능한 점 양해 바랍니다</p>
               <p className={styles.infoTextLine1}>시각장애인 배려용 화면에서는</p>
-              <p className={styles.infoTextLine2}>모든 화면과 기능을 음성으로 제공합니다</p>
+              <p className={styles.infoTextLine2}>모든 화면과 기능을 음성으로 제공하며 </p>
+              <p className={styles.infoTextLine1}>시각장애인 사용자에게도 편리한 화면을 제공합니다. </p>
             </div>
           </div>
         </div>
@@ -111,7 +111,7 @@ const Disabled = () => {
         <div className={styles.navbar}>
           <div className={styles.row}>
             <button
-              onClick={() => handleNavClick('/disabled/notice2')}
+              onClick={() => handleNavClick('/disabled/notice')}
               onMouseEnter={() => handleMouseEnter("공지사항")}
             >
               공지사항

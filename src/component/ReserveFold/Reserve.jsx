@@ -33,7 +33,6 @@ function Reserve() {
   const [isWaiting, setIsWaiting] = useState(false); // 대기 상태를 관리하는 state
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // 삭제 확인 화면 제어
   const [lectureToRemove, setLectureToRemove] = useState(null); // 삭제할 강의 정보
-  const [showInputError, setShowInputError] = useState(false); // 과목 코드 오류 화면 제어
   const [colleges, setColleges] = useState([]); // 대학 리스트
   const [departments, setDepartments] = useState([]); // 학과 리스트
   const [filteredLectures, setFilteredLectures] = useState([]);
@@ -45,6 +44,9 @@ function Reserve() {
   const [basketLectures, setBasketLectures] = useState([]); // 장바구니 데이터 저장 상태
   const [scheduleData, setScheduleData] = useState([]); // 서버에서 받은 시간표 데이터
   const [schedule, setSchedule] = useState(Array(5).fill(null).map(() => Array(9).fill(null))); // 기존 시간표 상태
+  const [showInputError, setShowInputError] = useState(false); // 오류 화면 표시 여부
+  const [errorMessage, setErrorMessage] = useState(''); // 오류 메시지 관리  
+
 
   const [appliedLectures, setAppliedLectures] = useState(() => {
     const savedLectures = JSON.parse(localStorage.getItem('appliedLectures')) || [];
@@ -753,19 +755,45 @@ useEffect(() => {
     togglePopup('lecturePlan');
   };
 
-  const handleSubjectCodeInput = () => {
-    const foundLecture = lectureList.find((lecture) => lecture.lecture === subjectCode);
-
-    if (foundLecture) {
-      handleAddToCart(foundLecture);
-    } else {
-      setShowInputError(true); // 과목 코드 오류 화면 표시
+  const handleSubjectCodeInput = async () => {
+    try {
+      const accessToken = localStorage.getItem('accessToken');
+      
+      // URL에 파라미터를 포함하여 POST 요청을 보냅니다.
+      const response = await axios.post(
+        `http://43.202.223.188:8080/enrollment/by-code?studentId=1&lectureNumber=${subjectCode}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`, // 인증 토큰을 헤더에 포함
+          },
+        }
+      );
+      
+      // response.data.status가 400인 경우 오류 처리
+      if (response.data.status === 400) {
+        setErrorMessage(response.data.message); // 오류 메시지 설정
+        setShowInputError(true); // 오류 화면 표시
+      } else {
+        console.log('수강 신청 성공:', response.data);
+        alert('수강 신청이 성공적으로 완료되었습니다!');
+        
+        // 필요 시 추가로 시간표 갱신 함수 호출
+        await fetchScheduleData();
+      }
+    } catch (error) {
+      console.error('수강 신청 실패:', error);
+      alert('서버와의 통신 오류입니다. 다시 시도해 주세요.');
     }
   };
+  
 
   const handleConfirmInputError = () => {
-    setShowInputError(false); // 오류 화면 숨김
+    setShowInputError(false); // 오류 화면 숨기기
+    setErrorMessage(''); // 오류 메시지 초기화
   };
+  
+  
 
   const MainLectureItem = ({ lecture }) => (
     <div className={styles.lectureBox}>
@@ -827,10 +855,12 @@ useEffect(() => {
   if (showInputError) {
     return (
       <ReserveClassInputAgain
-        onConfirm={handleConfirmInputError}
+        message={errorMessage} // 오류 메시지를 컴포넌트에 전달
+        onConfirm={handleConfirmInputError} // 확인 버튼 클릭 시 오류 화면 숨기기
       />
     );
   }
+  
 
   //시각장애인 배려용 화면 변경 버튼 
   const handleNavClickdisabled = () => {
@@ -843,6 +873,7 @@ const handleFindSubjectName =(event)=>{
   console.log(event.target.value)
 }
 console.log(inputSubjectName)
+console.log(subjectCode)
 
 const onClickSearchIcon = async () => {
   const accessToken = localStorage.getItem('accessToken');
@@ -1174,24 +1205,25 @@ const onClickSearchIcon = async () => {
 
                 <div className={styles.sectionContainer}>
                 <div className={styles.sectionSubject}>
-                  <div className={styles.sectionTitle}>과목 코드 직접 입력</div>
-                  <input
-                    type="text"
-                    placeholder="과목 코드 입력"
-                    className={styles.subjectCode}
-                    value={subjectCode}
-                    onChange={handleSubjectCodeChange}
-                    onKeyDown={(event) => {
-                      if (event.key === 'Enter') {
-                        handleSubjectCodeInput();  // 엔터 키 입력 시 수강신청 처리
-                      }
-                    }}
-                    style={{ marginBottom: '10px', marginLeft: '5px' }}
-                  />
-                  <button type="button" className={styles.cartBtn} onClick={handleSubjectCodeInput}>
-                    수강신청
-                  </button>
-                </div>
+  <div className={styles.sectionTitle}>과목 코드 직접 입력</div>
+  <input
+    type="text"
+    placeholder="과목 코드 입력"
+    className={styles.subjectCode}
+    value={subjectCode}
+    onChange={handleSubjectCodeChange}
+    onKeyDown={(event) => {
+      if (event.key === 'Enter') {
+        handleSubjectCodeInput();  // 엔터 키 입력 시 수강신청 처리
+      }
+    }}
+    style={{ marginBottom: '10px', marginLeft: '5px' }}
+  />
+  <button type="button" className={styles.cartBtn} onClick={handleSubjectCodeInput}>
+    수강신청
+  </button>
+</div>
+
                 </div>
               </div>
             </div>

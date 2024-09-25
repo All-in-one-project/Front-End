@@ -1173,20 +1173,25 @@ const onClickSearchIcon = async () => {
 
 
                 <div className={styles.sectionContainer}>
-                  <div className={styles.sectionSubject}>
-                    <div className={styles.sectionTitle}>과목 코드 직접 입력</div>
-                    <input
-                      type="text"
-                      placeholder="과목 코드 입력"
-                      className={styles.subjectCode}
-                      value={subjectCode}
-                      onChange={handleSubjectCodeChange}
-                      style={{ marginBottom: '10px', marginLeft: '5px' }}
-                    />
-                    <button type="button" className={styles.cartBtn} onClick={handleSubjectCodeInput}>
-                      수강신청
-                    </button>
-                  </div>
+                <div className={styles.sectionSubject}>
+                  <div className={styles.sectionTitle}>과목 코드 직접 입력</div>
+                  <input
+                    type="text"
+                    placeholder="과목 코드 입력"
+                    className={styles.subjectCode}
+                    value={subjectCode}
+                    onChange={handleSubjectCodeChange}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter') {
+                        handleSubjectCodeInput();  // 엔터 키 입력 시 수강신청 처리
+                      }
+                    }}
+                    style={{ marginBottom: '10px', marginLeft: '5px' }}
+                  />
+                  <button type="button" className={styles.cartBtn} onClick={handleSubjectCodeInput}>
+                    수강신청
+                  </button>
+                </div>
                 </div>
               </div>
             </div>
